@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.pojotester.log.PojoTesterLogger;
 import org.pojotester.mock.MockObject;
 
 public abstract class ClassUtilities {
@@ -58,7 +59,7 @@ public abstract class ClassUtilities {
 		try {
 			clazz = (classLoader != null) ?  classLoader.loadClass(className) : Class.forName(className);
 		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+			PojoTesterLogger.debugMessage("Not able to load " + className, e);
 		}
 		return clazz;
 	}
@@ -68,6 +69,7 @@ public abstract class ClassUtilities {
 		try {
 			object = clazz.newInstance();
 		} catch (InstantiationException | IllegalAccessException e) {
+			PojoTesterLogger.debugMessage("Not able to initialize using default constructor of " + clazz.getName(), e);
 			object =  createObjectUsingOtherConstructor(clazz);
 		}
 		return object;
