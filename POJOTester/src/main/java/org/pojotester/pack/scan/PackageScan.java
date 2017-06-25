@@ -16,6 +16,10 @@
 package org.pojotester.pack.scan;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -41,15 +45,13 @@ public final class PackageScan {
 				String patternString  = location.substring(rootDirectory.length());
 				if(patternString.isEmpty()){
 					// When exact path is given [e.g. mypack.MyClass.class]
-					int endIndex = rootDirectory.length() - CLASS_FILE_SUFFIX.length();
-					String className = rootDirectory.substring(0, endIndex);
-					className = getQualifiedClassName(className);
-					ClassUtilities.loadClass(className);
-				} else if(patternString.indexOf(PATH_SEPARATOR_CHAR) == -1){
-					// Goto that folder match class pattern [e.g. mypack.My*.class]
-					
-				} else {
+					loadClassAndAddItToSet(classSet, rootDirectory);
+				}  else {
 					// Goto root directory and match pattern to search directories/files [e.g. mypack.**.My*.class, mypack.**.MyClass.class]
+					Set<String> classFileSet = findClassFile(rootDirectory, patternString);
+					for(String className : classFileSet){
+						loadClassAndAddItToSet(classSet, className);
+					}
 				}
 				
 			}
@@ -113,9 +115,28 @@ public final class PackageScan {
 		return location;
 	}
 	
+	private static Set<String> findClassFile(String rootDirectory, String patternString) {
+		Path startDirectory = Paths.get(rootDirectory);
+		Finder visitor = new Finder(patternString);
+		try {
+			Files.walkFileTree(startDirectory, visitor);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		Set<String> classFileSet = visitor.getMactingSet();
+		return classFileSet;
+	}
+	
 	private static String getQualifiedClassName(String className) {
+		int endIndex = className.length() - CLASS_FILE_SUFFIX.length();
+		className = className.substring(0, endIndex);
 		className = className.replaceAll(PATH_SEPARATOR, DOT);
 		return className;
 	}
-	
+
+	private static void loadClassAndAddItToSet(Set<Class<?>> classSet, String rootDirectory) {
+		String className = getQualifiedClassName(rootDirectory);
+		Class<?> clazz = ClassUtilities.loadClass(className);
+		classSet.add(clazz);
+	}
 }
