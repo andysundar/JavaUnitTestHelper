@@ -11,7 +11,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class Finder  extends SimpleFileVisitor<Path> {
+class Finder  extends SimpleFileVisitor<Path> {
 	
 	private final PathMatcher matcher;
     private final Set<String> classFileSet;
