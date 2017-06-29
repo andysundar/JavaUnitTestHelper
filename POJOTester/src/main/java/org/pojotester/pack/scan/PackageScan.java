@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.pojotester.reflection.annotation.ReflectionClassLevel;
 import org.pojotester.utils.ClassUtilities;
 
 public final class PackageScan {
@@ -137,6 +138,11 @@ public final class PackageScan {
 	private static void loadClassAndAddItToSet(Set<Class<?>> classSet, String rootDirectory) {
 		String className = getQualifiedClassName(rootDirectory);
 		Class<?> clazz = ClassUtilities.loadClass(className);
-		classSet.add(clazz);
+		if(clazz != null) {
+		    boolean ignoreThisClass = ReflectionClassLevel.ignoreClass(clazz);
+			if(!ignoreThisClass){
+				classSet.add(clazz);
+			}
+		}
 	}
 }
