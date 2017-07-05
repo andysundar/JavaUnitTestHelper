@@ -23,22 +23,12 @@ import org.pojotester.annotation.fieldmethod.StringTestValue;
 
 public abstract class TestValuesFactory {
 
-	public static TestValues<?> createTestValuesObject(final Class<?> typeClass, final Field field){
+	public static TestValues<?> createTestValuesObject(final Class<?> typeClass){
 		 TestValues<?>  testValues = null;
 		 if(typeClass == Boolean.class || typeClass == boolean.class 
 				 || typeClass == Boolean[].class || typeClass == boolean[].class){
 			 TestValues<Boolean> testValuesBoolean = new TestValues<Boolean>();
-			 BooleanTestValue booleanTestValue = field.getAnnotation(BooleanTestValue.class);
-				if(booleanTestValue != null) {
-					boolean[] assignValues = booleanTestValue.assignValues();
-					boolean[] expectedValues = booleanTestValue.expectedValues();
-					if(expectedValues == null){
-						expectedValues = assignValues;
-					}
-					
-					testValuesBoolean.setAssignedValues(assignValues);
-					testValuesBoolean.setExpectedValues(expectedValues);
-				}
+			
 		 } else  if(typeClass == Byte.class || typeClass == byte.class 
 				 || typeClass == Byte[].class || typeClass == byte[].class){
 			 testValues = new TestValues<Byte>();

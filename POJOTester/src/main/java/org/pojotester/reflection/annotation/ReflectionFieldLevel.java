@@ -25,22 +25,13 @@ public class ReflectionFieldLevel {
 	
 	public static TestValues<?> assignValues(final Field field){
 		Class<?> typeClass = field.getType();
-		TestValues<?> testValues = TestValuesFactory.createTestValuesObject(typeClass, field);
+		TestValues<?> testValues = TestValuesFactory.createTestValuesObject(typeClass);
 		testValues.setField(field);
 		
 		if(typeClass == Boolean.class || typeClass == boolean.class 
 				 || typeClass == Boolean[].class || typeClass == boolean[].class){
 			BooleanTestValue booleanTestValue = field.getAnnotation(BooleanTestValue.class);
-			if(booleanTestValue != null) {
-				boolean[] assignValues = booleanTestValue.assignValues();
-				boolean[] expectedValues = booleanTestValue.expectedValues();
-				if(expectedValues == null){
-					expectedValues = assignValues;
-				}
-				
-				testValues.setAssignedValues(assignValues);
-				testValues.setExpectedValues(expectedValues);
-			}
+			testValues = createBooleanTestValues(booleanTestValue);
 		 } else  if(typeClass == Byte.class || typeClass == byte.class 
 				 || typeClass == Byte[].class || typeClass == byte[].class){
 			 ByteTestValue byteTestValue = field.getAnnotation(ByteTestValue.class);
@@ -64,8 +55,43 @@ public class ReflectionFieldLevel {
 			 ShortTestValue shortTestValue = field.getAnnotation(ShortTestValue.class);
 		 } else  if(typeClass == String.class || typeClass == String[].class){
 			 StringTestValue stringTestValue = field.getAnnotation(StringTestValue.class);
+			 testValues = createStringTestValues(stringTestValue);
 		 }
 	
+		return testValues;
+	}
+
+	private static TestValues<String> createStringTestValues(StringTestValue stringTestValue) {
+		TestValues<String> testValues = new TestValues<String>();
+		if(stringTestValue != null) {
+			String[] assignValues = stringTestValue.assignValues();
+			String[] expectedValues = stringTestValue.expectedValues();
+			if(expectedValues == null || expectedValues.length == 0){
+				expectedValues = assignValues;
+			}
+			
+			testValues.setAssignedValues(assignValues);
+			testValues.setExpectedValues(expectedValues);
+		}
+		return testValues;
+	}
+	
+	private static TestValues<Boolean> createBooleanTestValues(BooleanTestValue booleanTestValue) {
+		TestValues<Boolean> testValues = new TestValues<Boolean>();
+		if(booleanTestValue != null) {
+			boolean[] assignValues = booleanTestValue.assignValues();
+			boolean[] expectedValues = booleanTestValue.expectedValues();
+			if(expectedValues == null || expectedValues.length == 0){
+				expectedValues = assignValues;
+			}
+			int assignLength = assignValues.length;
+			Boolean[] assignObjectValues =  new Boolean[assignLength];
+			Boolean[] expectedObjectValues =  new Boolean[assignLength];
+			System.arraycopy(assignValues, 0, assignObjectValues, 0, assignLength);
+			System.arraycopy(expectedValues, 0, expectedObjectValues, 0, assignLength);
+			testValues.setAssignedValues(assignObjectValues);
+			testValues.setExpectedValues(expectedObjectValues);
+		}
 		return testValues;
 	}
 	
