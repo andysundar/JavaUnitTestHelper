@@ -1,5 +1,5 @@
 package org.pojotester.reflection.annotation;
 
-public class ReflectionMethodLevel {
+public abstract class ReflectionMethodLevel {
 	
 }

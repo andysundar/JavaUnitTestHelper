@@ -21,7 +21,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(value = {ElementType.FIELD, ElementType.METHOD})
+@Target(value = {ElementType.FIELD})
 public @interface IntTestValue {
 	int[] assignValues() default {Integer.MAX_VALUE};
 	int[] expectedValues();

@@ -16,7 +16,7 @@ import org.pojotester.test.values.TestValues;
 import org.pojotester.test.values.TestValuesFactory;
 import org.pojotester.type.PrimitiveToObjectArray;
 
-public class ReflectionFieldLevel extends CreateTestValue {
+public  abstract class ReflectionFieldLevel {
 
 	public static boolean ignoreField(final Field field){
 		boolean isFieldIgnored = field.isAnnotationPresent(IgnoreField.class);	
