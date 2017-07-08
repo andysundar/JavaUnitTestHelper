@@ -2,21 +2,21 @@ package org.pojotester.reflection.annotation;
 
 import java.lang.reflect.Field;
 
+import org.pojotester.annotation.field.BooleanTestValue;
+import org.pojotester.annotation.field.ByteTestValue;
+import org.pojotester.annotation.field.CharTestValue;
+import org.pojotester.annotation.field.DoubleTestValue;
+import org.pojotester.annotation.field.FloatTestValue;
 import org.pojotester.annotation.field.IgnoreField;
-import org.pojotester.annotation.fieldmethod.BooleanTestValue;
-import org.pojotester.annotation.fieldmethod.ByteTestValue;
-import org.pojotester.annotation.fieldmethod.CharTestValue;
-import org.pojotester.annotation.fieldmethod.DoubleTestValue;
-import org.pojotester.annotation.fieldmethod.FloatTestValue;
-import org.pojotester.annotation.fieldmethod.IntTestValue;
-import org.pojotester.annotation.fieldmethod.LongTestValue;
-import org.pojotester.annotation.fieldmethod.ShortTestValue;
-import org.pojotester.annotation.fieldmethod.StringTestValue;
+import org.pojotester.annotation.field.IntTestValue;
+import org.pojotester.annotation.field.LongTestValue;
+import org.pojotester.annotation.field.ShortTestValue;
+import org.pojotester.annotation.field.StringTestValue;
 import org.pojotester.test.values.TestValues;
 import org.pojotester.test.values.TestValuesFactory;
 import org.pojotester.type.PrimitiveToObjectArray;
 
-public class ReflectionFieldLevel {
+public class ReflectionFieldLevel extends CreateTestValue {
 
 	public static boolean ignoreField(final Field field){
 		boolean isFieldIgnored = field.isAnnotationPresent(IgnoreField.class);	
@@ -26,7 +26,7 @@ public class ReflectionFieldLevel {
 	public static TestValues<?> assignValues(final Field field){
 		Class<?> typeClass = field.getType();
 		TestValues<?> testValues = null;
-		testValues.setField(field);
+		
 		
 		if(typeClass == Boolean.class || typeClass == boolean.class 
 				 || typeClass == Boolean[].class || typeClass == boolean[].class){
@@ -67,10 +67,16 @@ public class ReflectionFieldLevel {
 			 testValues = TestValuesFactory.createTestValuesObject(typeClass);
 		 }
 	
+		if(testValues != null){
+			testValues.setField(field);
+		}
 		return testValues;
 	}
 
-	private static TestValues<String> createTestValues(StringTestValue stringTestValue) {
+
+
+	
+	protected static TestValues<String> createTestValues(StringTestValue stringTestValue) {
 		TestValues<String> testValues = new TestValues<String>();
 		if(stringTestValue != null) {
 			String[] assignValues = stringTestValue.assignValues();
@@ -85,7 +91,7 @@ public class ReflectionFieldLevel {
 		return testValues;
 	}
 	
-	private static TestValues<Boolean> createTestValues(BooleanTestValue booleanTestValue) {
+	protected static TestValues<Boolean> createTestValues(BooleanTestValue booleanTestValue) {
 		TestValues<Boolean> testValues = new TestValues<Boolean>();
 		if(booleanTestValue != null) {
 			boolean[] assignValues = booleanTestValue.assignValues();
@@ -103,7 +109,7 @@ public class ReflectionFieldLevel {
 		return testValues;
 	}
 	
-	private static TestValues<Byte> createTestValues(ByteTestValue byteTestValue) {
+	protected static TestValues<Byte> createTestValues(ByteTestValue byteTestValue) {
 		TestValues<Byte> testValues = new TestValues<Byte>();
 		if(byteTestValue != null) {
 			byte[] assignValues = byteTestValue.assignValues();
@@ -121,7 +127,7 @@ public class ReflectionFieldLevel {
 		return testValues;
 	}
 	
-	private static TestValues<Character> createTestValues(CharTestValue charTestValue) {
+	protected static TestValues<Character> createTestValues(CharTestValue charTestValue) {
 		TestValues<Character> testValues = new TestValues<Character>();
 		if(charTestValue != null) {
 			char[] assignValues = charTestValue.assignValues();
@@ -139,7 +145,7 @@ public class ReflectionFieldLevel {
 		return testValues;
 	}
 	
-	private static TestValues<Double> createTestValues(DoubleTestValue doubleTestValue) {
+	protected static TestValues<Double> createTestValues(DoubleTestValue doubleTestValue) {
 		TestValues<Double> testValues = new TestValues<Double>();
 		if(doubleTestValue != null) {
 			double[] assignValues = doubleTestValue.assignValues();
@@ -157,7 +163,7 @@ public class ReflectionFieldLevel {
 		return testValues;
 	}
 	
-	private static TestValues<Float> createTestValues(FloatTestValue floatTestValue) {
+	protected static TestValues<Float> createTestValues(FloatTestValue floatTestValue) {
 		TestValues<Float> testValues = new TestValues<Float>();
 		if(floatTestValue != null) {
 			float[] assignValues = floatTestValue.assignValues();
@@ -175,7 +181,7 @@ public class ReflectionFieldLevel {
 		return testValues;
 	}
 
-	private static TestValues<Integer> createTestValues(IntTestValue intTestValue) {
+	protected static TestValues<Integer> createTestValues(IntTestValue intTestValue) {
 		TestValues<Integer> testValues = new TestValues<Integer>();
 		if(intTestValue != null) {
 			int[] assignValues = intTestValue.assignValues();
@@ -193,7 +199,7 @@ public class ReflectionFieldLevel {
 		return testValues;
 	}
 	
-	private static TestValues<Long> createTestValues(LongTestValue longTestValue) {
+	protected static TestValues<Long> createTestValues(LongTestValue longTestValue) {
 		TestValues<Long> testValues = new TestValues<Long>();
 		if(longTestValue != null) {
 			long[] assignValues = longTestValue.assignValues();
@@ -211,7 +217,7 @@ public class ReflectionFieldLevel {
 		return testValues;
 	}
 	
-	private static TestValues<Short> createTestValues(ShortTestValue shortTestValue) {
+	protected static TestValues<Short> createTestValues(ShortTestValue shortTestValue) {
 		TestValues<Short> testValues = new TestValues<Short>();
 		if(shortTestValue != null) {
 			short[] assignValues = shortTestValue.assignValues();
@@ -228,6 +234,7 @@ public class ReflectionFieldLevel {
 		}
 		return testValues;
 	}
+
 }
 
 

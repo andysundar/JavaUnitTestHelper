@@ -11,15 +11,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.pojotester.annotation.fieldmethod.BooleanTestValue;
-import org.pojotester.annotation.fieldmethod.ByteTestValue;
-import org.pojotester.annotation.fieldmethod.CharTestValue;
-import org.pojotester.annotation.fieldmethod.DoubleTestValue;
-import org.pojotester.annotation.fieldmethod.FloatTestValue;
-import org.pojotester.annotation.fieldmethod.IntTestValue;
-import org.pojotester.annotation.fieldmethod.LongTestValue;
-import org.pojotester.annotation.fieldmethod.ShortTestValue;
-import org.pojotester.annotation.fieldmethod.StringTestValue;
+import org.pojotester.annotation.field.BooleanTestValue;
+import org.pojotester.annotation.field.ByteTestValue;
+import org.pojotester.annotation.field.CharTestValue;
+import org.pojotester.annotation.field.DoubleTestValue;
+import org.pojotester.annotation.field.FloatTestValue;
+import org.pojotester.annotation.field.IntTestValue;
+import org.pojotester.annotation.field.LongTestValue;
+import org.pojotester.annotation.field.ShortTestValue;
+import org.pojotester.annotation.field.StringTestValue;
 
 public abstract class TestValuesFactory {
 
