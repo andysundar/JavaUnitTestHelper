@@ -11,6 +11,7 @@ public class PackageScanTest {
 
 	@Test
 	public void testDetermineRootDir() throws Exception {
+		String []packagesToScan = {"org.pojotester.pack.**.mypack.MyClass0*.class", "org.pojotester.**.scan.mypack.dto"};
 		Set<Class<?>> classSet = PackageScan.getClasses(packagesToScan);
 		assertNotNull(classSet);
 		assertFalse(classSet.isEmpty());
