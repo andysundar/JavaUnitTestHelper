@@ -15,8 +15,8 @@
  ******************************************************************************/
 package org.pojotester.pack.scan;
 
-import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -30,11 +30,12 @@ import org.pojotester.utils.ClassUtilities;
 
 public final class PackageScan {
 	
-	private static final char PATH_SEPARATOR_CHAR = File.separatorChar;
+	private static final char PATH_SEPARATOR_CHAR = '/'; //File.separatorChar;
 	private static final char WILDCARD_CHAR = '*';
-	private static final String PATH_SEPARATOR = File.separator;
-	private static final String DOT = ".";
+	private static final String PATH_SEPARATOR = "/";//File.separator;
+	private static final String DOT = "\\.";
 	private static final String CLASS_FILE_SUFFIX = ".class";
+	private static final String CLASS_SUFFIX = "class";
 	
 	public static Set<Class<?>> getClasses(final String... packagesToScan){
 		Set<Class<?>> classSet = Collections.emptySet();
@@ -75,7 +76,7 @@ public final class PackageScan {
 			}
 			endIndex = indexOfWildcard - endIndex;
 			char[] rootDirChars = Arrays.copyOfRange(sources, 0, endIndex);
-			rootDirectory = "" + rootDirChars;
+			rootDirectory = new String(rootDirChars);
 		}
 		
 		return rootDirectory;
@@ -94,12 +95,11 @@ public final class PackageScan {
 	
 	private static String processLocations(String location) {
 		location = location.replaceAll(DOT, PATH_SEPARATOR);
-		String pathSeparatorClassSuffix = PATH_SEPARATOR + CLASS_FILE_SUFFIX;
-		String dotSeparatorClassSuffix = DOT + CLASS_FILE_SUFFIX;
+		String pathSeparatorClassSuffix = PATH_SEPARATOR + CLASS_SUFFIX;
 		if(location.endsWith(pathSeparatorClassSuffix)){
 			int endIndex = location.length() - pathSeparatorClassSuffix.length();
 			location = location.substring(0, endIndex);
-			location += dotSeparatorClassSuffix;
+			location += CLASS_FILE_SUFFIX;
 		}
 		if(!location.endsWith(CLASS_FILE_SUFFIX)){
 			// When path end with *.* instead of *.class
@@ -117,13 +117,16 @@ public final class PackageScan {
 	}
 	
 	private static Set<String> findClassFile(String rootDirectory, String patternString) {
-		Path startDirectory = Paths.get(rootDirectory);
+		ClassLoader classLoader = ClassUtilities.getDefaultClassLoader();
 		Finder visitor = new Finder(patternString);
+		
 		try {
+			Path startDirectory = Paths.get(classLoader.getResource(rootDirectory).toURI());
 			Files.walkFileTree(startDirectory, visitor);
-		} catch (IOException e) {
+		} catch (URISyntaxException | IOException e) {
 			e.printStackTrace();
 		}
+		
 		Set<String> classFileSet = visitor.getMactingSet();
 		return classFileSet;
 	}

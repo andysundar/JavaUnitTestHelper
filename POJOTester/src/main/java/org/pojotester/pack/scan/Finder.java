@@ -27,6 +27,7 @@ class Finder  extends SimpleFileVisitor<Path> {
     	 boolean flag = false;
          Path name = file.getFileName();
          if (name != null && matcher.matches(name)) {
+        	 System.out.println(name.toString());
         	 flag = classFileSet.add(name.toString());
          }
          return flag;
