@@ -44,7 +44,7 @@ public final class PackageScan {
 			for(String location : packagesToScan){
 				location = processLocations(location);
 				String rootDirectory = determineRootDirectory(location);
-				String patternString  = location.substring(rootDirectory.length());
+				String patternString  = location.substring((rootDirectory.length() + 1));
 				if(patternString.isEmpty()){
 					// When exact path is given [e.g. mypack.MyClass.class]
 					loadClassAndAddItToSet(classSet, rootDirectory);
