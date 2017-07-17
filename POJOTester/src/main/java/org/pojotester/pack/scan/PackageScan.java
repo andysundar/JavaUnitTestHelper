@@ -16,16 +16,17 @@
 package org.pojotester.pack.scan;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.net.URL;
+import java.nio.file.DirectoryIteratorException;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -34,7 +35,6 @@ import org.pojotester.utils.ClassUtilities;
 
 public final class PackageScan {
 	
-	private static final String WILDCARD_REGX = "**";
 	private static final char PATH_SEPARATOR_CHAR = '/'; //File.separatorChar;
 	private static final char WILDCARD_CHAR = '*';
 	private static final String PATH_SEPARATOR = "/";//File.separator;
@@ -42,41 +42,28 @@ public final class PackageScan {
 	private static final String CLASS_FILE_SUFFIX = ".class";
 	private static final String CLASS_SUFFIX = "class";
 	
-	public static Set<Class<?>> getClasses(final String... packagesToScan){
+	public Set<Class<?>> getClasses(final String... packagesToScan){
 		Set<Class<?>> classSet = Collections.emptySet();
 		if(packagesToScan != null){
 			classSet = new HashSet<Class<?>>();
 			for(String location : packagesToScan){
 				location = processLocations(location);
 				String rootDirectory = determineRootDirectory(location);
-				String patternString  = location.substring((rootDirectory.length() + 1));
+				String patternString  = location.substring(rootDirectory.length());
 				if(patternString.isEmpty()){
 					// When exact path is given [e.g. mypack.MyClass.class]
 					loadClassAndAddItToSet(classSet, rootDirectory);
 				}  else {
 					// Goto root directory and match pattern to search directories/files [e.g. mypack.**.My*.class, mypack.**.MyClass.class]
-					String tempArray[] = patternString.split(PATH_SEPARATOR);
-					List<String> patterns = new LinkedList<String>();
-					for(String temp : tempArray){
-						if(!WILDCARD_REGX.endsWith(temp)){
-							patterns.add(temp);
-						}
+					List<String> patterns = Collections.emptyList();
+					String[] patternStrings = patternString.split(PATH_SEPARATOR);
+					for(String pattern : patternStrings){
+						
 					}
-					tempArray = null;
-					Set<String> classFileSet = Collections.emptySet();
-					ClassLoader classLoader = ClassUtilities.getDefaultClassLoader();
-					URL url = classLoader.getResource(rootDirectory);
-					
-//					Path startDirectory = null;
-//					try {
-//						startDirectory = Paths.get(url.toURI());
-//					} catch (URISyntaxException e) {
-//						e.printStackTrace();
-//					}
-//					classFileSet = findClassFile(startDirectory, patterns);
-
-					
-					for(String className : classFileSet){
+					File packageDirectory = findPackageDirectory(rootDirectory, patterns);
+					Path path = packageDirectory.toPath();
+					Set<String> classFiles = findClassFiles(path, patternString);
+					for(String className : classFiles){
 						loadClassAndAddItToSet(classSet, className);
 					}
 				}
@@ -86,8 +73,7 @@ public final class PackageScan {
 		return classSet;
 	}
 
-
-	protected static String determineRootDirectory(final String location){
+	protected String determineRootDirectory(final String location){
 		char[] sources = location.toCharArray();
 		int endIndex = 0;
 		String rootDirectory = location;
@@ -108,7 +94,7 @@ public final class PackageScan {
 		return rootDirectory;
 	}
 
-	private static int indexofWildcardChar(char[] sources) {
+	private int indexofWildcardChar(char[] sources) {
 		int indexOfWildcard = 0;
 		for(char chr : sources){
 			if(chr == WILDCARD_CHAR){
@@ -119,7 +105,7 @@ public final class PackageScan {
 		return indexOfWildcard;
 	}
 	
-	private static String processLocations(String location) {
+	private String processLocations(String location) {
 		location = location.replaceAll(DOT, PATH_SEPARATOR);
 		String pathSeparatorClassSuffix = PATH_SEPARATOR + CLASS_SUFFIX;
 		if(location.endsWith(pathSeparatorClassSuffix)){
@@ -142,17 +128,35 @@ public final class PackageScan {
 		return location;
 	}
 	
-	private static Set<String> findClassFile(Path startDirectory, List<String> patterns) {
-		Finder visitor = new Finder(patterns);
+	private File findPackageDirectory(String rootDirectory, List<String> patterns) {
+		ClassLoader classLoader = ClassUtilities.getDefaultClassLoader();
+		DirectoryFinder visitor = new DirectoryFinder(patterns);
 		
 		try {
+			Path startDirectory = Paths.get(classLoader.getResource(rootDirectory).toURI());
 			Files.walkFileTree(startDirectory, visitor);
-		} catch (IOException e) {
+		} catch (URISyntaxException | IOException e) {
 			e.printStackTrace();
 		}
 		
-		Set<String> classFileSet = visitor.getMactingSet();
-		return classFileSet;
+		File packageDirectory = visitor.getPackage();
+		return packageDirectory;
+	}
+	
+	private Set<String> findClassFiles(Path dir, String patternString) {
+		Set<String> classFiles = Collections.emptySet();
+		try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir, patternString)){
+			classFiles = new HashSet<String>();
+			for(Path path : stream){
+				File file = path.toFile();
+				if(file.isFile()){
+					classFiles.add(file.getAbsolutePath());
+				}
+			}
+		} catch (DirectoryIteratorException | IOException ex) {
+	         ex.printStackTrace();
+	       }
+		return classFiles;
 	}
 	
 	private static String getQualifiedClassName(String className) {
@@ -162,8 +166,8 @@ public final class PackageScan {
 		return className;
 	}
 
-	private static void loadClassAndAddItToSet(Set<Class<?>> classSet, String rootDirectory) {
-		String className = getQualifiedClassName(rootDirectory);
+	private static void loadClassAndAddItToSet(Set<Class<?>> classSet, String classNamePath) {
+		String className = getQualifiedClassName(classNamePath);
 		Class<?> clazz = ClassUtilities.loadClass(className);
 		if(clazz != null) {
 		    boolean ignoreThisClass = ReflectionClassLevel.ignoreClass(clazz);
@@ -172,25 +176,5 @@ public final class PackageScan {
 			}
 		}
 	}
-	
-	public static Set<String> walk( String path , String pattern) {
-		Set<String> result =  Collections.emptySet();
-        File root = new File( path );
-        String[] dirPaths = root.list();
-
-        if (dirPaths != null) {
-        	result = new LinkedHashSet<String>();
-        	for(String dirPath : dirPaths){
-        		File file = new File(dirPath);
-        		if(pattern.endsWith(CLASS_FILE_SUFFIX) && file.isFile() && file.getName().matches(pattern)){
-        			result.add(file.getAbsolutePath());
-        		} else if(file.isDirectory()){
-        			
-        		}
-        	}
-        }
-
-       
-         return result;
-    }
+		
 }
