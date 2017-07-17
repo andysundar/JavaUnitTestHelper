@@ -16,9 +16,10 @@
 package org.pojotester.pack.scan;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.DirectoryIteratorException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -27,6 +28,7 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -37,34 +39,62 @@ public final class PackageScan {
 	
 	private static final char PATH_SEPARATOR_CHAR = '/'; //File.separatorChar;
 	private static final char WILDCARD_CHAR = '*';
+	private static final String WILDCARD_REGX = "**";
 	private static final String PATH_SEPARATOR = "/";//File.separator;
 	private static final String DOT = "\\.";
 	private static final String CLASS_FILE_SUFFIX = ".class";
 	private static final String CLASS_SUFFIX = "class";
+	private static final String ILLEGAL_PACKAGE = "Package cannot start with " + WILDCARD_REGX ;
 	
 	public Set<Class<?>> getClasses(final String... packagesToScan){
 		Set<Class<?>> classSet = Collections.emptySet();
 		if(packagesToScan != null){
 			classSet = new HashSet<Class<?>>();
 			for(String location : packagesToScan){
+				if(location.startsWith(WILDCARD_REGX)){
+					throw new IllegalArgumentException(ILLEGAL_PACKAGE + " [ " + location + " ]");
+				}
+				String startPackage = location.split(DOT)[0];
+			
 				location = processLocations(location);
 				String rootDirectory = determineRootDirectory(location);
-				String patternString  = location.substring(rootDirectory.length());
+				String patternString  = "";
+				if(!location.equals(rootDirectory)){
+					patternString  = location.substring(rootDirectory.length() + 1);
+				} else {
+					if(!rootDirectory.endsWith(CLASS_FILE_SUFFIX)){
+						patternString  = WILDCARD_CHAR + CLASS_FILE_SUFFIX;
+					}
+				}
+				
 				if(patternString.isEmpty()){
 					// When exact path is given [e.g. mypack.MyClass.class]
-					loadClassAndAddItToSet(classSet, rootDirectory);
+					String binaryClassName = getQualifiedClassName(startPackage, rootDirectory);
+					Class<?> clazz = loadClassAndAddItToSet(binaryClassName);
+					if(clazz != null){
+						classSet.add(clazz);
+					}
 				}  else {
 					// Goto root directory and match pattern to search directories/files [e.g. mypack.**.My*.class, mypack.**.MyClass.class]
-					List<String> patterns = Collections.emptyList();
+					List<String> patterns = new LinkedList<String>();
 					String[] patternStrings = patternString.split(PATH_SEPARATOR);
+					String classFilePattern = WILDCARD_CHAR + CLASS_FILE_SUFFIX;
 					for(String pattern : patternStrings){
-						
+						if(pattern.endsWith(CLASS_FILE_SUFFIX)){
+							classFilePattern = pattern;
+						} else if(!WILDCARD_REGX.equals(pattern)){
+							patterns.add(pattern);
+						} 
 					}
 					File packageDirectory = findPackageDirectory(rootDirectory, patterns);
 					Path path = packageDirectory.toPath();
-					Set<String> classFiles = findClassFiles(path, patternString);
+					Set<String> classFiles = findClassFiles(path, classFilePattern);
 					for(String className : classFiles){
-						loadClassAndAddItToSet(classSet, className);
+						String binaryClassName = getQualifiedClassName(startPackage, className);
+						Class<?> clazz = loadClassAndAddItToSet(binaryClassName);
+						if(clazz != null){
+							classSet.add(clazz);
+						}
 					}
 				}
 				
@@ -130,16 +160,37 @@ public final class PackageScan {
 	
 	private File findPackageDirectory(String rootDirectory, List<String> patterns) {
 		ClassLoader classLoader = ClassUtilities.getDefaultClassLoader();
+		URL url = classLoader.getResource(rootDirectory);
+		URI uri = null;
+		File packageDirectory = null;
+		try {
+			uri = url.toURI();
+		} catch (URISyntaxException e1) {
+			e1.printStackTrace();
+		}
+		if(uri != null){
+			if(!patterns.isEmpty()){
+				packageDirectory = patternMaching(patterns, uri);
+			} else {
+				packageDirectory = new File(uri);
+			}
+			
+		} 
+		return packageDirectory;
+	}
+
+	private File patternMaching(List<String> patterns, URI uri) {
+		File packageDirectory;
 		DirectoryFinder visitor = new DirectoryFinder(patterns);
 		
 		try {
-			Path startDirectory = Paths.get(classLoader.getResource(rootDirectory).toURI());
+			Path startDirectory = Paths.get(uri);
 			Files.walkFileTree(startDirectory, visitor);
-		} catch (URISyntaxException | IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
-		File packageDirectory = visitor.getPackage();
+		packageDirectory = visitor.getPackage();
 		return packageDirectory;
 	}
 	
@@ -159,22 +210,29 @@ public final class PackageScan {
 		return classFiles;
 	}
 	
-	private static String getQualifiedClassName(String className) {
-		int endIndex = className.length() - CLASS_FILE_SUFFIX.length();
-		className = className.substring(0, endIndex);
-		className = className.replaceAll(PATH_SEPARATOR, DOT);
-		return className;
+	private String getQualifiedClassName(String startPackage, String classNamePath) {
+		int endIndex = classNamePath.length() - CLASS_FILE_SUFFIX.length();
+		int startIndex = classNamePath.indexOf(startPackage);
+		classNamePath = classNamePath.substring(startIndex, endIndex);
+		if(classNamePath.contains(File.separator)){
+			String separator = File.separator + File.separator ;
+			classNamePath = classNamePath.replaceAll(separator, DOT);
+		} else {
+			classNamePath = classNamePath.replaceAll(PATH_SEPARATOR, DOT);
+		}
+		
+		return classNamePath;
 	}
 
-	private static void loadClassAndAddItToSet(Set<Class<?>> classSet, String classNamePath) {
-		String className = getQualifiedClassName(classNamePath);
+	private Class<?> loadClassAndAddItToSet(String className) {
 		Class<?> clazz = ClassUtilities.loadClass(className);
 		if(clazz != null) {
 		    boolean ignoreThisClass = ReflectionClassLevel.ignoreClass(clazz);
-			if(!ignoreThisClass){
-				classSet.add(clazz);
+			if(ignoreThisClass){
+				clazz = null;
 			}
 		}
+		return clazz;
 	}
 		
 }
