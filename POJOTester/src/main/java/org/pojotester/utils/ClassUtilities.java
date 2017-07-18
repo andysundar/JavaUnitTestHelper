@@ -17,10 +17,14 @@ package org.pojotester.utils;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 
 import org.pojotester.log.PojoTesterLogger;
 import org.pojotester.mock.MockObject;
+import org.pojotester.reflection.annotation.ReflectionMethodLevel;
 
 public abstract class ClassUtilities {
 		
@@ -59,7 +63,12 @@ public abstract class ClassUtilities {
 			object = clazz.newInstance();
 		} catch (InstantiationException | IllegalAccessException e) {
 			PojoTesterLogger.debugMessage("Not able to initialize using default constructor of " + clazz.getName(), e);
-			object =  createObjectUsingOtherConstructor(clazz);
+			try {
+				object =  createObjectUsingOtherConstructor(clazz);
+			}catch(Exception ex){
+				PojoTesterLogger.debugMessage("Not able to initialize using other constructor of " + clazz.getName(), e);
+				object = createObjectUsingStaticMethod(clazz);
+			}
 		}
 		return object;
 	}
@@ -86,6 +95,23 @@ public abstract class ClassUtilities {
 					args[index] = mockObject.proxy();
 				}
 				index++;
+			}
+		}
+		return object;
+	}
+	
+	public static Object createObjectUsingStaticMethod(final Class<?> clazz) {
+		Object object = null;
+		Method []methods = clazz.getDeclaredMethods();
+		for(Method method : methods){
+			boolean isCreateMethod = ReflectionMethodLevel.isCreateMethod(method);
+			int methodModifier = method.getModifiers();
+			if(isCreateMethod && Modifier.isStatic(methodModifier) && Modifier.isPublic(methodModifier)){
+				try {
+					 object = method.invoke(null, null);
+				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 		return object;
