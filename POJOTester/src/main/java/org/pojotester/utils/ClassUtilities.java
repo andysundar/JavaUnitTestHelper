@@ -23,7 +23,7 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 
 import org.pojotester.log.PojoTesterLogger;
-import org.pojotester.mock.MockObject;
+import org.pojotester.object.mock.MockObject;
 import org.pojotester.reflection.annotation.ReflectionMethodLevel;
 
 public abstract class ClassUtilities {
