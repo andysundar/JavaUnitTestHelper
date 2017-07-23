@@ -12,14 +12,24 @@ public abstract class ReflectionMethodLevel {
 		boolean thisIsCreateMethod = method.isAnnotationPresent(CreateObjectMethod.class);
 		return thisIsCreateMethod;
 	}
-	
-	public static boolean isWriteMethod(final Method method){
-		boolean thisIsCreateMethod = method.isAnnotationPresent(WriteMethod.class);
-		return thisIsCreateMethod;
+		
+	public static String getFieldNameOfReadMethod(final Method method){
+		boolean thisIsReadMethod = method.isAnnotationPresent(ReadMethod.class);
+		String fieldName = null;
+		if(thisIsReadMethod){
+			ReadMethod readMethod = method.getDeclaredAnnotation(ReadMethod.class);
+			fieldName = readMethod.fieldName();
+		}
+		return fieldName;
 	}
 	
-	public static boolean isReadMethod(final Method method){
-		boolean thisIsCreateMethod = method.isAnnotationPresent(ReadMethod.class);
-		return thisIsCreateMethod;
+	public static String getFieldNameOfWriteMethod(final Method method){
+		boolean thisIsWriteMethod = method.isAnnotationPresent(WriteMethod.class);
+		String fieldName = null;
+		if(thisIsWriteMethod){
+			WriteMethod writeMethod = method.getDeclaredAnnotation(WriteMethod.class);
+			fieldName = writeMethod.fieldName();
+		}
+		return fieldName;
 	}
 }
