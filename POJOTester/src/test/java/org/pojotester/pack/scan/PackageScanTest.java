@@ -21,7 +21,7 @@ public class PackageScanTest {
 	public void testDetermineRootDir() throws Exception { 
 		String []packagesToScan = {
 									"org.pojotester.pack.scan1.mypack1.MyClass04.class",
-									"org.pojotester.pack.**.mypack.MyClass0*.class", 
+									"org.*tester.pack.**.mypack.MyClass0*.class", 
 									"org.pojotester.pack.scan.mypack.dto"
 									};
 		Set<Class<?>> classSet = packageScan.getClasses(packagesToScan);
