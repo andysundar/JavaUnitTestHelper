@@ -1,6 +1,5 @@
 package org.pojotester.test.values;
 
-import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.Instant;
@@ -11,73 +10,63 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.pojotester.annotation.field.BooleanTestValue;
-import org.pojotester.annotation.field.ByteTestValue;
-import org.pojotester.annotation.field.CharTestValue;
-import org.pojotester.annotation.field.DoubleTestValue;
-import org.pojotester.annotation.field.FloatTestValue;
-import org.pojotester.annotation.field.IntTestValue;
-import org.pojotester.annotation.field.LongTestValue;
-import org.pojotester.annotation.field.ShortTestValue;
-import org.pojotester.annotation.field.StringTestValue;
-
 public abstract class TestValuesFactory {
 
-	public static TestValues<?> createTestValuesObject(final Class<?> typeClass){
-		 TestValues<?>  testValues = null;
+	public static TestConfigurations<?> createTestValuesObject(final Class<?> typeClass){
+		 TestConfigurations<?>  testValues = null;
 		 if(typeClass == Boolean.class || typeClass == boolean.class 
 				 || typeClass == Boolean[].class || typeClass == boolean[].class){
-			 TestValues<Boolean> testValuesBoolean = new TestValues<Boolean>();
+			 TestConfigurations<Boolean> testValuesBoolean = new TestConfigurations<Boolean>();
 			
 		 } else  if(typeClass == Byte.class || typeClass == byte.class 
 				 || typeClass == Byte[].class || typeClass == byte[].class){
-			 testValues = new TestValues<Byte>();
+			 testValues = new TestConfigurations<Byte>();
 		 } else  if(typeClass == Character.class || typeClass == char.class 
 				 || typeClass == Character[].class || typeClass == char[].class){
-			 testValues = new TestValues<Character>();
+			 testValues = new TestConfigurations<Character>();
 		 }  else  if(typeClass == Double.class || typeClass == double.class
 				 || typeClass == Double[].class || typeClass == double[].class){
-			 testValues = new TestValues<Double>();
+			 testValues = new TestConfigurations<Double>();
 		 } else  if(typeClass == Float.class || typeClass == float.class
 				 || typeClass == Float[].class || typeClass == float[].class){
-			 testValues = new TestValues<Float>();
+			 testValues = new TestConfigurations<Float>();
 		 } else  if(typeClass == Integer.class || typeClass == int.class
 				 || typeClass == Integer[].class || typeClass == int[].class){
-			 testValues = new TestValues<Integer>();
+			 testValues = new TestConfigurations<Integer>();
 		 } else  if(typeClass == Long.class || typeClass == long.class
 				 || typeClass == Long[].class || typeClass == long[].class){
-			 testValues = new TestValues<Long>();
+			 testValues = new TestConfigurations<Long>();
 		 } else  if(typeClass == Short.class || typeClass == short.class
 				 || typeClass == Short[].class || typeClass == short[].class){
-			 testValues = new TestValues<Short>();
+			 testValues = new TestConfigurations<Short>();
 		 } else  if(typeClass == String.class || typeClass == String[].class){
-			 testValues = new TestValues<String>();
+			 testValues = new TestConfigurations<String>();
 		 } else  if(typeClass == java.util.Date.class || typeClass == java.util.Date[].class){
-			 testValues = new TestValues<java.util.Date>();
+			 testValues = new TestConfigurations<java.util.Date>();
 		 } else  if(typeClass == java.sql.Date.class || typeClass == java.sql.Date[].class){
-			 testValues = new TestValues<java.sql.Date>();
+			 testValues = new TestConfigurations<java.sql.Date>();
 		 } else  if(typeClass == java.util.Calendar.class || typeClass == java.util.Calendar[].class){
-			 testValues = new TestValues<java.util.Calendar>();
+			 testValues = new TestConfigurations<java.util.Calendar>();
 		 } else  if(typeClass == LocalDate.class || typeClass == LocalDate[].class){
-			 testValues = new TestValues<LocalDate>();
+			 testValues = new TestConfigurations<LocalDate>();
 		 } else  if(typeClass == LocalTime.class || typeClass == LocalTime[].class){
-			 testValues = new TestValues<LocalTime>();
+			 testValues = new TestConfigurations<LocalTime>();
 		 } else  if(typeClass == LocalDateTime.class || typeClass == LocalDateTime[].class){
-			 testValues = new TestValues<LocalDateTime>();
+			 testValues = new TestConfigurations<LocalDateTime>();
 		 } else  if(typeClass == Instant.class || typeClass == Instant[].class){
-			 testValues = new TestValues<Instant>();
+			 testValues = new TestConfigurations<Instant>();
 		 } else  if(typeClass == BigDecimal.class || typeClass == BigDecimal[].class){
-			 testValues = new TestValues<BigDecimal>();
+			 testValues = new TestConfigurations<BigDecimal>();
 		 } else  if(typeClass == BigInteger.class || typeClass == BigInteger[].class){
-			 testValues = new TestValues<BigInteger>();
+			 testValues = new TestConfigurations<BigInteger>();
 		 } else  if(typeClass == Set.class || typeClass.getSuperclass() == Set.class){
-			 testValues = new TestValues<Set<?>>();
+			 testValues = new TestConfigurations<Set<?>>();
 		 } else  if(typeClass == List.class || typeClass.getSuperclass() == List.class){
-			 testValues = new TestValues<List<?>>();
+			 testValues = new TestConfigurations<List<?>>();
 		 } else  if(typeClass == Map.class || typeClass.getSuperclass() == Map.class){
-			 testValues = new TestValues<Map<?, ?>>();
+			 testValues = new TestConfigurations<Map<?, ?>>();
 		 } else {
-			 testValues = new TestValues<Object>();
+			 testValues = new TestConfigurations<Object>();
 		 }
 		 return testValues;
 	}

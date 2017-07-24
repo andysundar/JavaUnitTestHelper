@@ -12,7 +12,7 @@ import org.pojotester.annotation.field.IntTestValue;
 import org.pojotester.annotation.field.LongTestValue;
 import org.pojotester.annotation.field.ShortTestValue;
 import org.pojotester.annotation.field.StringTestValue;
-import org.pojotester.test.values.TestValues;
+import org.pojotester.test.values.TestConfigurations;
 import org.pojotester.test.values.TestValuesFactory;
 import org.pojotester.type.PrimitiveToObjectArray;
 
@@ -23,9 +23,9 @@ public  abstract class ReflectionFieldLevel {
 		return isFieldIgnored;
 	}
 	
-	public static TestValues<?> assignValues(final Field field){
+	public static TestConfigurations<?> assignValues(final Field field){
 		Class<?> typeClass = field.getType();
-		TestValues<?> testValues = null;
+		TestConfigurations<?> testValues = null;
 		
 		
 		if(typeClass == Boolean.class || typeClass == boolean.class 
@@ -76,8 +76,8 @@ public  abstract class ReflectionFieldLevel {
 
 
 	
-	protected static TestValues<String> createTestValues(StringTestValue stringTestValue) {
-		TestValues<String> testValues = new TestValues<String>();
+	protected static TestConfigurations<String> createTestValues(StringTestValue stringTestValue) {
+		TestConfigurations<String> testValues = new TestConfigurations<String>();
 		if(stringTestValue != null) {
 			String[] assignValues = stringTestValue.assignValues();
 			String[] expectedValues = stringTestValue.expectedValues();
@@ -91,8 +91,8 @@ public  abstract class ReflectionFieldLevel {
 		return testValues;
 	}
 	
-	protected static TestValues<Boolean> createTestValues(BooleanTestValue booleanTestValue) {
-		TestValues<Boolean> testValues = new TestValues<Boolean>();
+	protected static TestConfigurations<Boolean> createTestValues(BooleanTestValue booleanTestValue) {
+		TestConfigurations<Boolean> testValues = new TestConfigurations<Boolean>();
 		if(booleanTestValue != null) {
 			boolean[] assignValues = booleanTestValue.assignValues();
 			boolean[] expectedValues = booleanTestValue.expectedValues();
@@ -109,8 +109,8 @@ public  abstract class ReflectionFieldLevel {
 		return testValues;
 	}
 	
-	protected static TestValues<Byte> createTestValues(ByteTestValue byteTestValue) {
-		TestValues<Byte> testValues = new TestValues<Byte>();
+	protected static TestConfigurations<Byte> createTestValues(ByteTestValue byteTestValue) {
+		TestConfigurations<Byte> testValues = new TestConfigurations<Byte>();
 		if(byteTestValue != null) {
 			byte[] assignValues = byteTestValue.assignValues();
 			byte[] expectedValues = byteTestValue.expectedValues();
@@ -127,8 +127,8 @@ public  abstract class ReflectionFieldLevel {
 		return testValues;
 	}
 	
-	protected static TestValues<Character> createTestValues(CharTestValue charTestValue) {
-		TestValues<Character> testValues = new TestValues<Character>();
+	protected static TestConfigurations<Character> createTestValues(CharTestValue charTestValue) {
+		TestConfigurations<Character> testValues = new TestConfigurations<Character>();
 		if(charTestValue != null) {
 			char[] assignValues = charTestValue.assignValues();
 			char[] expectedValues = charTestValue.expectedValues();
@@ -145,8 +145,8 @@ public  abstract class ReflectionFieldLevel {
 		return testValues;
 	}
 	
-	protected static TestValues<Double> createTestValues(DoubleTestValue doubleTestValue) {
-		TestValues<Double> testValues = new TestValues<Double>();
+	protected static TestConfigurations<Double> createTestValues(DoubleTestValue doubleTestValue) {
+		TestConfigurations<Double> testValues = new TestConfigurations<Double>();
 		if(doubleTestValue != null) {
 			double[] assignValues = doubleTestValue.assignValues();
 			double[] expectedValues = doubleTestValue.expectedValues();
@@ -163,8 +163,8 @@ public  abstract class ReflectionFieldLevel {
 		return testValues;
 	}
 	
-	protected static TestValues<Float> createTestValues(FloatTestValue floatTestValue) {
-		TestValues<Float> testValues = new TestValues<Float>();
+	protected static TestConfigurations<Float> createTestValues(FloatTestValue floatTestValue) {
+		TestConfigurations<Float> testValues = new TestConfigurations<Float>();
 		if(floatTestValue != null) {
 			float[] assignValues = floatTestValue.assignValues();
 			float[] expectedValues = floatTestValue.expectedValues();
@@ -181,8 +181,8 @@ public  abstract class ReflectionFieldLevel {
 		return testValues;
 	}
 
-	protected static TestValues<Integer> createTestValues(IntTestValue intTestValue) {
-		TestValues<Integer> testValues = new TestValues<Integer>();
+	protected static TestConfigurations<Integer> createTestValues(IntTestValue intTestValue) {
+		TestConfigurations<Integer> testValues = new TestConfigurations<Integer>();
 		if(intTestValue != null) {
 			int[] assignValues = intTestValue.assignValues();
 			int[] expectedValues = intTestValue.expectedValues();
@@ -199,8 +199,8 @@ public  abstract class ReflectionFieldLevel {
 		return testValues;
 	}
 	
-	protected static TestValues<Long> createTestValues(LongTestValue longTestValue) {
-		TestValues<Long> testValues = new TestValues<Long>();
+	protected static TestConfigurations<Long> createTestValues(LongTestValue longTestValue) {
+		TestConfigurations<Long> testValues = new TestConfigurations<Long>();
 		if(longTestValue != null) {
 			long[] assignValues = longTestValue.assignValues();
 			long[] expectedValues = longTestValue.expectedValues();
@@ -217,8 +217,8 @@ public  abstract class ReflectionFieldLevel {
 		return testValues;
 	}
 	
-	protected static TestValues<Short> createTestValues(ShortTestValue shortTestValue) {
-		TestValues<Short> testValues = new TestValues<Short>();
+	protected static TestConfigurations<Short> createTestValues(ShortTestValue shortTestValue) {
+		TestConfigurations<Short> testValues = new TestConfigurations<Short>();
 		if(shortTestValue != null) {
 			short[] assignValues = shortTestValue.assignValues();
 			short[] expectedValues = shortTestValue.expectedValues();
