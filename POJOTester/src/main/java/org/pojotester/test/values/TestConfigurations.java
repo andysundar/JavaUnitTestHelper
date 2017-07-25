@@ -16,7 +16,7 @@ public class TestConfigurations<T> {
 	private Method readMethod;
 	private Method writeMethod;
 
-	public List<AssertObject<T>> assertAssignedValues() {
+	public List<AssertObject> assertAssignedValues() {
 		if (field != null) {
 			field.setAccessible(true);
 		}
@@ -26,7 +26,7 @@ public class TestConfigurations<T> {
 		} else {
 			length = expectedValues.length;
 		}
-		List<AssertObject<T>> values = new LinkedList<>();
+		List<AssertObject> values = new LinkedList<>();
 		for (int index = 0; index < length; index++) {
 			AssertObject<T> assertObject = new AssertObject<>();
 			writeValue(assignedValues[index]);
