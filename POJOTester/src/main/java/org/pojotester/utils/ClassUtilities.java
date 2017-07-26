@@ -67,7 +67,6 @@ public abstract class ClassUtilities {
 				object =  createObjectUsingOtherConstructor(clazz);
 			}catch(Exception ex){
 				PojoTesterLogger.debugMessage("Not able to initialize using other constructor of " + clazz.getName(), e);
-				object = createObjectUsingStaticMethod(clazz);
 			}
 		}
 		return object;
@@ -100,20 +99,18 @@ public abstract class ClassUtilities {
 		return object;
 	}
 	
-	public static Object createObjectUsingStaticMethod(final Class<?> clazz) {
+	public static Object createObjectUsingStaticMethod(final Class<?> clazz, Method method) {
 		Object object = null;
-		Method []methods = clazz.getDeclaredMethods();
-		for(Method method : methods){
-			boolean isCreateMethod = ReflectionMethodLevel.isCreateMethod(method);
-			int methodModifier = method.getModifiers();
-			if(isCreateMethod && Modifier.isStatic(methodModifier) && Modifier.isPublic(methodModifier)){
-				try {
-					 object = method.invoke(null, null);
-				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-					e.printStackTrace();
-				}
+		boolean isCreateMethod = ReflectionMethodLevel.isCreateMethod(method);
+		int methodModifier = method.getModifiers();
+		if (isCreateMethod && Modifier.isStatic(methodModifier) && Modifier.isPublic(methodModifier)) {
+			try {
+				object = method.invoke(null, null);
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+				e.printStackTrace();
 			}
 		}
+
 		return object;
 	}
 	

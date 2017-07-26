@@ -6,17 +6,19 @@ import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.pojotester.utils.ClassUtilities;
+
 public class TestConfigurations<T> {
 
 	private Object object;
-
+	private Method createObjectMethod;
 	private Field field;
 	private T[] assignedValues;
 	private T[] expectedValues;
 	private Method readMethod;
 	private Method writeMethod;
 
-	public List<AssertObject> assertAssignedValues() {
+	public List<AssertObject> assertAssignedValues(Class<?> clazz) {
 		if (field != null) {
 			field.setAccessible(true);
 		}
@@ -29,6 +31,11 @@ public class TestConfigurations<T> {
 		List<AssertObject> values = new LinkedList<>();
 		for (int index = 0; index < length; index++) {
 			AssertObject<T> assertObject = new AssertObject<>();
+			if(createObjectMethod == null) {
+				object = ClassUtilities.createObject(clazz);
+			} else {
+				object = ClassUtilities.createObjectUsingStaticMethod(clazz, createObjectMethod);
+			}
 			writeValue(assignedValues[index]);
 			T returnedValue = readValue();
 			assertObject.setReturnedValue(returnedValue);
@@ -116,12 +123,12 @@ public class TestConfigurations<T> {
 		this.writeMethod = writeMethod;
 	}
 
-	public Object getObject() {
-		return object;
+	public Method getCreateObjectMethod() {
+		return createObjectMethod;
 	}
 
-	public void setObject(Object object) {
-		this.object = object;
+	public void setCreateObjectMethod(Method createObjectMethod) {
+		this.createObjectMethod = createObjectMethod;
 	}
 
 }
