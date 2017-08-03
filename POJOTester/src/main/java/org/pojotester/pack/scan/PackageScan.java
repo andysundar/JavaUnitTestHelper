@@ -61,11 +61,7 @@ public final class PackageScan {
 				String patternString  = "";
 				if(!location.equals(rootDirectory)){
 					patternString  = location.substring(rootDirectory.length() + 1);
-				} else {
-					if(!rootDirectory.endsWith(CLASS_FILE_SUFFIX)){
-						patternString  = WILDCARD_CHAR + CLASS_FILE_SUFFIX;
-					}
-				}
+				} 
 				
 				if(patternString.isEmpty()){
 					// When exact path is given [e.g. mypack.MyClass.class]

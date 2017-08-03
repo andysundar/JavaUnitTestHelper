@@ -53,7 +53,6 @@ class DirectoryFinder  extends SimpleFileVisitor<Path> {
     	 boolean flag = false;
          Path name = file.getFileName();
          if (name != null && matcher.matches(name)) {
-        	 System.out.println(name.toString());
         	 flag = true;
          }
          return flag;
