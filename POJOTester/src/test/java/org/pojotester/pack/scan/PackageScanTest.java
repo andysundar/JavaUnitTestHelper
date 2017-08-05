@@ -100,5 +100,13 @@ public class PackageScanTest {
 		assertTrue(classSet.isEmpty());
 		
 	}
+	
+	@Test
+	public void testDetermineRootDir_WhenClassMarkedIgnoredClass() { 
+		String []packagesToScan = { "org.pojotester.pack.scan.mypack.MyClass03.class"	};
+		Set<Class<?>> classSet = packageScan.getClasses(packagesToScan);
+		assertNotNull(classSet);
+		assertTrue(classSet.isEmpty());
+	}
 
 }
