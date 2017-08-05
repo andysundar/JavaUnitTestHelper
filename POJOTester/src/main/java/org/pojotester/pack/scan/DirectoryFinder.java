@@ -36,6 +36,7 @@ class DirectoryFinder  extends SimpleFileVisitor<Path> {
     private File directory;
     private String pattern = "*.class";
     private List<String> patterns;
+    private boolean postDirLock;
     
     public DirectoryFinder(List<String> patterns) {
     	this.patterns = Collections.emptyList();
@@ -61,9 +62,10 @@ class DirectoryFinder  extends SimpleFileVisitor<Path> {
      public File getPackage(){
     	 return directory;
      }
-          
-     @Override 
-     public FileVisitResult postVisitDirectory(Path dir, IOException exc){
+       
+     @Override
+     public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
+    	 postDirLock = false;
     	 if(patternsPresent && find(dir)){
     		 directory = dir.toFile();
     		 patternsPresent = (patterns != null && !patterns.isEmpty());
@@ -72,6 +74,14 @@ class DirectoryFinder  extends SimpleFileVisitor<Path> {
 				matcher = FileSystems.getDefault().getPathMatcher("glob:" + pattern);
 				patterns.remove(0);
 			}
+			postDirLock = true;
+    	 }
+    	 return CONTINUE;
+     }
+     @Override 
+     public FileVisitResult postVisitDirectory(Path dir, IOException exc){
+    	 if(patternsPresent && postDirLock){
+    		 
     		 return SKIP_SIBLINGS;
     	 }
 		return CONTINUE;
