@@ -16,8 +16,7 @@ public abstract class TestValuesFactory {
 		 TestConfigurations<?>  testValues = null;
 		 if(typeClass == Boolean.class || typeClass == boolean.class 
 				 || typeClass == Boolean[].class || typeClass == boolean[].class){
-			 TestConfigurations<Boolean> testValuesBoolean = new TestConfigurations<Boolean>();
-			
+			 testValues = new TestConfigurations<Boolean>();
 		 } else  if(typeClass == Byte.class || typeClass == byte.class 
 				 || typeClass == Byte[].class || typeClass == byte[].class){
 			 testValues = new TestConfigurations<Byte>();

@@ -3,10 +3,12 @@ package org.pojotester.test.values;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.pojotester.utils.ClassUtilities;
+import org.pojotester.utils.DefaultValueUtilities;
 
 public class TestConfigurations<T> {
 
@@ -22,27 +24,46 @@ public class TestConfigurations<T> {
 		if (field != null) {
 			field.setAccessible(true);
 		}
+
+		if(createObjectMethod == null) {
+			object = ClassUtilities.createObject(clazz);
+		} else {
+			object = ClassUtilities.createObjectUsingStaticMethod(clazz, createObjectMethod);
+		}
+		List<AssertObject> values = Collections.emptyList();
+		if(assignedValues != null){
+			values = populateAnnotatedValues();
+		} else {
+			values = new LinkedList<AssertObject>();
+			T object = (T) DefaultValueUtilities.getValueFromMap(field.getType());
+			AssertObject<T> assertObject = invokeReadWriteMethod(object, object);
+			values.add(assertObject);
+		}
+		return values;
+	}
+
+	private List<AssertObject> populateAnnotatedValues() {
+		List<AssertObject> values = new LinkedList<AssertObject>();
 		int length = 0;
 		if (assignedValues.length <= expectedValues.length) {
 			length = assignedValues.length;
 		} else {
 			length = expectedValues.length;
 		}
-		List<AssertObject> values = new LinkedList<>();
 		for (int index = 0; index < length; index++) {
-			AssertObject<T> assertObject = new AssertObject<>();
-			if(createObjectMethod == null) {
-				object = ClassUtilities.createObject(clazz);
-			} else {
-				object = ClassUtilities.createObjectUsingStaticMethod(clazz, createObjectMethod);
-			}
-			writeValue(assignedValues[index]);
-			T returnedValue = readValue();
-			assertObject.setReturnedValue(returnedValue);
-			assertObject.setExpectedValue(expectedValues[index]);
+			AssertObject<T> assertObject = invokeReadWriteMethod(assignedValues[index],expectedValues[index]);
 			values.add(assertObject);
 		}
 		return values;
+	}
+
+	private AssertObject<T> invokeReadWriteMethod(T assignedValue, T expectedValue) {
+		AssertObject<T> assertObject = new AssertObject<>();
+		writeValue(assignedValue);
+		T returnedValue = readValue();
+		assertObject.setReturnedValue(returnedValue);
+		assertObject.setExpectedValue(expectedValue);
+		return assertObject;
 	}
 
 	private void writeValue(T value) {

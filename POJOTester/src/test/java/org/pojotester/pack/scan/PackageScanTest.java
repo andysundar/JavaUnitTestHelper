@@ -14,7 +14,7 @@ import static org.junit.Assert.assertTrue;
 
 public class PackageScanTest {
 	
-	private final String CLASS_WITH_DOT = ".class"; 
+	private final static String CLASS_WITH_DOT = ".class"; 
 	private PackageScan  packageScan;
 	
 	@Rule

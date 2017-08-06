@@ -87,7 +87,7 @@ public  abstract class ReflectionFieldLevel {
 			
 			testValues.setAssignedValues(assignValues);
 			testValues.setExpectedValues(expectedValues);
-		}
+		} 
 		return testValues;
 	}
 	

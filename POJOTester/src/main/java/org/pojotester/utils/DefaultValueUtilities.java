@@ -115,5 +115,5 @@ public abstract class DefaultValueUtilities {
 	public static Object getValueFromMap(final Class<?> clazz){
 		return classValueMap.get(clazz);
 	}
-	
+		
 }
