@@ -6,7 +6,6 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -19,12 +18,11 @@ import org.pojotester.reflection.annotation.ReflectionFieldLevel;
 import org.pojotester.reflection.annotation.ReflectionMethodLevel;
 import org.pojotester.test.values.AssertObject;
 import org.pojotester.test.values.TestConfigurations;
-import org.pojotester.utils.DefaultValueUtilities;
 
 public class AssertObjectCreator {
 
-	public List<AssertObject> getAssertObjects(final String... packagesToScan) {
-		List<AssertObject> assertObjectList = new LinkedList<AssertObject>();
+	public List<AssertObject<?>> getAssertObjects(final String... packagesToScan) {
+		List<AssertObject<?>> assertObjectList = new LinkedList<AssertObject<?>>();
 		PackageScan packageScan = new PackageScan();
 		Set<Class<?>> uniqueClasses = packageScan.getClasses(packagesToScan);
 		for (Class<?> clazz : uniqueClasses) {
@@ -33,7 +31,7 @@ public class AssertObjectCreator {
 			Method createObjectMethod = findCreateObjectMethod(methods);
 			createTestConfigurationsFromIntospection(clazz, fieldAssertObjectMap, createObjectMethod);
 			createTestConfigurationsFromAnnotations(clazz, fieldAssertObjectMap, methods, createObjectMethod);
-			List<AssertObject> assertObjects = createAssertObject(clazz, fieldAssertObjectMap);
+			List<AssertObject<?>> assertObjects = createAssertObject(clazz, fieldAssertObjectMap);
 			assertObjectList.addAll(assertObjects);
 		}
 		return assertObjectList;
@@ -96,16 +94,16 @@ public class AssertObjectCreator {
 		}
 	}
 
-	private List<AssertObject> createAssertObject( Class<?> clazz,
+	private List<AssertObject<?>> createAssertObject( Class<?> clazz,
 			Map<String, TestConfigurations<?>> fieldAssertObjectMap) {
-		List<AssertObject> assertObjectList = Collections.emptyList();
+		List<AssertObject<?>> assertObjectList = Collections.emptyList();
 		Set<String> fieldNameSet = fieldAssertObjectMap.keySet();
 		if (fieldNameSet != null && !fieldNameSet.isEmpty()) {
-			assertObjectList = new LinkedList<AssertObject>();
+			assertObjectList = new LinkedList<AssertObject<?>>();
 			for (String fieldName : fieldNameSet) {
 				TestConfigurations<?> testConfigurations = fieldAssertObjectMap.get(fieldName);
 				if(testConfigurations != null){
-					List<AssertObject> assertObjects = testConfigurations.assertAssignedValues(clazz);
+					List<AssertObject<?>> assertObjects = testConfigurations.assertAssignedValues(clazz);
 					assertObjectList.addAll(assertObjects);
 				}
 			}

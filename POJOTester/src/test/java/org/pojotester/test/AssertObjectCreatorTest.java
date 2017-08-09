@@ -19,8 +19,8 @@ public class AssertObjectCreatorTest {
 	@Test
 	public void testGetAssertObjects() {
 		String []packagesToScan = {"org.*tester.pack.**.mypack"};
-		List<AssertObject> assertObjects = assertObjectCreator.getAssertObjects(packagesToScan);
-		for(AssertObject assertObject : assertObjects) {
+		List<AssertObject<?>> assertObjects = assertObjectCreator.getAssertObjects(packagesToScan);
+		for(AssertObject<?> assertObject : assertObjects) {
 			assertEquals(assertObject.getExpectedValue(), assertObject.getReturnedValue());
 		}
 	}

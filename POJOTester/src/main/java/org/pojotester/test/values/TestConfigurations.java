@@ -20,7 +20,7 @@ public class TestConfigurations<T> {
 	private Method readMethod;
 	private Method writeMethod;
 
-	public List<AssertObject> assertAssignedValues(Class<?> clazz) {
+	public List<AssertObject<?>> assertAssignedValues(Class<?> clazz) {
 		if (field != null) {
 			field.setAccessible(true);
 		}
@@ -30,11 +30,12 @@ public class TestConfigurations<T> {
 		} else {
 			object = ClassUtilities.createObjectUsingStaticMethod(clazz, createObjectMethod);
 		}
-		List<AssertObject> values = Collections.emptyList();
+		List<AssertObject<?>> values = Collections.emptyList();
 		if(assignedValues != null){
 			values = populateAnnotatedValues();
 		} else {
-			values = new LinkedList<AssertObject>();
+			values = new LinkedList<AssertObject<?>>();
+			@SuppressWarnings("unchecked")
 			T object = (T) DefaultValueUtilities.getValueFromMap(field.getType());
 			AssertObject<T> assertObject = invokeReadWriteMethod(object, object);
 			values.add(assertObject);
@@ -42,8 +43,8 @@ public class TestConfigurations<T> {
 		return values;
 	}
 
-	private List<AssertObject> populateAnnotatedValues() {
-		List<AssertObject> values = new LinkedList<AssertObject>();
+	private List<AssertObject<?>> populateAnnotatedValues() {
+		List<AssertObject<?>> values = new LinkedList<AssertObject<?>>();
 		int length = 0;
 		if (assignedValues.length <= expectedValues.length) {
 			length = assignedValues.length;
@@ -84,10 +85,10 @@ public class TestConfigurations<T> {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private T readValue() {
 		T returnValue = null;
 		if (readMethod != null) {
-			Object args[] = null;
 			try {
 				returnValue = (T) readMethod.invoke(object, null);
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
