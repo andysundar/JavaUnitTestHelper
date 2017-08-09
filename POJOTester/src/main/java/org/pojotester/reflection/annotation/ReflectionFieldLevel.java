@@ -12,9 +12,9 @@ import org.pojotester.annotation.field.IntTestValue;
 import org.pojotester.annotation.field.LongTestValue;
 import org.pojotester.annotation.field.ShortTestValue;
 import org.pojotester.annotation.field.StringTestValue;
-import org.pojotester.test.values.TestConfigurations;
+import org.pojotester.test.values.TestConfiguration;
 import org.pojotester.test.values.TestValuesFactory;
-import org.pojotester.type.PrimitiveToObjectArray;
+import org.pojotester.type.convertor.PrimitiveToObjectArray;
 
 public  abstract class ReflectionFieldLevel {
 
@@ -23,9 +23,9 @@ public  abstract class ReflectionFieldLevel {
 		return isFieldIgnored;
 	}
 	
-	public static TestConfigurations<?> assignValues(final Field field){
+	public static TestConfiguration<?> assignValues(final Field field){
 		Class<?> typeClass = field.getType();
-		TestConfigurations<?> testValues = null;
+		TestConfiguration<?> testValues = null;
 		
 		
 		if(typeClass == Boolean.class || typeClass == boolean.class 
@@ -76,8 +76,8 @@ public  abstract class ReflectionFieldLevel {
 
 
 	
-	protected static TestConfigurations<String> createTestValues(StringTestValue stringTestValue) {
-		TestConfigurations<String> testValues = new TestConfigurations<String>();
+	protected static TestConfiguration<String> createTestValues(StringTestValue stringTestValue) {
+		TestConfiguration<String> testValues = new TestConfiguration<String>();
 		if(stringTestValue != null) {
 			String[] assignValues = stringTestValue.assignValues();
 			String[] expectedValues = stringTestValue.expectedValues();
@@ -91,8 +91,8 @@ public  abstract class ReflectionFieldLevel {
 		return testValues;
 	}
 	
-	protected static TestConfigurations<Boolean> createTestValues(BooleanTestValue booleanTestValue) {
-		TestConfigurations<Boolean> testValues = new TestConfigurations<Boolean>();
+	protected static TestConfiguration<Boolean> createTestValues(BooleanTestValue booleanTestValue) {
+		TestConfiguration<Boolean> testValues = new TestConfiguration<Boolean>();
 		if(booleanTestValue != null) {
 			boolean[] assignValues = booleanTestValue.assignValues();
 			boolean[] expectedValues = booleanTestValue.expectedValues();
@@ -109,8 +109,8 @@ public  abstract class ReflectionFieldLevel {
 		return testValues;
 	}
 	
-	protected static TestConfigurations<Byte> createTestValues(ByteTestValue byteTestValue) {
-		TestConfigurations<Byte> testValues = new TestConfigurations<Byte>();
+	protected static TestConfiguration<Byte> createTestValues(ByteTestValue byteTestValue) {
+		TestConfiguration<Byte> testValues = new TestConfiguration<Byte>();
 		if(byteTestValue != null) {
 			byte[] assignValues = byteTestValue.assignValues();
 			byte[] expectedValues = byteTestValue.expectedValues();
@@ -127,8 +127,8 @@ public  abstract class ReflectionFieldLevel {
 		return testValues;
 	}
 	
-	protected static TestConfigurations<Character> createTestValues(CharTestValue charTestValue) {
-		TestConfigurations<Character> testValues = new TestConfigurations<Character>();
+	protected static TestConfiguration<Character> createTestValues(CharTestValue charTestValue) {
+		TestConfiguration<Character> testValues = new TestConfiguration<Character>();
 		if(charTestValue != null) {
 			char[] assignValues = charTestValue.assignValues();
 			char[] expectedValues = charTestValue.expectedValues();
@@ -145,8 +145,8 @@ public  abstract class ReflectionFieldLevel {
 		return testValues;
 	}
 	
-	protected static TestConfigurations<Double> createTestValues(DoubleTestValue doubleTestValue) {
-		TestConfigurations<Double> testValues = new TestConfigurations<Double>();
+	protected static TestConfiguration<Double> createTestValues(DoubleTestValue doubleTestValue) {
+		TestConfiguration<Double> testValues = new TestConfiguration<Double>();
 		if(doubleTestValue != null) {
 			double[] assignValues = doubleTestValue.assignValues();
 			double[] expectedValues = doubleTestValue.expectedValues();
@@ -163,8 +163,8 @@ public  abstract class ReflectionFieldLevel {
 		return testValues;
 	}
 	
-	protected static TestConfigurations<Float> createTestValues(FloatTestValue floatTestValue) {
-		TestConfigurations<Float> testValues = new TestConfigurations<Float>();
+	protected static TestConfiguration<Float> createTestValues(FloatTestValue floatTestValue) {
+		TestConfiguration<Float> testValues = new TestConfiguration<Float>();
 		if(floatTestValue != null) {
 			float[] assignValues = floatTestValue.assignValues();
 			float[] expectedValues = floatTestValue.expectedValues();
@@ -181,8 +181,8 @@ public  abstract class ReflectionFieldLevel {
 		return testValues;
 	}
 
-	protected static TestConfigurations<Integer> createTestValues(IntTestValue intTestValue) {
-		TestConfigurations<Integer> testValues = new TestConfigurations<Integer>();
+	protected static TestConfiguration<Integer> createTestValues(IntTestValue intTestValue) {
+		TestConfiguration<Integer> testValues = new TestConfiguration<Integer>();
 		if(intTestValue != null) {
 			int[] assignValues = intTestValue.assignValues();
 			int[] expectedValues = intTestValue.expectedValues();
@@ -199,8 +199,8 @@ public  abstract class ReflectionFieldLevel {
 		return testValues;
 	}
 	
-	protected static TestConfigurations<Long> createTestValues(LongTestValue longTestValue) {
-		TestConfigurations<Long> testValues = new TestConfigurations<Long>();
+	protected static TestConfiguration<Long> createTestValues(LongTestValue longTestValue) {
+		TestConfiguration<Long> testValues = new TestConfiguration<Long>();
 		if(longTestValue != null) {
 			long[] assignValues = longTestValue.assignValues();
 			long[] expectedValues = longTestValue.expectedValues();
@@ -217,8 +217,8 @@ public  abstract class ReflectionFieldLevel {
 		return testValues;
 	}
 	
-	protected static TestConfigurations<Short> createTestValues(ShortTestValue shortTestValue) {
-		TestConfigurations<Short> testValues = new TestConfigurations<Short>();
+	protected static TestConfiguration<Short> createTestValues(ShortTestValue shortTestValue) {
+		TestConfiguration<Short> testValues = new TestConfiguration<Short>();
 		if(shortTestValue != null) {
 			short[] assignValues = shortTestValue.assignValues();
 			short[] expectedValues = shortTestValue.expectedValues();

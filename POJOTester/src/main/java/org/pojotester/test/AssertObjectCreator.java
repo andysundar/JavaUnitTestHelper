@@ -17,7 +17,7 @@ import org.pojotester.pack.scan.PackageScan;
 import org.pojotester.reflection.annotation.ReflectionFieldLevel;
 import org.pojotester.reflection.annotation.ReflectionMethodLevel;
 import org.pojotester.test.values.AssertObject;
-import org.pojotester.test.values.TestConfigurations;
+import org.pojotester.test.values.TestConfiguration;
 
 public class AssertObjectCreator {
 
@@ -26,7 +26,7 @@ public class AssertObjectCreator {
 		PackageScan packageScan = new PackageScan();
 		Set<Class<?>> uniqueClasses = packageScan.getClasses(packagesToScan);
 		for (Class<?> clazz : uniqueClasses) {
-			Map<String, TestConfigurations<?>> fieldAssertObjectMap = new HashMap<String, TestConfigurations<?>>();
+			Map<String, TestConfiguration<?>> fieldAssertObjectMap = new HashMap<String, TestConfiguration<?>>();
 			Method[] methods = clazz.getDeclaredMethods();
 			Method createObjectMethod = findCreateObjectMethod(methods);
 			createTestConfigurationsFromIntospection(clazz, fieldAssertObjectMap, createObjectMethod);
@@ -38,7 +38,7 @@ public class AssertObjectCreator {
 	}
 
 	private void createTestConfigurationsFromIntospection(Class<?> clazz,
-			Map<String, TestConfigurations<?>> fieldAssertObjectMap, Method createObjectMethod) {
+			Map<String, TestConfiguration<?>> fieldAssertObjectMap, Method createObjectMethod) {
 		BeanInfo beanInfo = null;
 		try {
 			beanInfo = Introspector.getBeanInfo(clazz, Object.class);
@@ -51,7 +51,7 @@ public class AssertObjectCreator {
 				Method readMethod = propertyDescriptor.getReadMethod();
 				Method writeMethod = propertyDescriptor.getWriteMethod();
 				String fieldName = propertyDescriptor.getName();
-				TestConfigurations<?> testConfigurations = createTestConfigurations(clazz, createObjectMethod,
+				TestConfiguration<?> testConfigurations = createTestConfigurations(clazz, createObjectMethod,
 						readMethod, writeMethod, fieldName);
 				if (testConfigurations != null) {
 					fieldAssertObjectMap.put(fieldName, testConfigurations);
@@ -61,7 +61,7 @@ public class AssertObjectCreator {
 	}
 
 	private void createTestConfigurationsFromAnnotations(Class<?> clazz,
-			Map<String, TestConfigurations<?>> fieldAssertObjectMap, Method[] methods, Method createObjectMethod) {
+			Map<String, TestConfiguration<?>> fieldAssertObjectMap, Method[] methods, Method createObjectMethod) {
 		for (Method method : methods) {
 			String fieldName = ReflectionMethodLevel.getFieldNameOfReadMethod(method);
 			boolean writeMethod = false;
@@ -74,10 +74,10 @@ public class AssertObjectCreator {
 		}
 	}
 
-	private void setAnnotedReadOrWriteMethod(Class<?> clazz, Map<String, TestConfigurations<?>> fieldAssertObjectMap,
+	private void setAnnotedReadOrWriteMethod(Class<?> clazz, Map<String, TestConfiguration<?>> fieldAssertObjectMap,
 			Method createObjectMethod, Method method, String fieldName, boolean writeMethod) {
 		if(fieldName != null && !fieldName.isEmpty()) {
-			TestConfigurations<?> testConfigurations = fieldAssertObjectMap.get(fieldName);
+			TestConfiguration<?> testConfigurations = fieldAssertObjectMap.get(fieldName);
 			if (testConfigurations != null) {
 				testConfigurations.setCreateObjectMethod(createObjectMethod);
 				if(!writeMethod){
@@ -95,13 +95,13 @@ public class AssertObjectCreator {
 	}
 
 	private List<AssertObject<?>> createAssertObject( Class<?> clazz,
-			Map<String, TestConfigurations<?>> fieldAssertObjectMap) {
+			Map<String, TestConfiguration<?>> fieldAssertObjectMap) {
 		List<AssertObject<?>> assertObjectList = Collections.emptyList();
 		Set<String> fieldNameSet = fieldAssertObjectMap.keySet();
 		if (fieldNameSet != null && !fieldNameSet.isEmpty()) {
 			assertObjectList = new LinkedList<AssertObject<?>>();
 			for (String fieldName : fieldNameSet) {
-				TestConfigurations<?> testConfigurations = fieldAssertObjectMap.get(fieldName);
+				TestConfiguration<?> testConfigurations = fieldAssertObjectMap.get(fieldName);
 				if(testConfigurations != null){
 					List<AssertObject<?>> assertObjects = testConfigurations.assertAssignedValues(clazz);
 					assertObjectList.addAll(assertObjects);
@@ -111,9 +111,9 @@ public class AssertObjectCreator {
 		return assertObjectList;
 	}
 
-	private TestConfigurations<?> createTestConfigurations(Class<?> clazz, Method createObjectMethod, Method readMethod,
+	private TestConfiguration<?> createTestConfigurations(Class<?> clazz, Method createObjectMethod, Method readMethod,
 			Method writeMethod, String fieldName) {
-		TestConfigurations<?> testConfigurations = null;
+		TestConfiguration<?> testConfigurations = null;
 		Field field = getField(clazz, fieldName);
 		if (field != null) {
 			boolean ignore = ReflectionFieldLevel.ignoreField(field);

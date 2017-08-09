@@ -1,4 +1,4 @@
-package org.pojotester.type;
+package org.pojotester.type.convertor;
 
 public abstract class PrimitiveToObjectArray {
 

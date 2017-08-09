@@ -10,7 +10,7 @@ import java.util.List;
 import org.pojotester.utils.ClassUtilities;
 import org.pojotester.utils.DefaultValueUtilities;
 
-public class TestConfigurations<T> {
+public class TestConfiguration<T> {
 
 	private Object object;
 	private Method createObjectMethod;

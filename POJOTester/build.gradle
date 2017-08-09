@@ -28,6 +28,7 @@ dependencies {
     implementation 'org.slf4j:slf4j-simple:1.5.11'
 	implementation 'org.tinylog:tinylog:1.2-beta-1'
     // Use JUnit test framework
-    testImplementation 'junit:junit:4.12'
+    testCompile 'junit:junit:4.4'
+    testCompile 'org.hamcrest:hamcrest-junit:2.0.0.0'
 }
 

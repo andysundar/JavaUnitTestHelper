@@ -12,60 +12,60 @@ import java.util.Set;
 
 public abstract class TestValuesFactory {
 
-	public static TestConfigurations<?> createTestValuesObject(final Class<?> typeClass){
-		 TestConfigurations<?>  testValues = null;
+	public static TestConfiguration<?> createTestValuesObject(final Class<?> typeClass){
+		 TestConfiguration<?>  testValues = null;
 		 if(typeClass == Boolean.class || typeClass == boolean.class 
 				 || typeClass == Boolean[].class || typeClass == boolean[].class){
-			 testValues = new TestConfigurations<Boolean>();
+			 testValues = new TestConfiguration<Boolean>();
 		 } else  if(typeClass == Byte.class || typeClass == byte.class 
 				 || typeClass == Byte[].class || typeClass == byte[].class){
-			 testValues = new TestConfigurations<Byte>();
+			 testValues = new TestConfiguration<Byte>();
 		 } else  if(typeClass == Character.class || typeClass == char.class 
 				 || typeClass == Character[].class || typeClass == char[].class){
-			 testValues = new TestConfigurations<Character>();
+			 testValues = new TestConfiguration<Character>();
 		 }  else  if(typeClass == Double.class || typeClass == double.class
 				 || typeClass == Double[].class || typeClass == double[].class){
-			 testValues = new TestConfigurations<Double>();
+			 testValues = new TestConfiguration<Double>();
 		 } else  if(typeClass == Float.class || typeClass == float.class
 				 || typeClass == Float[].class || typeClass == float[].class){
-			 testValues = new TestConfigurations<Float>();
+			 testValues = new TestConfiguration<Float>();
 		 } else  if(typeClass == Integer.class || typeClass == int.class
 				 || typeClass == Integer[].class || typeClass == int[].class){
-			 testValues = new TestConfigurations<Integer>();
+			 testValues = new TestConfiguration<Integer>();
 		 } else  if(typeClass == Long.class || typeClass == long.class
 				 || typeClass == Long[].class || typeClass == long[].class){
-			 testValues = new TestConfigurations<Long>();
+			 testValues = new TestConfiguration<Long>();
 		 } else  if(typeClass == Short.class || typeClass == short.class
 				 || typeClass == Short[].class || typeClass == short[].class){
-			 testValues = new TestConfigurations<Short>();
+			 testValues = new TestConfiguration<Short>();
 		 } else  if(typeClass == String.class || typeClass == String[].class){
-			 testValues = new TestConfigurations<String>();
+			 testValues = new TestConfiguration<String>();
 		 } else  if(typeClass == java.util.Date.class || typeClass == java.util.Date[].class){
-			 testValues = new TestConfigurations<java.util.Date>();
+			 testValues = new TestConfiguration<java.util.Date>();
 		 } else  if(typeClass == java.sql.Date.class || typeClass == java.sql.Date[].class){
-			 testValues = new TestConfigurations<java.sql.Date>();
+			 testValues = new TestConfiguration<java.sql.Date>();
 		 } else  if(typeClass == java.util.Calendar.class || typeClass == java.util.Calendar[].class){
-			 testValues = new TestConfigurations<java.util.Calendar>();
+			 testValues = new TestConfiguration<java.util.Calendar>();
 		 } else  if(typeClass == LocalDate.class || typeClass == LocalDate[].class){
-			 testValues = new TestConfigurations<LocalDate>();
+			 testValues = new TestConfiguration<LocalDate>();
 		 } else  if(typeClass == LocalTime.class || typeClass == LocalTime[].class){
-			 testValues = new TestConfigurations<LocalTime>();
+			 testValues = new TestConfiguration<LocalTime>();
 		 } else  if(typeClass == LocalDateTime.class || typeClass == LocalDateTime[].class){
-			 testValues = new TestConfigurations<LocalDateTime>();
+			 testValues = new TestConfiguration<LocalDateTime>();
 		 } else  if(typeClass == Instant.class || typeClass == Instant[].class){
-			 testValues = new TestConfigurations<Instant>();
+			 testValues = new TestConfiguration<Instant>();
 		 } else  if(typeClass == BigDecimal.class || typeClass == BigDecimal[].class){
-			 testValues = new TestConfigurations<BigDecimal>();
+			 testValues = new TestConfiguration<BigDecimal>();
 		 } else  if(typeClass == BigInteger.class || typeClass == BigInteger[].class){
-			 testValues = new TestConfigurations<BigInteger>();
+			 testValues = new TestConfiguration<BigInteger>();
 		 } else  if(typeClass == Set.class || typeClass.getSuperclass() == Set.class){
-			 testValues = new TestConfigurations<Set<?>>();
+			 testValues = new TestConfiguration<Set<?>>();
 		 } else  if(typeClass == List.class || typeClass.getSuperclass() == List.class){
-			 testValues = new TestConfigurations<List<?>>();
+			 testValues = new TestConfiguration<List<?>>();
 		 } else  if(typeClass == Map.class || typeClass.getSuperclass() == Map.class){
-			 testValues = new TestConfigurations<Map<?, ?>>();
+			 testValues = new TestConfiguration<Map<?, ?>>();
 		 } else {
-			 testValues = new TestConfigurations<Object>();
+			 testValues = new TestConfiguration<Object>();
 		 }
 		 return testValues;
 	}
