@@ -23,7 +23,7 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 
 import org.pojotester.log.PojoTesterLogger;
-import org.pojotester.object.mock.MockObject;
+import org.pojotester.object.mock.MockInterfaceObject;
 import org.pojotester.reflection.annotation.ReflectionMethodLevel;
 
 public abstract class ClassUtilities {
@@ -66,7 +66,7 @@ public abstract class ClassUtilities {
 			try {
 				object =  createObjectUsingOtherConstructor(clazz);
 			}catch(Exception ex){
-				PojoTesterLogger.debugMessage("Not able to initialize using other constructor of " + clazz.getName(), e);
+				PojoTesterLogger.debugMessage("Not able to initialize using other constructor of " + clazz.getName(), ex);
 			}
 		}
 		return object;
@@ -89,11 +89,20 @@ public abstract class ClassUtilities {
 				} else if(parameterDataTypeClass.isArray()){
 					Class<?> typeOfArray = parameterDataTypeClass.getComponentType();
 					args[index] = Array.newInstance(typeOfArray, 0);
-				} else {
-					MockObject mockObject = new MockObject(parameterDataTypeClass);
+				} else if(parameterDataTypeClass.isInterface()){
+					MockInterfaceObject mockObject = new MockInterfaceObject(parameterDataTypeClass);
 					args[index] = mockObject.proxy();
+				} else {
+					args[index] = createObject(parameterDataTypeClass);
 				}
 				index++;
+			}
+			try {
+				object = constructor.newInstance(args);
+				break;
+			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+					| InvocationTargetException ex) {
+				PojoTesterLogger.debugMessage("Not able to initialize using other constructor of " + clazz.getName(), ex);
 			}
 		}
 		return object;

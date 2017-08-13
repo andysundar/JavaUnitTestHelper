@@ -17,8 +17,17 @@ public class AssertObjectCreatorTest {
 		assertObjectCreator = new AssertObjectCreator();
 	}
 	@Test
-	public void testGetAssertObjects() {
+	public void testGetAssertObjects1() {
 		String []packagesToScan = {"org.*tester.pack.**.mypack"};
+		List<AssertObject<?>> assertObjects = assertObjectCreator.getAssertObjects(packagesToScan);
+		for(AssertObject<?> assertObject : assertObjects) {
+			assertEquals(assertObject.getExpectedValue(), assertObject.getReturnedValue());
+		}
+	}
+	
+	@Test
+	public void testGetAssertObjects_WhenAnotherClassInjected() {
+		String []packagesToScan = {"org.pojotester.pack.scan.mypack.dto.Test01.class"};
 		List<AssertObject<?>> assertObjects = assertObjectCreator.getAssertObjects(packagesToScan);
 		for(AssertObject<?> assertObject : assertObjects) {
 			assertEquals(assertObject.getExpectedValue(), assertObject.getReturnedValue());
