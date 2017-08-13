@@ -21,12 +21,13 @@ import java.lang.reflect.Proxy;
 
 import org.pojotester.utils.ClassUtilities;
 
-public class MockObject implements InvocationHandler {
+public class MockInterfaceObject implements InvocationHandler {
 
 	private Object proxy;
 	
-	public MockObject(Class<?> clazz){
-		this.proxy = Proxy.newProxyInstance(clazz.getClassLoader(), new Class<?>[]{clazz}, this);
+	public MockInterfaceObject(Class<?> clazz){
+		ClassLoader classLoader = ClassUtilities.getDefaultClassLoader();
+		this.proxy = Proxy.newProxyInstance(classLoader, new Class<?>[]{clazz}, this);
 	}
 	
 	public Object proxy(){
