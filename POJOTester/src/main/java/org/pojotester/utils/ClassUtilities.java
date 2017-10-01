@@ -23,6 +23,7 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 
 import org.pojotester.log.PojoTesterLogger;
+import org.pojotester.object.mock.MockDependencyObject;
 import org.pojotester.object.mock.MockInterfaceObject;
 import org.pojotester.reflection.annotation.ReflectionMethodLevel;
 
@@ -93,8 +94,9 @@ public abstract class ClassUtilities {
 					MockInterfaceObject mockObject = new MockInterfaceObject(parameterDataTypeClass);
 					args[index] = mockObject.proxy();
 				} else {
-					args[index] = createObject(parameterDataTypeClass);
-				}
+					MockDependencyObject mockObject = new MockDependencyObject();
+					args[index] = mockObject.getProxyObject(parameterDataTypeClass);
+				} 
 				index++;
 			}
 			try {
