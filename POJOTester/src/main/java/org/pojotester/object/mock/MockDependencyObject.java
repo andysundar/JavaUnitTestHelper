@@ -35,7 +35,7 @@ public class MockDependencyObject {
 			Unloaded<?> uploaded = builder.method(ElementMatchers.any())
 					.intercept(MethodDelegation.to(MyInterceptor.class)).make();
 			ClassLoader classLoader = ClassUtilities.getDefaultClassLoader();
-			Class<?> subclazz = uploaded.load(classLoader).getClass();
+			Class<?> subclazz = uploaded.load(classLoader).getLoaded();
 		    try {
 				object = subclazz.newInstance();
 			} catch (InstantiationException | IllegalAccessException e) {

@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 import org.pojotester.annotation.field.IgnoreField;
 import org.pojotester.annotation.field.IntTestValue;
-import org.pojotester.pack.scan.mypack.MyClass03;
+import org.pojotester.pack.scan.mypack.MyClassWithDefaultConstructor;
 
 public class Test01 {
 
@@ -14,7 +14,7 @@ public class Test01 {
 	private int[] nums1;
 	private BigDecimal bigDecimal1;
 	
-	public Test01(MyClass03 myClass03){
+	public Test01(MyClassWithDefaultConstructor myClass03){
 		num1 = myClass03.getNum1();
 	}
 
