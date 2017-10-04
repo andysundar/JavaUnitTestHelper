@@ -47,14 +47,16 @@ public class TestConfiguration<T> {
 			object = ClassUtilities.createObjectUsingStaticMethod(clazz, createObjectMethod);
 		}
 		List<AssertObject<?>> values = Collections.emptyList();
-		if(assignedValues != null){
-			values = populateAnnotatedValues();
-		} else {
-			values = new LinkedList<AssertObject<?>>();
-			@SuppressWarnings("unchecked")
-			T object = (T) DefaultValueUtilities.getValueFromMap(field.getType());
-			AssertObject<T> assertObject = invokeReadWriteMethod(object, object);
-			values.add(assertObject);
+		if(object != null){
+			if(assignedValues != null){
+				values = populateAnnotatedValues();
+			} else {
+				values = new LinkedList<AssertObject<?>>();
+				@SuppressWarnings("unchecked")
+				T object = (T) DefaultValueUtilities.getValueFromMap(field.getType());
+				AssertObject<T> assertObject = invokeReadWriteMethod(object, object);
+				values.add(assertObject);
+			}
 		}
 		return values;
 	}

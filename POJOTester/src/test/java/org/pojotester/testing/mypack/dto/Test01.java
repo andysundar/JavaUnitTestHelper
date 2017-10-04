@@ -15,6 +15,8 @@ public class Test01 {
 	private int[] nums1;
 	private BigDecimal bigDecimal1;
 	private boolean flag;
+	private char ch;
+	private long lg;
 	
 	public Test01(MyClassWithDefaultConstructor myClass03){
 		num1 = myClass03.getNum1();

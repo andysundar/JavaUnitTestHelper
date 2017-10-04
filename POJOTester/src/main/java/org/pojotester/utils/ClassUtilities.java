@@ -63,12 +63,9 @@ public abstract class ClassUtilities {
 		try {
 			object = clazz.newInstance();
 		} catch (InstantiationException | IllegalAccessException e) {
-			PojoTesterLogger.debugMessage("Not able to initialize using default constructor of " + clazz.getName(), e);
-			try {
-				object =  createObjectUsingOtherConstructor(clazz);
-			}catch(Exception ex){
-				PojoTesterLogger.debugMessage("Not able to initialize using other constructor of " + clazz.getName(), ex);
-			}
+			PojoTesterLogger.debugMessage("Not able to initialize using default constructor of " + clazz.getName() + 
+					".\n Now trying with other constructor (if any).", e);
+			object =  createObjectUsingOtherConstructor(clazz);
 		}
 		return object;
 	}
