@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.pojotester.log.PojoTesterLogger;
 import org.pojotester.pack.scan.PackageScan;
 import org.pojotester.reflection.annotation.ReflectionFieldLevel;
 import org.pojotester.reflection.annotation.ReflectionMethodLevel;
@@ -165,7 +166,7 @@ public class AssertObjectCreator {
 		try {
 			field = clazz.getDeclaredField(fieldName);
 		} catch (NoSuchFieldException | SecurityException e) {
-			e.printStackTrace();
+			PojoTesterLogger.debugMessage(fieldName + " field name is not present in " + clazz.getName(), e);
 		}
 		return field;
 	}

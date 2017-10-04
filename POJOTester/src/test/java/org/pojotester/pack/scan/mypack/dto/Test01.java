@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import org.pojotester.annotation.field.IgnoreField;
 import org.pojotester.annotation.field.IntTestValue;
+import org.pojotester.annotation.method.ReadMethod;
 import org.pojotester.pack.scan.mypack.MyClassWithDefaultConstructor;
 
 public class Test01 {
@@ -13,6 +14,7 @@ public class Test01 {
 	@IntTestValue(assignValues={1,2}, expectedValues = { 1,2 })
 	private int[] nums1;
 	private BigDecimal bigDecimal1;
+	private boolean flag;
 	
 	public Test01(MyClassWithDefaultConstructor myClass03){
 		num1 = myClass03.getNum1();
@@ -41,5 +43,13 @@ public class Test01 {
 	public void setBigDecimal1(BigDecimal bigDecimal1) {
 		this.bigDecimal1 = bigDecimal1;
 	}
+
+	public void setFlag(boolean flag) {
+		this.flag = flag;
+	}
 	
+	@ReadMethod(fieldName="flag")
+	public boolean hasFlag(){
+		return flag;
+	}
 }

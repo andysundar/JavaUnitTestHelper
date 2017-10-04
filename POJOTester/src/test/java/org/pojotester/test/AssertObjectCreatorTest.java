@@ -33,4 +33,13 @@ public class AssertObjectCreatorTest {
 			assertEquals(assertObject.getExpectedValue(), assertObject.getReturnedValue());
 		}
 	}
+	
+	@Test
+	public void testGetAssertObjects_WhenCreateObjectMethod() {
+		String []packagesToScan = {"org.pojotester.pack.scan.**.dto.Test03.class"};
+		List<AssertObject<?>> assertObjects = assertObjectCreator.getAssertObjects(packagesToScan);
+		for(AssertObject<?> assertObject : assertObjects) {
+			assertEquals(assertObject.getExpectedValue(), assertObject.getReturnedValue());
+		}
+	}
 }

@@ -118,7 +118,7 @@ public abstract class ClassUtilities {
 			try {
 				object = method.invoke(null, null);
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-				e.printStackTrace();
+				PojoTesterLogger.debugMessage("Not able to invoke " + method.getName() + " in " + clazz.getName(), e);
 			}
 		}
 
