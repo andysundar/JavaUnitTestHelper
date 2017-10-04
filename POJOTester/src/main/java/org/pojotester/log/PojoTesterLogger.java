@@ -33,9 +33,6 @@ public abstract class PojoTesterLogger {
 		for(Class<?> clazz : LOGGERS){
 			try {
 				logger = (PojoTesterLogger) clazz.newInstance();
-				if(logger != null) {
-					break;
-				}
 			} catch (InstantiationException | IllegalAccessException e) {
 				e.printStackTrace();
 			}
