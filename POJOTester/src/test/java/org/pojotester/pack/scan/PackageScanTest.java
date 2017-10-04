@@ -26,6 +26,15 @@ public class PackageScanTest {
 	}
 	
 	@Test
+	public void testDetermineRootDir_WhenArgumentIsNull() { 
+		String []packagesToScan = null;
+		Set<Class<?>> classSet = packageScan.getClasses(packagesToScan);
+		assertNotNull(classSet);
+		assertTrue(classSet.isEmpty());
+	}
+	
+	
+	@Test
 	public void testDetermineRootDir_WhenClassNameIsWildcard() { 
 		String []packagesToScan = { "org.pojotester.pack.scan*.mypack1.*.*" };
 		Set<Class<?>> classSet = packageScan.getClasses(packagesToScan);
