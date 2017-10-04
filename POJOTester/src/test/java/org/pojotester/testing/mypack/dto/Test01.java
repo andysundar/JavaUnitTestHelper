@@ -1,11 +1,11 @@
-package org.pojotester.pack.scan.mypack.dto;
+package org.pojotester.testing.mypack.dto;
 
 import java.math.BigDecimal;
 
 import org.pojotester.annotation.field.IgnoreField;
 import org.pojotester.annotation.field.IntTestValue;
 import org.pojotester.annotation.method.ReadMethod;
-import org.pojotester.pack.scan.mypack.MyClassWithDefaultConstructor;
+import org.pojotester.testing.mypack.MyClassWithDefaultConstructor;
 
 public class Test01 {
 

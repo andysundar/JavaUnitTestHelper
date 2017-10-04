@@ -36,19 +36,19 @@ public class PackageScanTest {
 	
 	@Test
 	public void testDetermineRootDir_WhenClassNameIsWildcard() { 
-		String []packagesToScan = { "org.pojotester.pack.scan*.mypack1.*.*" };
+		String []packagesToScan = { "org.pojotester.test*.mypack.**.*.*" };
 		Set<Class<?>> classSet = packageScan.getClasses(packagesToScan);
 		assertNotNull(classSet);
 		assertFalse(classSet.isEmpty());
 		for(Class<?> clazz : classSet){
 			String className = clazz.getName();
-			assertTrue(className.contains("org.pojotester.pack.scan1.mypack1"));
+			assertTrue(className.contains("org.pojotester.testing.mypack.another"));
 		}
 	}
 	
 	@Test
 	public void testDetermineRootDir_WhenClassNameOrPatternNotGiven() { 
-		String []packagesToScan = { "org.pojotester.pack.scan.mypack.dto"	};
+		String []packagesToScan = { "org.pojotester.testing.mypack.dto"	};
 		Set<Class<?>> classSet = packageScan.getClasses(packagesToScan);
 		assertNotNull(classSet);
 		assertFalse(classSet.isEmpty());
@@ -72,18 +72,18 @@ public class PackageScanTest {
 	
 	@Test
 	public void testDetermineRootDir_WhenClassNameContainsWildchar() { 
-		String []packagesToScan = { "org.pojotester.pack.scan.mypack.*Class01.class"	};
+		String []packagesToScan = { "org.pojotester.testing.mypack.*Class01.class"	};
 		Set<Class<?>> classSet = packageScan.getClasses(packagesToScan);
 		assertNotNull(classSet);
 		assertFalse(classSet.isEmpty());
 		for(Class<?> clazz : classSet){
 			String className = clazz.getName();
-			assertTrue(className.contains("org.pojotester.pack.scan.mypack.MyClass01"));
+			assertTrue(className.contains("org.pojotester.testing.mypack.MyClass01"));
 		}
 	}
 	@Test
 	public void testDetermineRootDir_WhenFullQualifiedClassName() { 
-		String []packagesToScan = { "org.pojotester.pack.scan1.mypack1.MyClass04.class" };
+		String []packagesToScan = { "org.pojotester.testing.mypack.another.MyClass04.class" };
 		Set<Class<?>> classSet = packageScan.getClasses(packagesToScan);
 		assertNotNull(classSet);
 		assertFalse(classSet.isEmpty());

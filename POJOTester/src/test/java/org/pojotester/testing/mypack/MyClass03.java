@@ -1,4 +1,4 @@
-package org.pojotester.pack.scan.mypack;
+package org.pojotester.testing.mypack;
 
 import java.util.List;
 

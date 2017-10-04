@@ -36,7 +36,7 @@ public class AssertObjectCreatorTest {
 	
 	@Test
 	public void testGetAssertObjects_WhenCreateObjectMethod() {
-		String []packagesToScan = {"org.pojotester.pack.scan.**.dto.Test03.class"};
+		String []packagesToScan = {"org.pojotester.testing.mypack.dto.Test03.class"};
 		List<AssertObject<?>> assertObjects = assertObjectCreator.getAssertObjects(packagesToScan);
 		for(AssertObject<?> assertObject : assertObjects) {
 			assertEquals(assertObject.getExpectedValue(), assertObject.getReturnedValue());
@@ -45,7 +45,7 @@ public class AssertObjectCreatorTest {
 	
 	@Test
 	public void testGetAssertObjects_WhenEnumArgument() {
-		String []packagesToScan = {"org.pojotester.pack.scan.mypack.dto.Test04.class"};
+		String []packagesToScan = {"org.pojotester.testing.mypack.dto.Test04.class"};
 		List<AssertObject<?>> assertObjects = assertObjectCreator.getAssertObjects(packagesToScan);
 		for(AssertObject<?> assertObject : assertObjects) {
 			assertEquals(assertObject.getExpectedValue(), assertObject.getReturnedValue());

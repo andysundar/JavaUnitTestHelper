@@ -1,6 +1,6 @@
-package org.pojotester.pack.scan.mypack.dto;
+package org.pojotester.testing.mypack.dto;
 
-import org.pojotester.pack.scan.mypack.Test;
+import org.pojotester.testing.mypack.Test;
 
 public class Test04 {
 
