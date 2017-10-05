@@ -5,6 +5,7 @@ import org.pojotester.testing.mypack.TestInterface;
 public class Test06 {
 
 	private TestInterface list;
+	private String str;
 	
 	public Test06(TestInterface list){
 		this.setList(list);
@@ -17,4 +18,9 @@ public class Test06 {
 	public void setList(TestInterface list) {
 		this.list = list;
 	}
+
+	public String getStr() {
+		return list.getString();
+	}
+
 }
