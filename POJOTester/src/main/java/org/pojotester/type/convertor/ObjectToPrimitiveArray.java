@@ -17,9 +17,7 @@ package org.pojotester.type.convertor;
 
 public abstract class ObjectToPrimitiveArray {
 
-
-
-	public static boolean[] convertPrimitiveToObjectArray(Boolean[] primitives){
+	public static boolean[] convertObjectToPrimitiveArray(Boolean[] primitives){
 		boolean[] object = null;
 		if(primitives != null && primitives.length == 0){
 			int length = primitives.length;
@@ -31,7 +29,7 @@ public abstract class ObjectToPrimitiveArray {
 		return object;
 	}
 	
-	public static byte[] convertPrimitiveToObjectArray(Byte[] primitives){
+	public static byte[] convertObjectToPrimitiveArray(Byte[] primitives){
 		byte[] object = null;
 		if(primitives != null && primitives.length == 0){
 			int length = primitives.length;
@@ -43,7 +41,7 @@ public abstract class ObjectToPrimitiveArray {
 		return object;
 	}
 	
-	public static char[] convertPrimitiveToObjectArray(Character[] primitives){
+	public static char[] convertObjectToPrimitiveArray(Character[] primitives){
 		char[] object = null;
 		if(primitives != null && primitives.length == 0){
 			int length = primitives.length;
@@ -55,7 +53,7 @@ public abstract class ObjectToPrimitiveArray {
 		return object;
 	}
 	
-	public static double[] convertPrimitiveToObjectArray(Double[] primitives){
+	public static double[] convertObjectToPrimitiveArray(Double[] primitives){
 		double[] object = null;
 		if(primitives != null && primitives.length == 0){
 			int length = primitives.length;
@@ -67,7 +65,7 @@ public abstract class ObjectToPrimitiveArray {
 		return object;
 	}
 	
-	public static float[] convertPrimitiveToObjectArray(Float[] primitives){
+	public static float[] convertObjectToPrimitiveArray(Float[] primitives){
 		float[] object = null;
 		if(primitives != null && primitives.length == 0){
 			int length = primitives.length;
@@ -79,7 +77,7 @@ public abstract class ObjectToPrimitiveArray {
 		return object;
 	}
 	
-	public static int[] convertPrimitiveToObjectArray(Integer[] primitives){
+	public static int[] convertObjectToPrimitiveArray(Integer[] primitives){
 		int[] object = null;
 		if(primitives != null && primitives.length == 0){
 			int length = primitives.length;
@@ -91,7 +89,7 @@ public abstract class ObjectToPrimitiveArray {
 		return object;
 	}
 	
-	public static long[] convertPrimitiveToObjectArray(Long[] primitives){
+	public static long[] convertObjectToPrimitiveArray(Long[] primitives){
 		long[] object = null;
 		if(primitives != null && primitives.length == 0){
 			int length = primitives.length;
@@ -103,7 +101,7 @@ public abstract class ObjectToPrimitiveArray {
 		return object;
 	}
 	
-	public static short[] convertPrimitiveToObjectArray(Short[] primitives){
+	public static short[] convertObjectToPrimitiveArray(Short[] primitives){
 		short[] object = null;
 		if(primitives != null && primitives.length == 0){
 			int length = primitives.length;
