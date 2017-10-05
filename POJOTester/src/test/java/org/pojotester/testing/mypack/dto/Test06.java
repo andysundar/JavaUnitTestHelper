@@ -1,20 +1,20 @@
 package org.pojotester.testing.mypack.dto;
 
-import java.util.List;
+import org.pojotester.testing.mypack.TestInterface;
 
 public class Test06 {
 
-	private List<String> list;
+	private TestInterface list;
 	
-	public Test06(List<String> list){
+	public Test06(TestInterface list){
 		this.setList(list);
 	}
 
-	public List<String> getList() {
+	public TestInterface getList() {
 		return list;
 	}
 
-	public void setList(List<String> list) {
+	public void setList(TestInterface list) {
 		this.list = list;
 	}
 }

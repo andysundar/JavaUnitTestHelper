@@ -17,6 +17,7 @@ package org.pojotester.pack.scan;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Modifier;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -67,7 +68,7 @@ public final class PackageScan {
 					// When exact path is given [e.g. mypack.MyClass.class]
 					String binaryClassName = getQualifiedClassName(startPackage, rootDirectory);
 					Class<?> clazz = loadClassAndAddItToSet(binaryClassName);
-					if(clazz != null){
+					if(isClass(clazz)){
 						classSet.add(clazz);
 					}
 				}  else {
@@ -88,7 +89,7 @@ public final class PackageScan {
 					for(String className : classFiles){
 						String binaryClassName = getQualifiedClassName(startPackage, className);
 						Class<?> clazz = loadClassAndAddItToSet(binaryClassName);
-						if(clazz != null){
+						if(isClass(clazz)){
 							classSet.add(clazz);
 						}
 					}
@@ -98,6 +99,8 @@ public final class PackageScan {
 		}
 		return classSet;
 	}
+
+
 
 	protected String determineRootDirectory(final String location){
 		char[] sources = location.toCharArray();
@@ -231,4 +234,7 @@ public final class PackageScan {
 		return clazz;
 	}
 		
+	private boolean isClass(Class<?> clazz) {
+		return clazz != null && !clazz.isAnnotation() && !clazz.isInterface() && !clazz.isEnum() && !Modifier.isAbstract(clazz.getModifiers());
+	}
 }
