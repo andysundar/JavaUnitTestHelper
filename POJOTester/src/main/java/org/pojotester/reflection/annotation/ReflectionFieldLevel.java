@@ -97,9 +97,7 @@ public  abstract class ReflectionFieldLevel {
 		if(stringTestValue != null) {
 			String[] assignValues = stringTestValue.assignValues();
 			String[] expectedValues = stringTestValue.expectedValues();
-			if(expectedValues == null || expectedValues.length == 0){
-				expectedValues = assignValues;
-			}
+			
 			
 			testValues.setAssignedValues(assignValues);
 			testValues.setExpectedValues(expectedValues);
@@ -112,9 +110,7 @@ public  abstract class ReflectionFieldLevel {
 		if(booleanTestValue != null) {
 			boolean[] assignValues = booleanTestValue.assignValues();
 			boolean[] expectedValues = booleanTestValue.expectedValues();
-			if(expectedValues == null || expectedValues.length == 0){
-				expectedValues = assignValues;
-			}
+			
 		
 			Boolean[] assignObjectValues =  PrimitiveToObjectArray.convertPrimitiveToObjectArray(assignValues);
 			Boolean[] expectedObjectValues =  PrimitiveToObjectArray.convertPrimitiveToObjectArray(expectedValues);
@@ -130,9 +126,7 @@ public  abstract class ReflectionFieldLevel {
 		if(byteTestValue != null) {
 			byte[] assignValues = byteTestValue.assignValues();
 			byte[] expectedValues = byteTestValue.expectedValues();
-			if(expectedValues == null || expectedValues.length == 0){
-				expectedValues = assignValues;
-			}
+			
 		
 			Byte[] assignObjectValues =  PrimitiveToObjectArray.convertPrimitiveToObjectArray(assignValues);
 			Byte[] expectedObjectValues =  PrimitiveToObjectArray.convertPrimitiveToObjectArray(expectedValues);
@@ -148,9 +142,7 @@ public  abstract class ReflectionFieldLevel {
 		if(charTestValue != null) {
 			char[] assignValues = charTestValue.assignValues();
 			char[] expectedValues = charTestValue.expectedValues();
-			if(expectedValues == null || expectedValues.length == 0){
-				expectedValues = assignValues;
-			}
+			
 		
 			Character[] assignObjectValues =  PrimitiveToObjectArray.convertPrimitiveToObjectArray(assignValues);
 			Character[] expectedObjectValues =  PrimitiveToObjectArray.convertPrimitiveToObjectArray(expectedValues);
@@ -166,9 +158,7 @@ public  abstract class ReflectionFieldLevel {
 		if(doubleTestValue != null) {
 			double[] assignValues = doubleTestValue.assignValues();
 			double[] expectedValues = doubleTestValue.expectedValues();
-			if(expectedValues == null || expectedValues.length == 0){
-				expectedValues = assignValues;
-			}
+			
 		
 			Double[] assignObjectValues =  PrimitiveToObjectArray.convertPrimitiveToObjectArray(assignValues);
 			Double[] expectedObjectValues =  PrimitiveToObjectArray.convertPrimitiveToObjectArray(expectedValues);
@@ -184,9 +174,7 @@ public  abstract class ReflectionFieldLevel {
 		if(floatTestValue != null) {
 			float[] assignValues = floatTestValue.assignValues();
 			float[] expectedValues = floatTestValue.expectedValues();
-			if(expectedValues == null || expectedValues.length == 0){
-				expectedValues = assignValues;
-			}
+			
 		
 			Float[] assignObjectValues =  PrimitiveToObjectArray.convertPrimitiveToObjectArray(assignValues);
 			Float[] expectedObjectValues =  PrimitiveToObjectArray.convertPrimitiveToObjectArray(expectedValues);
@@ -202,9 +190,7 @@ public  abstract class ReflectionFieldLevel {
 		if(intTestValue != null) {
 			int[] assignValues = intTestValue.assignValues();
 			int[] expectedValues = intTestValue.expectedValues();
-			if(expectedValues == null || expectedValues.length == 0){
-				expectedValues = assignValues;
-			}
+			
 		
 			Integer[] assignObjectValues =  PrimitiveToObjectArray.convertPrimitiveToObjectArray(assignValues);
 			Integer[] expectedObjectValues =  PrimitiveToObjectArray.convertPrimitiveToObjectArray(expectedValues);
@@ -220,9 +206,7 @@ public  abstract class ReflectionFieldLevel {
 		if(longTestValue != null) {
 			long[] assignValues = longTestValue.assignValues();
 			long[] expectedValues = longTestValue.expectedValues();
-			if(expectedValues == null || expectedValues.length == 0){
-				expectedValues = assignValues;
-			}
+			
 		
 			Long[] assignObjectValues =  PrimitiveToObjectArray.convertPrimitiveToObjectArray(assignValues);
 			Long[] expectedObjectValues =  PrimitiveToObjectArray.convertPrimitiveToObjectArray(expectedValues);
@@ -238,10 +222,7 @@ public  abstract class ReflectionFieldLevel {
 		if(shortTestValue != null) {
 			short[] assignValues = shortTestValue.assignValues();
 			short[] expectedValues = shortTestValue.expectedValues();
-			if(expectedValues == null || expectedValues.length == 0){
-				expectedValues = assignValues;
-			}
-		
+			
 			Short[] assignObjectValues =  PrimitiveToObjectArray.convertPrimitiveToObjectArray(assignValues);
 			Short[] expectedObjectValues =  PrimitiveToObjectArray.convertPrimitiveToObjectArray(expectedValues);
 			
