@@ -235,6 +235,6 @@ public final class PackageScan {
 	}
 		
 	private boolean isClass(Class<?> clazz) {
-		return clazz != null && !clazz.isAnnotation() && !clazz.isInterface() && !clazz.isEnum() && !Modifier.isAbstract(clazz.getModifiers());
+		return (clazz != null) && (!clazz.isAnnotation()) && (!clazz.isInterface()) && (!clazz.isEnum()) && (!Modifier.isAbstract(clazz.getModifiers()));
 	}
 }
