@@ -34,14 +34,6 @@ public class Test01 {
 		return nums1;
 	}
 
-	public void setNums1(int[] nums1) {
-		this.nums1 = nums1;
-	}
-
-	public BigDecimal getBigDecimal1() {
-		return bigDecimal1;
-	}
-
 	public void setBigDecimal1(BigDecimal bigDecimal1) {
 		this.bigDecimal1 = bigDecimal1;
 	}
