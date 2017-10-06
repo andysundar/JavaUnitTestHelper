@@ -17,100 +17,100 @@ package org.pojotester.type.convertor;
 
 public abstract class ObjectToPrimitiveArray {
 
-	public static boolean[] convertObjectToPrimitiveArray(Boolean[] primitives){
-		boolean[] object = null;
-		if(primitives != null && primitives.length == 0){
-			int length = primitives.length;
-			object = new boolean[length];
+	public static boolean[] convertObjectToPrimitiveArray(Boolean[] objects){
+		boolean[] primitives = null;
+		if(objects != null && objects.length != 0){
+			int length = objects.length;
+			primitives = new boolean[length];
 			for(int index = 0; index < length; index++){
-				object[index] = primitives[index]; 
+				primitives[index] = objects[index]; 
 			}
 		}
-		return object;
+		return primitives;
 	}
 	
-	public static byte[] convertObjectToPrimitiveArray(Byte[] primitives){
-		byte[] object = null;
-		if(primitives != null && primitives.length == 0){
-			int length = primitives.length;
-			object = new byte[length];
+	public static byte[] convertObjectToPrimitiveArray(Byte[] objects){
+		byte[] primitives = null;
+		if(objects != null && objects.length != 0){
+			int length = objects.length;
+			primitives = new byte[length];
 			for(int index = 0; index < length; index++){
-				object[index] = primitives[index]; 
+				primitives[index] = objects[index]; 
 			}
 		}
-		return object;
+		return primitives;
 	}
 	
-	public static char[] convertObjectToPrimitiveArray(Character[] primitives){
-		char[] object = null;
-		if(primitives != null && primitives.length == 0){
-			int length = primitives.length;
-			object = new char[length];
+	public static char[] convertObjectToPrimitiveArray(Character[] objects){
+		char[] primitives = null;
+		if(objects != null && objects.length != 0){
+			int length = objects.length;
+			primitives = new char[length];
 			for(int index = 0; index < length; index++){
-				object[index] = primitives[index]; 
+				primitives[index] = objects[index]; 
 			}
 		}
-		return object;
+		return primitives;
 	}
 	
-	public static double[] convertObjectToPrimitiveArray(Double[] primitives){
-		double[] object = null;
-		if(primitives != null && primitives.length == 0){
-			int length = primitives.length;
-			object = new double[length];
+	public static double[] convertObjectToPrimitiveArray(Double[] objects){
+		double[] primitives = null;
+		if(objects != null && objects.length != 0){
+			int length = objects.length;
+			primitives = new double[length];
 			for(int index = 0; index < length; index++){
-				object[index] = primitives[index]; 
+				primitives[index] = objects[index]; 
 			}
 		}
-		return object;
+		return primitives;
 	}
 	
-	public static float[] convertObjectToPrimitiveArray(Float[] primitives){
-		float[] object = null;
-		if(primitives != null && primitives.length == 0){
-			int length = primitives.length;
-			object = new float[length];
+	public static float[] convertObjectToPrimitiveArray(Float[] objects){
+		float[] primitives = null;
+		if(objects != null && objects.length != 0){
+			int length = objects.length;
+			primitives = new float[length];
 			for(int index = 0; index < length; index++){
-				object[index] = primitives[index]; 
+				primitives[index] = objects[index]; 
 			}
 		}
-		return object;
+		return primitives;
 	}
 	
-	public static int[] convertObjectToPrimitiveArray(Integer[] primitives){
-		int[] object = null;
-		if(primitives != null && primitives.length == 0){
-			int length = primitives.length;
-			object = new int[length];
+	public static int[] convertObjectToPrimitiveArray(Integer[] objects){
+		int[] primitives = null;
+		if(objects != null && objects.length != 0){
+			int length = objects.length;
+			primitives = new int[length];
 			for(int index = 0; index < length; index++){
-				object[index] = primitives[index]; 
+				primitives[index] = objects[index]; 
 			}
 		}
-		return object;
+		return primitives;
 	}
 	
-	public static long[] convertObjectToPrimitiveArray(Long[] primitives){
-		long[] object = null;
-		if(primitives != null && primitives.length == 0){
-			int length = primitives.length;
-			object = new long[length];
+	public static long[] convertObjectToPrimitiveArray(Long[] objects){
+		long[] primitives = null;
+		if(objects != null && objects.length != 0){
+			int length = objects.length;
+			primitives = new long[length];
 			for(int index = 0; index < length; index++){
-				object[index] = primitives[index]; 
+				primitives[index] = objects[index]; 
 			}
 		}
-		return object;
+		return primitives;
 	}
 	
-	public static short[] convertObjectToPrimitiveArray(Short[] primitives){
-		short[] object = null;
-		if(primitives != null && primitives.length == 0){
-			int length = primitives.length;
-			object = new short[length];
+	public static short[] convertObjectToPrimitiveArray(Short[] objects){
+		short[] primitives = null;
+		if(objects != null && objects.length != 0){
+			int length = objects.length;
+			primitives = new short[length];
 			for(int index = 0; index < length; index++){
-				object[index] = primitives[index]; 
+				primitives[index] = objects[index]; 
 			}
 		}
-		return object;
+		return primitives;
 	}
 
 }
