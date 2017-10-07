@@ -6,3 +6,11 @@ cache:
   directories:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
+jdk:
+  - oraclejdk8
+notifications:
+  email: false
+install:
+  - chmod +x ./gradlew
+  - ./gradlew --info assemble
+script: ./gradlew --info check
