@@ -11,6 +11,6 @@ jdk:
 notifications:
   email: false
 install:
-  - chmod +x ./gradlew
+  - chmod +x gradle
   - gradle --info assemble
 script: gradle --info check
