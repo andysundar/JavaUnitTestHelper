@@ -134,39 +134,40 @@ public class TestConfiguration<T> {
 		Class<?> fieldType = field.getType();
 		Object[] args = new Object[1];
 		boolean isArray = fieldType.isArray();
+		fieldType = isArray ? fieldType.getComponentType() : fieldType;
 		if(fieldType.isPrimitive()){
 			if (fieldType == boolean.class) {
 				Boolean[] valueArray = {(Boolean) value};
 				boolean[] primitives = ObjectToPrimitiveArray.convertObjectToPrimitiveArray(valueArray);
-				args[0] = primitives[0];
+				args[0] = isArray ? primitives[0] : primitives;
 			} else if (fieldType == byte.class) {
 				Byte[] valueArray = {(Byte) value};
 				byte[] primitives = ObjectToPrimitiveArray.convertObjectToPrimitiveArray(valueArray);
-				args[0] = primitives[0];
+				args[0] = isArray ? primitives[0] : primitives;
 			} else if(fieldType == char.class){
 				Character[] valueArray = {(Character) value};
-				char[] primitives = ObjectToPrimitiveArray.convertObjectToPrimitiveArray((Character[]) valueArray);
-				args[0] = primitives[0];
+				char[] primitives = ObjectToPrimitiveArray.convertObjectToPrimitiveArray(valueArray);
+				args[0] = isArray ? primitives[0] : primitives;
 			} else if(fieldType == double.class){
 				Double[] valueArray = {(Double) value};
-				double[] primitives = ObjectToPrimitiveArray.convertObjectToPrimitiveArray((Double[]) valueArray);
-				args[0] = primitives[0];
+				double[] primitives = ObjectToPrimitiveArray.convertObjectToPrimitiveArray(valueArray);
+				args[0] = isArray ? primitives[0] : primitives;
 			} else if(fieldType == float.class){
 				Float[] valueArray = {(Float) value};
-				float[] primitives = ObjectToPrimitiveArray.convertObjectToPrimitiveArray((Float[]) valueArray);
-				args[0] = primitives[0];
+				float[] primitives = ObjectToPrimitiveArray.convertObjectToPrimitiveArray(valueArray);
+				args[0] = isArray ? primitives[0] : primitives;
 			} else if(fieldType == int.class){
 				Integer[] valueArray = {(Integer) value};
-				int[] primitives = ObjectToPrimitiveArray.convertObjectToPrimitiveArray((Integer[]) valueArray);
-				args[0] = primitives[0];
+				int[] primitives = ObjectToPrimitiveArray.convertObjectToPrimitiveArray(valueArray);
+				args[0] = isArray ? primitives[0] : primitives;
 			} else if(fieldType == long.class){
 				Long[] valueArray = {(Long) value};
-				long[] primitives = ObjectToPrimitiveArray.convertObjectToPrimitiveArray((Long[]) valueArray);
-				args[0] = primitives[0];
+				long[] primitives = ObjectToPrimitiveArray.convertObjectToPrimitiveArray(valueArray);
+				args[0] = isArray ? primitives[0] : primitives;
 			} else if(fieldType == short.class){
 				Short[] valueArray = {(Short) value};
-				short[] primitives = ObjectToPrimitiveArray.convertObjectToPrimitiveArray((Short[]) valueArray);
-				args[0] = primitives[0];
+				short[] primitives = ObjectToPrimitiveArray.convertObjectToPrimitiveArray(valueArray);
+				args[0] = isArray ? primitives[0] : primitives;
 			}
 		} else if(isArray){
 			fieldType = fieldType.getComponentType();

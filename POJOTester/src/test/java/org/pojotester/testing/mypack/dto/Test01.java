@@ -10,6 +10,7 @@ import org.pojotester.testing.mypack.MyClassWithDefaultConstructor;
 public class Test01 {
 
 	@IgnoreField
+	@IntTestValue(assignValues=1,expectedValues=1)
 	private int num1;
 	@IntTestValue(assignValues={1,2}, expectedValues = { 1,2 })
 	private int[] nums1;

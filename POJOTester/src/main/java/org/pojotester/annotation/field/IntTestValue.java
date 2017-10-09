@@ -23,7 +23,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = {ElementType.FIELD})
 public @interface IntTestValue {
-	int[] assignValues() default {Integer.MAX_VALUE};
+	int[] assignValues();
 	int[] expectedValues();
 	
 }

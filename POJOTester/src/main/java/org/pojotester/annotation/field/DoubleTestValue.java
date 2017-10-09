@@ -23,6 +23,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = {ElementType.FIELD})
 public @interface DoubleTestValue {
-	double[] assignValues() default {Double.MAX_VALUE};
+	double[] assignValues();
 	double[] expectedValues();
 }

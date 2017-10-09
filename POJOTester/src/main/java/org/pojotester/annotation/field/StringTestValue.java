@@ -23,6 +23,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = {ElementType.FIELD})
 public @interface StringTestValue {
-	String[] assignValues() default {"TestString"};
+	String[] assignValues();
 	String[] expectedValues();
 }

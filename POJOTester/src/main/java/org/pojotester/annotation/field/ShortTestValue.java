@@ -23,6 +23,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = {ElementType.FIELD})
 public @interface ShortTestValue {
-	short[] assignValues() default {Short.MAX_VALUE};
+	short[] assignValues();
 	short[] expectedValues();
 }

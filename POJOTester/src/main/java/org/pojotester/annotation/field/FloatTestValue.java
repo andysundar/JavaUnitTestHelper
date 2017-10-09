@@ -23,6 +23,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = {ElementType.FIELD})
 public @interface FloatTestValue {
-	float[] assignValues() default {Float.MAX_VALUE};
+	float[] assignValues();
 	float[] expectedValues();
 }
