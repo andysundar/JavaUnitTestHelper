@@ -57,7 +57,7 @@ public class ObjectToPrimitiveArrayTest {
 
 	@Test
 	public void testConvertObjectToPrimitiveArrayShortArray()  {
-		Short objects[] = {Short.MIN_VALUE};
+		Short objects[] = {Short.MIN_VALUE}; 
 		short result[] = ObjectToPrimitiveArray.convertObjectToPrimitiveArray(objects);
 		assertEquals(objects[0] , Short.valueOf(result[0]));
 	}

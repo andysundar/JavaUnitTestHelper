@@ -35,7 +35,7 @@ public abstract class ObjectToPrimitiveArray {
 			int length = objects.length;
 			primitives = new byte[length];
 			for(int index = 0; index < length; index++){
-				primitives[index] = objects[index]; 
+				primitives[index] = objects[index];  
 			}
 		}
 		return primitives;

@@ -107,7 +107,7 @@ public abstract class PrimitiveToObjectArray {
 			int length = primitives.length;
 			object = new Short[length];
 			for(int index = 0; index < length; index++){
-				object[index] = primitives[index]; 
+				object[index] = primitives[index];  
 			}
 		}
 		return object;

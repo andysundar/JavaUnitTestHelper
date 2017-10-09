@@ -17,7 +17,7 @@ public class PrimitiveToObjectArrayTest {
 	public void testConvertPrimitiveToObjectArrayByteArray()  {
 		byte primitives[] = {Byte.MIN_VALUE};
 		Byte result[] = PrimitiveToObjectArray.convertPrimitiveToObjectArray(primitives);
-		assertEquals(Byte.valueOf(primitives[0]),result[0]);
+		assertEquals(Byte.valueOf(primitives[0]),result[0]); 
 	}
 
 	@Test

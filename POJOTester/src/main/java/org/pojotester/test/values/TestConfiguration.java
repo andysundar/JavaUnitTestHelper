@@ -197,7 +197,6 @@ public class TestConfiguration<T> {
 					args[0] = primitives;
 				}
 			} 
-		
 		} 
 		return args;
 	}
