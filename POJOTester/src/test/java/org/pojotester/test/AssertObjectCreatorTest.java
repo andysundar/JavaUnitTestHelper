@@ -18,7 +18,7 @@ public class AssertObjectCreatorTest {
 		assertObjectCreator = new AssertObjectCreator();
 	}
 	@Test
-	public void testGetAssertObjects1() {
+	public void testGetAssertObjects_WhenMultiPackage() {
 		String []packagesToScan = {"org.*tester.pack.**.mypack","org.pojotester.testing.mypack.dto"};
 		List<AssertObject<?>> assertObjects = assertObjectCreator.getAssertObjects(packagesToScan);
 		for(AssertObject<?> assertObject : assertObjects) {
