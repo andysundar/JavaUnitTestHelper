@@ -94,7 +94,7 @@ public class TestConfiguration<T> {
 		boolean isArray = fieldType.isArray();
 		fieldType = isArray ? fieldType.getComponentType() : fieldType;
 		if(fieldType.isPrimitive()){
-			convertObjectToPrimitive(value);
+			convertObjectToPrimitiveForWriteMethod(value);
 		} else {
 			if (writeMethod != null) {
 				try {
@@ -140,7 +140,7 @@ public class TestConfiguration<T> {
 		return returnValue;
 	}
 
-	private void convertObjectToPrimitive(T value) {
+	private void convertObjectToPrimitiveForWriteMethod(T value) {
 		Class<?> fieldType = field.getType();
 		Object[] args = new Object[1];
 		boolean isArray = fieldType.isArray();
@@ -154,7 +154,7 @@ public class TestConfiguration<T> {
 					try {
 						writeMethod.invoke(object, args);
 					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-						PojoTesterLogger.debugMessage(writeMethod.getName() + " invoke fail.", e);
+						PojoTesterLogger.debugMessage(writeMethod.getName() + " method invoke fail.", e);
 						e.printStackTrace();
 					}
 				} else {
@@ -174,7 +174,7 @@ public class TestConfiguration<T> {
 					try {
 						writeMethod.invoke(object, args);
 					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-						PojoTesterLogger.debugMessage(writeMethod.getName() + " invoke fail.", e);
+						PojoTesterLogger.debugMessage(writeMethod.getName() + " method invoke fail.", e);
 						e.printStackTrace();
 					}
 				} else {
@@ -194,7 +194,7 @@ public class TestConfiguration<T> {
 					try {
 						writeMethod.invoke(object, args);
 					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-						PojoTesterLogger.debugMessage(writeMethod.getName() + " invoke fail.", e);
+						PojoTesterLogger.debugMessage(writeMethod.getName() + " method invoke fail.", e);
 						e.printStackTrace();
 					}
 				} else {
@@ -214,7 +214,7 @@ public class TestConfiguration<T> {
 					try {
 						writeMethod.invoke(object, args);
 					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-						PojoTesterLogger.debugMessage(writeMethod.getName() + " invoke fail.", e);
+						PojoTesterLogger.debugMessage(writeMethod.getName() + " method invoke fail.", e);
 						e.printStackTrace();
 					}
 				} else {
@@ -234,7 +234,7 @@ public class TestConfiguration<T> {
 					try {
 						writeMethod.invoke(object, args);
 					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-						PojoTesterLogger.debugMessage(writeMethod.getName() + " invoke fail.", e);
+						PojoTesterLogger.debugMessage(writeMethod.getName() + " method invoke fail.", e);
 						e.printStackTrace();
 					}
 				} else {
@@ -254,7 +254,7 @@ public class TestConfiguration<T> {
 					try {
 						writeMethod.invoke(object, args);
 					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-						PojoTesterLogger.debugMessage(writeMethod.getName() + " invoke fail.", e);
+						PojoTesterLogger.debugMessage(writeMethod.getName() + " method invoke fail.", e);
 						e.printStackTrace();
 					}
 				} else {
@@ -274,7 +274,7 @@ public class TestConfiguration<T> {
 					try {
 						writeMethod.invoke(object, args);
 					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-						PojoTesterLogger.debugMessage(writeMethod.getName() + " invoke fail.", e);
+						PojoTesterLogger.debugMessage(writeMethod.getName() + " method invoke fail.", e);
 						e.printStackTrace();
 					}
 				} else {
@@ -294,7 +294,7 @@ public class TestConfiguration<T> {
 					try {
 						writeMethod.invoke(object, args);
 					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-						PojoTesterLogger.debugMessage(writeMethod.getName() + " invoke fail.", e);
+						PojoTesterLogger.debugMessage(writeMethod.getName() + " method invoke fail.", e);
 						e.printStackTrace();
 					}
 				} else {
