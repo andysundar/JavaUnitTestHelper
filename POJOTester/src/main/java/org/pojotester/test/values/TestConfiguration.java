@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.pojotester.log.PojoTesterLogger;
 import org.pojotester.type.convertor.ObjectToPrimitiveArray;
 import org.pojotester.utils.ClassUtilities;
 import org.pojotester.utils.DefaultValueUtilities;
@@ -97,12 +98,14 @@ public class TestConfiguration<T> {
 			try {
 				writeMethod.invoke(object, args);
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+				PojoTesterLogger.debugMessage(writeMethod.getName() + " invoke fail.", e);
 				e.printStackTrace();
 			}
 		} else {
 			try {
 				field.set(object, args[0]);
 			} catch (IllegalArgumentException | IllegalAccessException e) {
+				PojoTesterLogger.debugMessage(field.getName() + " field set fail.", e);
 				e.printStackTrace();
 			}
 
