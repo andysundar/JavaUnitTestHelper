@@ -90,26 +90,31 @@ public class TestConfiguration<T> {
 
 	private void writeValue(T value) {
 		Object args[] = { value };
-		args = convertObjectToPrimitiveArray(value);
-		if(args[0] == null){
-			args[0] = value;
-		}
-		if (writeMethod != null) {
-			try {
-				writeMethod.invoke(object, args);
-			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-				PojoTesterLogger.debugMessage(writeMethod.getName() + " invoke fail.", e);
-				e.printStackTrace();
-			}
+		Class<?> fieldType = field.getType();
+		boolean isArray = fieldType.isArray();
+		fieldType = isArray ? fieldType.getComponentType() : fieldType;
+		if(fieldType.isPrimitive()){
+			convertObjectToPrimitive(value);
 		} else {
-			try {
-				field.set(object, args[0]);
-			} catch (IllegalArgumentException | IllegalAccessException e) {
-				PojoTesterLogger.debugMessage(field.getName() + " field set fail.", e);
-				e.printStackTrace();
-			}
+			if (writeMethod != null) {
+				try {
+					writeMethod.invoke(object, args);
+				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+					PojoTesterLogger.debugMessage(writeMethod.getName() + " invoke fail.", e);
+					e.printStackTrace();
+				}
+			} else {
+				try {
+					field.set(object, args[0]);
+				} catch (IllegalArgumentException | IllegalAccessException e) {
+					PojoTesterLogger.debugMessage(field.getName() + " field set fail.", e);
+					e.printStackTrace();
+				}
 
+			}
 		}
+		
+		
 	}
 
 	
@@ -120,12 +125,14 @@ public class TestConfiguration<T> {
 			try {
 				returnValue = (T) readMethod.invoke(object, null);
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+				PojoTesterLogger.debugMessage(readMethod.getName() + " method invoke fail.", e);
 				e.printStackTrace();
 			}
 		} else {
 			try {
 				returnValue = (T) field.get(object);
 			} catch (IllegalArgumentException | IllegalAccessException e) {
+				PojoTesterLogger.debugMessage(field.getName() + " field set fail.", e);
 				e.printStackTrace();
 			}
 
@@ -133,7 +140,7 @@ public class TestConfiguration<T> {
 		return returnValue;
 	}
 
-	private Object[] convertObjectToPrimitiveArray(T value) {
+	private void convertObjectToPrimitive(T value) {
 		Class<?> fieldType = field.getType();
 		Object[] args = new Object[1];
 		boolean isArray = fieldType.isArray();
@@ -142,67 +149,166 @@ public class TestConfiguration<T> {
 			if (fieldType == boolean.class) {
 				Boolean[] valueArray = {(Boolean) value};
 				boolean[] primitives = ObjectToPrimitiveArray.convertObjectToPrimitiveArray(valueArray);
-				args[0] = isArray ? primitives[0] : primitives;
+				args[0] = isArray ?  primitives : primitives[0];
+				if (writeMethod != null) {
+					try {
+						writeMethod.invoke(object, args);
+					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+						PojoTesterLogger.debugMessage(writeMethod.getName() + " invoke fail.", e);
+						e.printStackTrace();
+					}
+				} else {
+					try {
+						field.set(object, primitives);
+					} catch (IllegalArgumentException | IllegalAccessException e) {
+						PojoTesterLogger.debugMessage(field.getName() + " field set fail.", e);
+						e.printStackTrace();
+					}
+
+				}
 			} else if (fieldType == byte.class) {
 				Byte[] valueArray = {(Byte) value};
 				byte[] primitives = ObjectToPrimitiveArray.convertObjectToPrimitiveArray(valueArray);
-				args[0] = isArray ? primitives[0] : primitives;
+				args[0] = isArray ?  primitives : primitives[0];
+				if (writeMethod != null) {
+					try {
+						writeMethod.invoke(object, args);
+					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+						PojoTesterLogger.debugMessage(writeMethod.getName() + " invoke fail.", e);
+						e.printStackTrace();
+					}
+				} else {
+					try {
+						field.set(object, primitives);
+					} catch (IllegalArgumentException | IllegalAccessException e) {
+						PojoTesterLogger.debugMessage(field.getName() + " field set fail.", e);
+						e.printStackTrace();
+					}
+
+				}
 			} else if(fieldType == char.class){
 				Character[] valueArray = {(Character) value};
 				char[] primitives = ObjectToPrimitiveArray.convertObjectToPrimitiveArray(valueArray);
-				args[0] = isArray ? primitives[0] : primitives;
+				args[0] = isArray ?  primitives : primitives[0];
+				if (writeMethod != null) {
+					try {
+						writeMethod.invoke(object, args);
+					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+						PojoTesterLogger.debugMessage(writeMethod.getName() + " invoke fail.", e);
+						e.printStackTrace();
+					}
+				} else {
+					try {
+						field.set(object, primitives);
+					} catch (IllegalArgumentException | IllegalAccessException e) {
+						PojoTesterLogger.debugMessage(field.getName() + " field set fail.", e);
+						e.printStackTrace();
+					}
+
+				}
 			} else if(fieldType == double.class){
 				Double[] valueArray = {(Double) value};
 				double[] primitives = ObjectToPrimitiveArray.convertObjectToPrimitiveArray(valueArray);
-				args[0] = isArray ? primitives[0] : primitives;
+				args[0] = isArray ?  primitives : primitives[0];
+				if (writeMethod != null) {
+					try {
+						writeMethod.invoke(object, args);
+					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+						PojoTesterLogger.debugMessage(writeMethod.getName() + " invoke fail.", e);
+						e.printStackTrace();
+					}
+				} else {
+					try {
+						field.set(object, primitives);
+					} catch (IllegalArgumentException | IllegalAccessException e) {
+						PojoTesterLogger.debugMessage(field.getName() + " field set fail.", e);
+						e.printStackTrace();
+					}
+
+				}
 			} else if(fieldType == float.class){
 				Float[] valueArray = {(Float) value};
 				float[] primitives = ObjectToPrimitiveArray.convertObjectToPrimitiveArray(valueArray);
-				args[0] = isArray ? primitives[0] : primitives;
+				args[0] = isArray ?  primitives : primitives[0];
+				if (writeMethod != null) {
+					try {
+						writeMethod.invoke(object, args);
+					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+						PojoTesterLogger.debugMessage(writeMethod.getName() + " invoke fail.", e);
+						e.printStackTrace();
+					}
+				} else {
+					try {
+						field.set(object, primitives);
+					} catch (IllegalArgumentException | IllegalAccessException e) {
+						PojoTesterLogger.debugMessage(field.getName() + " field set fail.", e);
+						e.printStackTrace();
+					}
+
+				}
 			} else if(fieldType == int.class){
 				Integer[] valueArray = {(Integer) value};
 				int[] primitives = ObjectToPrimitiveArray.convertObjectToPrimitiveArray(valueArray);
-				args[0] = isArray ? primitives[0] : primitives;
+				args[0] = isArray ?  primitives : primitives[0];
+				if (writeMethod != null) {
+					try {
+						writeMethod.invoke(object, args);
+					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+						PojoTesterLogger.debugMessage(writeMethod.getName() + " invoke fail.", e);
+						e.printStackTrace();
+					}
+				} else {
+					try {
+						field.set(object, primitives);
+					} catch (IllegalArgumentException | IllegalAccessException e) {
+						PojoTesterLogger.debugMessage(field.getName() + " field set fail.", e);
+						e.printStackTrace();
+					}
+
+				}
 			} else if(fieldType == long.class){
 				Long[] valueArray = {(Long) value};
 				long[] primitives = ObjectToPrimitiveArray.convertObjectToPrimitiveArray(valueArray);
-				args[0] = isArray ? primitives[0] : primitives;
+				args[0] = isArray ?  primitives : primitives[0];
+				if (writeMethod != null) {
+					try {
+						writeMethod.invoke(object, args);
+					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+						PojoTesterLogger.debugMessage(writeMethod.getName() + " invoke fail.", e);
+						e.printStackTrace();
+					}
+				} else {
+					try {
+						field.set(object, primitives);
+					} catch (IllegalArgumentException | IllegalAccessException e) {
+						PojoTesterLogger.debugMessage(field.getName() + " field set fail.", e);
+						e.printStackTrace();
+					}
+
+				}
 			} else if(fieldType == short.class){
 				Short[] valueArray = {(Short) value};
 				short[] primitives = ObjectToPrimitiveArray.convertObjectToPrimitiveArray(valueArray);
-				args[0] = isArray ? primitives[0] : primitives;
-			}
-		} else if(isArray){
-			fieldType = fieldType.getComponentType();
-			if(fieldType.isPrimitive()){
-				if (fieldType == boolean.class) {
-					boolean[] primitives = ObjectToPrimitiveArray.convertObjectToPrimitiveArray((Boolean[]) value);
-					args[0] = primitives;
-				} else if (fieldType == byte.class) {
-					byte[] primitives = ObjectToPrimitiveArray.convertObjectToPrimitiveArray((Byte[]) value);
-					args[0] = primitives;
-				} else if(fieldType == char.class){
-					char[] primitives = ObjectToPrimitiveArray.convertObjectToPrimitiveArray((Character[]) value);
-					args[0] = primitives;
-				} else if(fieldType == double.class){
-					double[] primitives = ObjectToPrimitiveArray.convertObjectToPrimitiveArray((Double[]) value);
-					args[0] = primitives;
-				} else if(fieldType == float.class){
-					float[] primitives = ObjectToPrimitiveArray.convertObjectToPrimitiveArray((Float[]) value);
-					args[0] = primitives;
-				} else if(fieldType == int.class){
-					int[] primitives = ObjectToPrimitiveArray.convertObjectToPrimitiveArray((Integer[]) value);
-					args[0] = primitives;
-				} else if(fieldType == long.class){
-					long[] primitives = ObjectToPrimitiveArray.convertObjectToPrimitiveArray((Long[]) value);
-					args[0] = primitives;
-				} else if(fieldType == short.class){
-					short[] primitives = ObjectToPrimitiveArray.convertObjectToPrimitiveArray((Short[]) value);
-					args[0] = primitives;
+				args[0] = isArray ?  primitives : primitives[0];
+				if (writeMethod != null) {
+					try {
+						writeMethod.invoke(object, args);
+					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+						PojoTesterLogger.debugMessage(writeMethod.getName() + " invoke fail.", e);
+						e.printStackTrace();
+					}
+				} else {
+					try {
+						field.set(object, primitives);
+					} catch (IllegalArgumentException | IllegalAccessException e) {
+						PojoTesterLogger.debugMessage(field.getName() + " field set fail.", e);
+						e.printStackTrace();
+					}
+
 				}
-			} 
+			}
 		} 
-		return args;
+
 	}
 
 	public T[] getAssignedValues() {
