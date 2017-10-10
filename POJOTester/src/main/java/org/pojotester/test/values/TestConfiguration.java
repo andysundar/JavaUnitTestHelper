@@ -55,13 +55,20 @@ public class TestConfiguration<T> {
 			if(assignedValues != null){
 				values = populateAnnotatedValues();
 			} else {
-				values = new LinkedList<AssertObject<?>>();
-				@SuppressWarnings("unchecked")
-				T object = (T) DefaultValueUtilities.getValueFromMap(field.getType());
+				Object object = DefaultValueUtilities.getValueFromMap(field.getType());
+				Class<?> fieldType = field.getType();
+				boolean isArray = fieldType.isArray();
+				fieldType = isArray ? fieldType.getComponentType() : fieldType;
+				if(isArray && fieldType.isPrimitive()){
+					//assignedValues = (T[]) object; need to work on this 
+					values = populateAnnotatedValues();
+				} else { 
+					values = new LinkedList<AssertObject<?>>();
+					@SuppressWarnings("unchecked")
+					AssertObject<T> assertObject = invokeReadWriteMethod((T)object, (T)object);
+					values.add(assertObject);
+				}
 				
-				
-				AssertObject<T> assertObject = invokeReadWriteMethod(object, object);
-				values.add(assertObject);
 			}
 		}
 		return values;
@@ -74,6 +81,9 @@ public class TestConfiguration<T> {
 			length = assignedValues.length;
 		} else {
 			length = expectedValues.length;
+		}
+		if(expectedValues == null){
+			expectedValues = assignedValues;
 		}
 		for (int index = 0; index < length; index++) {
 			AssertObject<T> assertObject = invokeReadWriteMethod(assignedValues[index],expectedValues[index]);
