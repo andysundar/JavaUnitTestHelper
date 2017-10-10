@@ -25,6 +25,7 @@ import java.util.List;
 
 import org.pojotester.log.PojoTesterLogger;
 import org.pojotester.type.convertor.ObjectToPrimitiveArray;
+import org.pojotester.type.convertor.PrimitiveToObjectArray;
 import org.pojotester.utils.ClassUtilities;
 import org.pojotester.utils.DefaultValueUtilities;
 
@@ -57,6 +58,8 @@ public class TestConfiguration<T> {
 				values = new LinkedList<AssertObject<?>>();
 				@SuppressWarnings("unchecked")
 				T object = (T) DefaultValueUtilities.getValueFromMap(field.getType());
+				
+				
 				AssertObject<T> assertObject = invokeReadWriteMethod(object, object);
 				values.add(assertObject);
 			}
@@ -93,7 +96,7 @@ public class TestConfiguration<T> {
 		Class<?> fieldType = field.getType();
 		boolean isArray = fieldType.isArray();
 		fieldType = isArray ? fieldType.getComponentType() : fieldType;
-		if(fieldType.isPrimitive()){
+		if(isArray && fieldType.isPrimitive()){
 			convertObjectToPrimitiveForWriteMethod(value);
 		} else {
 			if (writeMethod != null) {
@@ -135,7 +138,42 @@ public class TestConfiguration<T> {
 				PojoTesterLogger.debugMessage(field.getName() + " field set fail.", e);
 				e.printStackTrace();
 			}
+		}
+		returnValue = convertPrimitiveToObjectForReadMethod(returnValue);
+		return returnValue;
+	}
 
+	private T convertPrimitiveToObjectForReadMethod(T returnValue) {
+		Class<?> fieldType = field.getType();
+		boolean isArray = fieldType.isArray();
+		fieldType = isArray ? fieldType.getComponentType() : fieldType;
+		if(isArray && fieldType.isPrimitive()){
+			if (fieldType == boolean.class) {
+				Boolean[] valueArray = PrimitiveToObjectArray.convertPrimitiveToObjectArray((boolean[]) returnValue) ;
+				returnValue = (T) valueArray[0];
+			} else if (fieldType == byte.class) {
+				Byte[] valueArray = PrimitiveToObjectArray.convertPrimitiveToObjectArray((byte[]) returnValue) ;
+				returnValue = (T) valueArray[0];
+			} else if (fieldType == char.class) {
+				Character[] valueArray = PrimitiveToObjectArray.convertPrimitiveToObjectArray((char[]) returnValue);
+				returnValue = (T) valueArray[0];
+			} else if (fieldType == double.class) {
+				Double[] valueArray = PrimitiveToObjectArray.convertPrimitiveToObjectArray((double[]) returnValue);
+				returnValue = (T) valueArray[0];
+			} else if (fieldType == float.class) {
+				Float[] valueArray = PrimitiveToObjectArray.convertPrimitiveToObjectArray((float[]) returnValue);
+				returnValue = (T) valueArray[0];
+			} else if (fieldType == int.class) {
+				Integer[] valueArray = PrimitiveToObjectArray.convertPrimitiveToObjectArray((int[]) returnValue);
+				returnValue = (T) valueArray[0];
+			} else if (fieldType == long.class) {
+				Long[] valueArray = PrimitiveToObjectArray.convertPrimitiveToObjectArray((long[]) returnValue);
+				returnValue = (T) valueArray[0];								
+			} else if (fieldType == short.class) {
+				Short[] valueArray =  PrimitiveToObjectArray.convertPrimitiveToObjectArray((short[]) returnValue);
+				returnValue = (T) valueArray[0];
+			}
+		
 		}
 		return returnValue;
 	}
@@ -145,11 +183,11 @@ public class TestConfiguration<T> {
 		Object[] args = new Object[1];
 		boolean isArray = fieldType.isArray();
 		fieldType = isArray ? fieldType.getComponentType() : fieldType;
-		if(fieldType.isPrimitive()){
+		if (fieldType.isPrimitive()) {
 			if (fieldType == boolean.class) {
-				Boolean[] valueArray = {(Boolean) value};
+				Boolean[] valueArray = { (Boolean) value };
 				boolean[] primitives = ObjectToPrimitiveArray.convertObjectToPrimitiveArray(valueArray);
-				args[0] = isArray ?  primitives : primitives[0];
+				args[0] = isArray ? primitives : primitives[0];
 				if (writeMethod != null) {
 					try {
 						writeMethod.invoke(object, args);
@@ -167,9 +205,9 @@ public class TestConfiguration<T> {
 
 				}
 			} else if (fieldType == byte.class) {
-				Byte[] valueArray = {(Byte) value};
+				Byte[] valueArray = { (Byte) value };
 				byte[] primitives = ObjectToPrimitiveArray.convertObjectToPrimitiveArray(valueArray);
-				args[0] = isArray ?  primitives : primitives[0];
+				args[0] = isArray ? primitives : primitives[0];
 				if (writeMethod != null) {
 					try {
 						writeMethod.invoke(object, args);
@@ -186,10 +224,10 @@ public class TestConfiguration<T> {
 					}
 
 				}
-			} else if(fieldType == char.class){
-				Character[] valueArray = {(Character) value};
+			} else if (fieldType == char.class) {
+				Character[] valueArray = { (Character) value };
 				char[] primitives = ObjectToPrimitiveArray.convertObjectToPrimitiveArray(valueArray);
-				args[0] = isArray ?  primitives : primitives[0];
+				args[0] = isArray ? primitives : primitives[0];
 				if (writeMethod != null) {
 					try {
 						writeMethod.invoke(object, args);
@@ -206,10 +244,10 @@ public class TestConfiguration<T> {
 					}
 
 				}
-			} else if(fieldType == double.class){
-				Double[] valueArray = {(Double) value};
+			} else if (fieldType == double.class) {
+				Double[] valueArray = { (Double) value };
 				double[] primitives = ObjectToPrimitiveArray.convertObjectToPrimitiveArray(valueArray);
-				args[0] = isArray ?  primitives : primitives[0];
+				args[0] = isArray ? primitives : primitives[0];
 				if (writeMethod != null) {
 					try {
 						writeMethod.invoke(object, args);
@@ -226,10 +264,10 @@ public class TestConfiguration<T> {
 					}
 
 				}
-			} else if(fieldType == float.class){
-				Float[] valueArray = {(Float) value};
+			} else if (fieldType == float.class) {
+				Float[] valueArray = { (Float) value };
 				float[] primitives = ObjectToPrimitiveArray.convertObjectToPrimitiveArray(valueArray);
-				args[0] = isArray ?  primitives : primitives[0];
+				args[0] = isArray ? primitives : primitives[0];
 				if (writeMethod != null) {
 					try {
 						writeMethod.invoke(object, args);
@@ -246,10 +284,10 @@ public class TestConfiguration<T> {
 					}
 
 				}
-			} else if(fieldType == int.class){
-				Integer[] valueArray = {(Integer) value};
+			} else if (fieldType == int.class) {
+				Integer[] valueArray = { (Integer) value };
 				int[] primitives = ObjectToPrimitiveArray.convertObjectToPrimitiveArray(valueArray);
-				args[0] = isArray ?  primitives : primitives[0];
+				args[0] = isArray ? primitives : primitives[0];
 				if (writeMethod != null) {
 					try {
 						writeMethod.invoke(object, args);
@@ -266,10 +304,10 @@ public class TestConfiguration<T> {
 					}
 
 				}
-			} else if(fieldType == long.class){
-				Long[] valueArray = {(Long) value};
+			} else if (fieldType == long.class) {
+				Long[] valueArray = { (Long) value };
 				long[] primitives = ObjectToPrimitiveArray.convertObjectToPrimitiveArray(valueArray);
-				args[0] = isArray ?  primitives : primitives[0];
+				args[0] = isArray ? primitives : primitives[0];
 				if (writeMethod != null) {
 					try {
 						writeMethod.invoke(object, args);
@@ -286,10 +324,10 @@ public class TestConfiguration<T> {
 					}
 
 				}
-			} else if(fieldType == short.class){
-				Short[] valueArray = {(Short) value};
+			} else if (fieldType == short.class) {
+				Short[] valueArray = { (Short) value };
 				short[] primitives = ObjectToPrimitiveArray.convertObjectToPrimitiveArray(valueArray);
-				args[0] = isArray ?  primitives : primitives[0];
+				args[0] = isArray ? primitives : primitives[0];
 				if (writeMethod != null) {
 					try {
 						writeMethod.invoke(object, args);
@@ -307,7 +345,7 @@ public class TestConfiguration<T> {
 
 				}
 			}
-		} 
+		}
 
 	}
 
