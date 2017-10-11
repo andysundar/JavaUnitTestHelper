@@ -74,26 +74,33 @@ public abstract class DefaultValueUtilities {
 		classValueMap.put(String.class, "String");
 		classValueMap.put(String[].class, new String[]{"String" , "" });
 		
-		classValueMap.put(java.util.Date.class, new java.util.Date());
-		classValueMap.put(java.util.Date[].class, new java.util.Date[]{new java.util.Date() , new java.util.Date() });
+		java.util.Date utilDate = new java.util.Date();
+		classValueMap.put(java.util.Date.class, utilDate);
+		classValueMap.put(java.util.Date[].class, new java.util.Date[]{utilDate});
 		
-		classValueMap.put(java.sql.Date.class, new java.sql.Date(new java.util.Date().getTime()));
-		classValueMap.put(java.sql.Date[].class, new java.sql.Date[]{new java.sql.Date(new java.util.Date().getTime()) , new java.sql.Date(new java.util.Date().getTime()) });
+		java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+		classValueMap.put(java.sql.Date.class, sqlDate);
+		classValueMap.put(java.sql.Date[].class, new java.sql.Date[]{sqlDate});
 		
-		classValueMap.put(java.util.Calendar.class, new java.util.Calendar.Builder().build());
-		classValueMap.put(java.util.Calendar[].class, new java.util.Calendar[]{new java.util.Calendar.Builder().build(), new java.util.Calendar.Builder().build()});
+		java.util.Calendar calendar = java.util.Calendar.getInstance();
+		classValueMap.put(java.util.Calendar.class, calendar);
+		classValueMap.put(java.util.Calendar[].class, new java.util.Calendar[]{calendar});
 		
-		classValueMap.put(LocalDate.class, LocalDate.now());
-		classValueMap.put(LocalDate[].class, new LocalDate[]{LocalDate.now() , LocalDate.now()});
+		LocalDate localDate = LocalDate.now();
+		classValueMap.put(LocalDate.class, localDate);
+		classValueMap.put(LocalDate[].class, new LocalDate[]{localDate});
 		
-		classValueMap.put(LocalTime.class, LocalTime.now());
-		classValueMap.put(LocalTime[].class, new LocalTime[]{LocalTime.now() , LocalTime.now()});
+		LocalTime localTime = LocalTime.now();
+		classValueMap.put(LocalTime.class, localTime);
+		classValueMap.put(LocalTime[].class, new LocalTime[]{localTime});
 		
-		classValueMap.put(LocalDateTime.class, LocalDateTime.now());
-		classValueMap.put(LocalDateTime[].class, new LocalDateTime[]{LocalDateTime.now() , LocalDateTime.now()});
+		LocalDateTime localDateTime = LocalDateTime.now();
+		classValueMap.put(LocalDateTime.class, localDateTime);
+		classValueMap.put(LocalDateTime[].class, new LocalDateTime[]{localDateTime});
 		
-		classValueMap.put(Instant.class, Instant.now());
-		classValueMap.put(Instant[].class, new Instant[]{Instant.now() , Instant.now()});
+		Instant instant = Instant.now();
+		classValueMap.put(Instant.class, instant);
+		classValueMap.put(Instant[].class, new Instant[]{instant, instant});
 		
 		
 		classValueMap.put(BigDecimal.class, BigDecimal.TEN);
@@ -102,8 +109,9 @@ public abstract class DefaultValueUtilities {
 		classValueMap.put(BigInteger.class, BigInteger.TEN);
 		classValueMap.put(BigInteger[].class, new BigInteger[]{BigInteger.TEN , BigInteger.ONE });
 		
+		Object object = new Object();
 		classValueMap.put(Object.class, new Object());
-		classValueMap.put(Object[].class, new Object[]{new Object() , new Object()});
+		classValueMap.put(Object[].class, new Object[]{object});
 		
 		classValueMap.put(Set.class, Collections.emptySet());
 		
