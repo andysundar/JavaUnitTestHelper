@@ -17,9 +17,10 @@
 package org.pojotester.test.values;
 
 public class AssertObject<T> {
-
-	T returnedValue;
-	T expectedValue;
+	private String classFieldName;
+	
+	private T returnedValue;
+	private T expectedValue;
 	
 	public T getExpectedValue() {
 		return expectedValue;
@@ -32,5 +33,11 @@ public class AssertObject<T> {
 	}
 	public void setReturnedValue(T returnedValue) {
 		this.returnedValue = returnedValue;
+	}
+	public String getClassFieldName() {
+		return classFieldName;
+	}
+	public void setClassFieldName(String classFieldName) {
+		this.classFieldName = classFieldName;
 	}
 }

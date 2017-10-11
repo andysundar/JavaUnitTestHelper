@@ -54,6 +54,7 @@ public abstract class ClassUtilities {
 			clazz = (classLoader != null) ?  classLoader.loadClass(className) : Class.forName(className);
 		} catch (ClassNotFoundException e) {
 			PojoTesterLogger.debugMessage("Not able to load " + className, e);
+			e.printStackTrace();
 		}
 		return clazz;
 	}

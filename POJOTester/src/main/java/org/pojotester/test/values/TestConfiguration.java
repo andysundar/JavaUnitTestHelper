@@ -60,7 +60,7 @@ public class TestConfiguration<T> {
 				boolean isArray = fieldType.isArray();
 				fieldType = isArray ? fieldType.getComponentType() : fieldType;
 				if(isArray && fieldType.isPrimitive()){
-					//assignedValues = (T[]) object; need to work on this 
+					assignedValues = (T[]) object; // need to work on this 
 					values = populateAnnotatedValues();
 				} else { 
 					values = new LinkedList<AssertObject<?>>();
@@ -77,14 +77,15 @@ public class TestConfiguration<T> {
 	private List<AssertObject<?>> populateAnnotatedValues() {
 		List<AssertObject<?>> values = new LinkedList<AssertObject<?>>();
 		int length = 0;
+		if(expectedValues == null){
+			expectedValues = assignedValues;
+		}
 		if (assignedValues.length <= expectedValues.length) {
 			length = assignedValues.length;
 		} else {
 			length = expectedValues.length;
 		}
-		if(expectedValues == null){
-			expectedValues = assignedValues;
-		}
+		
 		for (int index = 0; index < length; index++) {
 			AssertObject<T> assertObject = invokeReadWriteMethod(assignedValues[index],expectedValues[index]);
 			values.add(assertObject);
@@ -98,6 +99,7 @@ public class TestConfiguration<T> {
 		T returnedValue = readValue();
 		assertObject.setReturnedValue(returnedValue);
 		assertObject.setExpectedValue(expectedValue);
+		assertObject.setClassFieldName(object.getClass().getName()+"."+field.getName());
 		return assertObject;
 	}
 
