@@ -86,8 +86,8 @@ public class AssertObjectCreatorTest {
 	}
 	
 	@Test
-	public void testGetAssertObjects_WhenArrayLong() {
-		String []packagesToScan = {"org.pojotester.testing.mypack.another.MyClass01.class"};
+	public void testGetAssertObjects_WhenArray() {
+		String []packagesToScan = {"org.pojotester.testing.mypack.MyClass01.class"};
 		List<AssertObject<?>> assertObjects = assertObjectCreator.getAssertObjects(packagesToScan);
 		for(AssertObject<?> assertObject : assertObjects) {
 			assertEquals(assertObject.getClassFieldName(), assertObject.getExpectedValue(), assertObject.getReturnedValue());

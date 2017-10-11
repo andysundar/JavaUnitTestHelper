@@ -60,7 +60,34 @@ public class TestConfiguration<T> {
 				boolean isArray = fieldType.isArray();
 				fieldType = isArray ? fieldType.getComponentType() : fieldType;
 				if(isArray && fieldType.isPrimitive()){
-					assignedValues = (T[]) object; // need to work on this 
+
+					if (fieldType == boolean.class) {
+						Boolean[] valueArray = PrimitiveToObjectArray.convertPrimitiveToObjectArray((boolean[]) object) ;
+						assignedValues = (T[]) valueArray;
+					} else if (fieldType == byte.class) {
+						Byte[] valueArray = PrimitiveToObjectArray.convertPrimitiveToObjectArray((byte[]) object) ;
+						assignedValues = (T[]) valueArray;
+					} else if (fieldType == char.class) {
+						Character[] valueArray = PrimitiveToObjectArray.convertPrimitiveToObjectArray((char[]) object);
+						assignedValues = (T[]) valueArray;
+					} else if (fieldType == double.class) {
+						Double[] valueArray = PrimitiveToObjectArray.convertPrimitiveToObjectArray((double[]) object);
+						assignedValues = (T[]) valueArray;
+					} else if (fieldType == float.class) {
+						Float[] valueArray = PrimitiveToObjectArray.convertPrimitiveToObjectArray((float[]) object);
+						assignedValues = (T[]) valueArray;
+					} else if (fieldType == int.class) {
+						Integer[] valueArray = PrimitiveToObjectArray.convertPrimitiveToObjectArray((int[]) object);
+						assignedValues = (T[]) valueArray;
+					} else if (fieldType == long.class) {
+						Long[] valueArray = PrimitiveToObjectArray.convertPrimitiveToObjectArray((long[]) object);
+						assignedValues = (T[]) valueArray;							
+					} else if (fieldType == short.class) {
+						Short[] valueArray =  PrimitiveToObjectArray.convertPrimitiveToObjectArray((short[]) object);
+						assignedValues = (T[]) valueArray;
+					}
+				
+				
 					values = populateAnnotatedValues();
 				} else { 
 					values = new LinkedList<AssertObject<?>>();
