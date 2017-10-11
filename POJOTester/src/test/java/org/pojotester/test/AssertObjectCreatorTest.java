@@ -22,7 +22,7 @@ public class AssertObjectCreatorTest {
 		String []packagesToScan = {"org.*tester.pack.**.mypack","org.pojotester.testing.mypack.dto"};
 		List<AssertObject<?>> assertObjects = assertObjectCreator.getAssertObjects(packagesToScan);
 		for(AssertObject<?> assertObject : assertObjects) {
-			assertEquals(assertObject.getExpectedValue(), assertObject.getReturnedValue());
+			assertEquals(assertObject.getClassFieldName(),assertObject.getExpectedValue(), assertObject.getReturnedValue());
 		}
 	}
 	
@@ -31,7 +31,7 @@ public class AssertObjectCreatorTest {
 		String []packagesToScan = {"org.pojotester.testing.mypack.dto.Test01.class"};
 		List<AssertObject<?>> assertObjects = assertObjectCreator.getAssertObjects(packagesToScan);
 		for(AssertObject<?> assertObject : assertObjects) {
-			assertEquals(assertObject.getExpectedValue(), assertObject.getReturnedValue());
+			assertEquals(assertObject.getClassFieldName(),assertObject.getExpectedValue(), assertObject.getReturnedValue());
 		}
 	}
 	
@@ -40,7 +40,7 @@ public class AssertObjectCreatorTest {
 		String []packagesToScan = {"org.pojotester.testing.mypack.dto.Test03.class"};
 		List<AssertObject<?>> assertObjects = assertObjectCreator.getAssertObjects(packagesToScan);
 		for(AssertObject<?> assertObject : assertObjects) {
-			assertEquals(assertObject.getExpectedValue(), assertObject.getReturnedValue());
+			assertEquals(assertObject.getClassFieldName(),assertObject.getExpectedValue(), assertObject.getReturnedValue());
 		}
 	}
 	
@@ -49,7 +49,7 @@ public class AssertObjectCreatorTest {
 		String []packagesToScan = {"org.pojotester.testing.mypack.dto.Test04.class"};
 		List<AssertObject<?>> assertObjects = assertObjectCreator.getAssertObjects(packagesToScan);
 		for(AssertObject<?> assertObject : assertObjects) {
-			assertEquals(assertObject.getExpectedValue(), assertObject.getReturnedValue());
+			assertEquals(assertObject.getClassFieldName(),assertObject.getExpectedValue(), assertObject.getReturnedValue());
 		}
 	}
 	
@@ -72,7 +72,7 @@ public class AssertObjectCreatorTest {
 		String []packagesToScan = {"org.pojotester.testing.mypack.dto.Test05.class"};
 		List<AssertObject<?>> assertObjects = assertObjectCreator.getAssertObjects(packagesToScan);
 		for(AssertObject<?> assertObject : assertObjects) {
-			assertEquals(assertObject.getExpectedValue(), assertObject.getReturnedValue());
+			assertEquals(assertObject.getClassFieldName(), assertObject.getExpectedValue(), assertObject.getReturnedValue());
 		}
 	}
 	
@@ -81,7 +81,16 @@ public class AssertObjectCreatorTest {
 		String []packagesToScan = {"org.pojotester.testing.mypack.dto.Test06.class"};
 		List<AssertObject<?>> assertObjects = assertObjectCreator.getAssertObjects(packagesToScan);
 		for(AssertObject<?> assertObject : assertObjects) {
-			assertEquals(assertObject.getExpectedValue(), assertObject.getReturnedValue());
+			assertEquals(assertObject.getClassFieldName(), assertObject.getExpectedValue(), assertObject.getReturnedValue());
+		}
+	}
+	
+	@Test
+	public void testGetAssertObjects_WhenArrayLong() {
+		String []packagesToScan = {"org.pojotester.testing.mypack.another.MyClass01.class"};
+		List<AssertObject<?>> assertObjects = assertObjectCreator.getAssertObjects(packagesToScan);
+		for(AssertObject<?> assertObject : assertObjects) {
+			assertEquals(assertObject.getClassFieldName(), assertObject.getExpectedValue(), assertObject.getReturnedValue());
 		}
 	}
 }
