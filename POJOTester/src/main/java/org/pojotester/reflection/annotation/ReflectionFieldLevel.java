@@ -29,7 +29,7 @@ import org.pojotester.annotation.field.LongTestValue;
 import org.pojotester.annotation.field.ShortTestValue;
 import org.pojotester.annotation.field.StringTestValue;
 import org.pojotester.test.values.TestConfiguration;
-import org.pojotester.test.values.TestValuesFactory;
+import org.pojotester.test.values.TestConfigurationFactory;
 import org.pojotester.type.convertor.PrimitiveToObjectArray;
 
 public  abstract class ReflectionFieldLevel {
@@ -80,7 +80,7 @@ public  abstract class ReflectionFieldLevel {
 			 StringTestValue stringTestValue = field.getAnnotation(StringTestValue.class);
 			 testValues = createTestValues(stringTestValue);
 		 } else {
-			 testValues = TestValuesFactory.createTestValuesObject(typeClass);
+			 testValues = TestConfigurationFactory.createTestConfigurationObject(typeClass);
 		 }
 	
 		if(testValues != null){
