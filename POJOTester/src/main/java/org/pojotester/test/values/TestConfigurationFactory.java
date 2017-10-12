@@ -25,9 +25,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public abstract class TestValuesFactory {
+public abstract class TestConfigurationFactory {
 
-	public static TestConfiguration<?> createTestValuesObject(final Class<?> typeClass){
+	public static TestConfiguration<?> createTestConfigurationObject(final Class<?> typeClass){
 		 TestConfiguration<?>  testValues = null;
 		 if(typeClass == Boolean.class || typeClass == boolean.class 
 				 || typeClass == Boolean[].class || typeClass == boolean[].class){
