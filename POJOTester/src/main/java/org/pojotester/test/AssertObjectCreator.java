@@ -68,10 +68,10 @@ public class AssertObjectCreator {
 				Method readMethod = propertyDescriptor.getReadMethod();
 				Method writeMethod = propertyDescriptor.getWriteMethod();
 				String fieldName = propertyDescriptor.getName();
-				TestConfiguration<?> testConfigurations = createTestConfigurations(clazz, createObjectMethod,
+				TestConfiguration<?> testConfiguration = createTestConfiguration(clazz, createObjectMethod,
 						readMethod, writeMethod, fieldName);
-				if (testConfigurations != null) {
-					fieldAssertObjectMap.put(fieldName, testConfigurations);
+				if (testConfiguration != null) {
+					fieldAssertObjectMap.put(testConfiguration.getClassFieldName(), testConfiguration);
 				}
 			}
 		}
@@ -86,26 +86,38 @@ public class AssertObjectCreator {
 				fieldName = ReflectionMethodLevel.getFieldNameOfWriteMethod(method);
 				writeMethod = true;
 			}
-			setAnnotedReadOrWriteMethod(clazz, fieldAssertObjectMap, createObjectMethod, method, fieldName,
-					writeMethod);
+			if(fieldName != null && !fieldName.isEmpty()){
+				setAnnotedReadOrWriteMethod(clazz, fieldAssertObjectMap, createObjectMethod, method, fieldName,
+						writeMethod);
+			}
 		}
 	}
 
 	private void setAnnotedReadOrWriteMethod(Class<?> clazz, Map<String, TestConfiguration<?>> fieldAssertObjectMap,
 			Method createObjectMethod, Method method, String fieldName, boolean writeMethod) {
 		if(fieldName != null && !fieldName.isEmpty()) {
-			TestConfiguration<?> testConfigurations = fieldAssertObjectMap.get(fieldName);
-			if (testConfigurations != null) {
-				testConfigurations.setCreateObjectMethod(createObjectMethod);
+			String classFieldName = clazz.getName() + "." + fieldName;
+			TestConfiguration<?> testConfiguration = fieldAssertObjectMap.get(classFieldName);
+			if (testConfiguration != null) {
+				testConfiguration.setCreateObjectMethod(createObjectMethod);
+				Field field = testConfiguration.getField();
 				if(!writeMethod){
-					testConfigurations.setReadMethod(method);
+					if(method.getReturnType() == field.getType()){
+						testConfiguration.setReadMethod(method);
+					} else {
+						logReadMethodMessage(method, field);
+					}
 				} else {
-					testConfigurations.setWriteMethod(method);
+					if(method.getParameterCount() > 0 && method.getParameterTypes()[0] == field.getType()){
+						testConfiguration.setWriteMethod(method);
+					} else {
+						logWriteMethodMessage(method, field);
+					}
 				}
 			} else {
-				testConfigurations = createTestConfigurations(clazz, createObjectMethod, method, null, fieldName);
-				if (testConfigurations != null) {
-					fieldAssertObjectMap.put(fieldName, testConfigurations);
+				testConfiguration = createTestConfiguration(clazz, createObjectMethod, method, null, fieldName);
+				if (testConfiguration != null) {
+					fieldAssertObjectMap.put(testConfiguration.getClassFieldName(), testConfiguration);
 				}
 			}
 		}
@@ -114,13 +126,13 @@ public class AssertObjectCreator {
 	private List<AssertObject<?>> createAssertObject( Class<?> clazz,
 			Map<String, TestConfiguration<?>> fieldAssertObjectMap) {
 		List<AssertObject<?>> assertObjectList = Collections.emptyList();
-		Set<String> fieldNameSet = fieldAssertObjectMap.keySet();
-		if (fieldNameSet != null && !fieldNameSet.isEmpty()) {
+		Set<String> classFieldNameSet = fieldAssertObjectMap.keySet();
+		if (classFieldNameSet != null && !classFieldNameSet.isEmpty()) {
 			assertObjectList = new LinkedList<AssertObject<?>>();
-			for (String fieldName : fieldNameSet) {
-				TestConfiguration<?> testConfigurations = fieldAssertObjectMap.get(fieldName);
-				if(testConfigurations != null){
-					List<AssertObject<?>> assertObjects = testConfigurations.assertAssignedValues(clazz);
+			for (String classFieldName : classFieldNameSet) {
+				TestConfiguration<?> testConfiguration = fieldAssertObjectMap.get(classFieldName);
+				if(testConfiguration != null){
+					List<AssertObject<?>> assertObjects = testConfiguration.assertAssignedValues(clazz);
 					assertObjectList.addAll(assertObjects);
 				}
 			}
@@ -128,27 +140,59 @@ public class AssertObjectCreator {
 		return assertObjectList;
 	}
 
-	private TestConfiguration<?> createTestConfigurations(Class<?> clazz, Method createObjectMethod, Method readMethod,
+	private TestConfiguration<?> createTestConfiguration(Class<?> clazz, Method createObjectMethod, Method readMethod,
 			Method writeMethod, String fieldName) {
-		TestConfiguration<?> testConfigurations = null;
+		TestConfiguration<?> testConfiguration = null;
 		Field field = getField(clazz, fieldName);
 		if (field != null) {
 			boolean ignore = ReflectionFieldLevel.ignoreField(field);
 			if (!ignore) {
-				testConfigurations = ReflectionFieldLevel.assignValues(field);
-				if (testConfigurations != null) {
-					if (readMethod != null) {
-						testConfigurations.setReadMethod(readMethod);
+				testConfiguration = ReflectionFieldLevel.assignValues(field);
+				if (testConfiguration != null) {
+					testConfiguration.setClassFieldName(clazz.getName() +"." + field.getName());
+					if (readMethod != null && readMethod.getReturnType() == field.getType()) {
+						testConfiguration.setReadMethod(readMethod);
+					} else {
+						logReadMethodMessage(readMethod, field);
 					}
-					if (writeMethod != null) {
-						testConfigurations.setWriteMethod(writeMethod);
+					if (writeMethod != null && writeMethod.getParameterCount() > 0
+							&& writeMethod.getParameterTypes()[0] == field.getType()) {
+						testConfiguration.setWriteMethod(writeMethod);
+					} else {
+						logWriteMethodMessage(writeMethod, field);
 					}
-					testConfigurations.setCreateObjectMethod(createObjectMethod);
+					testConfiguration.setCreateObjectMethod(createObjectMethod);
 				}
 			}
+		} else {
+			PojoTesterLogger.debugMessage(fieldName + " not found in " + clazz.getName() , null);
 		}
-		return testConfigurations;
+		return testConfiguration;
 	}
+
+	private void logWriteMethodMessage(Method writeMethod, Field field) {
+		String message = "Write method of [" + field.getName() + "] is null.";
+		if (writeMethod != null) {
+			if (writeMethod.getParameterCount() > 0) {
+				message = writeMethod.getName() + " write method's 1st parametertype "
+						+ writeMethod.getParameterTypes()[0] + " but field [" + field.getName()
+						+ "] type is " + field.getType();
+			} else {
+				message = writeMethod.getName() + " write method did not have any paramter";
+			}
+		}
+		PojoTesterLogger.debugMessage(message, null);
+	}
+
+	private void logReadMethodMessage(Method readMethod, Field field) {
+		String message = "Read method of [" + field.getName() + "] is null.";
+		if (readMethod != null) {
+			message = readMethod.getName() + " read method return " + readMethod.getReturnType()
+					+ " but field [" + field.getName() + "] type is " + field.getType();
+		}
+		PojoTesterLogger.debugMessage(message, null);
+	}
+
 
 	private Method findCreateObjectMethod(Method[] methods) {
 		Method createObjectMethod = null;

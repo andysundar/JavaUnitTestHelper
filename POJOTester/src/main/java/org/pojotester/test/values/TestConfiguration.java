@@ -31,6 +31,7 @@ import org.pojotester.utils.DefaultValueUtilities;
 
 public class TestConfiguration<T> {
 
+	private String classFieldName;
 	private Object object;
 	private Method createObjectMethod;
 	private Field field;
@@ -125,7 +126,7 @@ public class TestConfiguration<T> {
 		T returnedValue = readValue();
 		assertObject.setReturnedValue(returnedValue);
 		assertObject.setExpectedValue(expectedValue);
-		assertObject.setClassFieldName(object.getClass().getName()+"."+field.getName());
+		assertObject.setClassFieldName(classFieldName);
 		return assertObject;
 	}
 
@@ -433,6 +434,14 @@ public class TestConfiguration<T> {
 
 	public void setCreateObjectMethod(Method createObjectMethod) {
 		this.createObjectMethod = createObjectMethod;
+	}
+
+	public String getClassFieldName() {
+		return classFieldName;
+	}
+
+	public void setClassFieldName(String classFieldName) {
+		this.classFieldName = classFieldName;
 	}
 
 }
