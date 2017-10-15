@@ -30,6 +30,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.pojotester.log.PojoTesterLogger;
+import org.pojotester.pack.scan.LoadClassIfAskedFor;
+import org.pojotester.pack.scan.LoadClassIfNotIgnored;
 import org.pojotester.pack.scan.PackageScan;
 import org.pojotester.reflection.annotation.ReflectionFieldLevel;
 import org.pojotester.reflection.annotation.ReflectionMethodLevel;
@@ -38,9 +40,18 @@ import org.pojotester.test.values.TestConfiguration;
 
 public class AssertObjectCreator {
 
+	private boolean loadClassesAskedFor;
+	
+	public AssertObjectCreator(){
+		this(false);
+	}
+	public AssertObjectCreator(boolean loadClassesAskedFor){
+		this.loadClassesAskedFor = loadClassesAskedFor;
+	}
+	
 	public List<AssertObject<?>> getAssertObjects(final String... packagesToScan) {
 		List<AssertObject<?>> assertObjectList = new LinkedList<AssertObject<?>>();
-		PackageScan packageScan = new PackageScan();
+		PackageScan packageScan = loadClassesAskedFor ? new LoadClassIfAskedFor():new LoadClassIfNotIgnored();
 		Set<Class<?>> uniqueClasses = packageScan.getClasses(packagesToScan);
 		for (Class<?> clazz : uniqueClasses) {
 			Map<String, TestConfiguration<?>> fieldAssertObjectMap = new HashMap<String, TestConfiguration<?>>();

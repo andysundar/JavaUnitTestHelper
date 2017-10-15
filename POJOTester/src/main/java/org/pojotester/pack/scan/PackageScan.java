@@ -33,10 +33,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.pojotester.reflection.annotation.ReflectionClassLevel;
 import org.pojotester.utils.ClassUtilities;
 
-public final class PackageScan {
+public abstract class PackageScan {
 	
 	private static final char PATH_SEPARATOR_CHAR = '/'; //File.separatorChar;
 	private static final char WILDCARD_CHAR = '*';
@@ -47,7 +46,7 @@ public final class PackageScan {
 	private static final String CLASS_SUFFIX = "class";
 	private static final String ILLEGAL_PACKAGE = "Package cannot start with " + WILDCARD_REGX ;
 	
-	public Set<Class<?>> getClasses(final String... packagesToScan){
+	 public Set<Class<?>> getClasses(final String... packagesToScan){
 		Set<Class<?>> classSet = Collections.emptySet();
 		if(packagesToScan != null){
 			classSet = new HashSet<Class<?>>();
@@ -67,7 +66,7 @@ public final class PackageScan {
 				if(patternString.isEmpty()){
 					// When exact path is given [e.g. mypack.MyClass.class]
 					String binaryClassName = getQualifiedClassName(startPackage, rootDirectory);
-					Class<?> clazz = loadClassAndAddItToSet(binaryClassName);
+					Class<?> clazz = loadClass(binaryClassName);
 					if(isClass(clazz)){
 						classSet.add(clazz);
 					}
@@ -88,7 +87,7 @@ public final class PackageScan {
 					Set<String> classFiles = findClassFiles(path, classFilePattern);
 					for(String className : classFiles){
 						String binaryClassName = getQualifiedClassName(startPackage, className);
-						Class<?> clazz = loadClassAndAddItToSet(binaryClassName);
+						Class<?> clazz = loadClass(binaryClassName);
 						if(isClass(clazz)){
 							classSet.add(clazz);
 						}
@@ -223,16 +222,8 @@ public final class PackageScan {
 		return classNamePath;
 	}
 
-	private Class<?> loadClassAndAddItToSet(String className) {
-		Class<?> clazz = ClassUtilities.loadClass(className);
-		if(clazz != null) {
-		    boolean ignoreThisClass = ReflectionClassLevel.ignoreClass(clazz);
-			if(ignoreThisClass){
-				clazz = null;
-			}
-		}
-		return clazz;
-	}
+	protected abstract Class<?> loadClass(String className);
+	
 		
 	private boolean isClass(Class<?> clazz) {
 		return (clazz != null) && (!clazz.isAnnotation()) && (!clazz.isInterface()) && (!clazz.isEnum()) && (!Modifier.isAbstract(clazz.getModifiers()));

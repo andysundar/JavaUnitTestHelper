@@ -17,11 +17,17 @@
 package org.pojotester.reflection.annotation;
 
 import org.pojotester.annotation.clazz.IgnoreClass;
+import org.pojotester.annotation.clazz.TestThisClass;
 
 public abstract class ReflectionClassLevel {
 
 	public static boolean ignoreClass(Class<?> clazz){
 	   boolean ignoreThisClass =	clazz.isAnnotationPresent(IgnoreClass.class);
 	   return ignoreThisClass;
+	}
+	
+	public static boolean testThisClass(Class<?> clazz) {
+		boolean testThisClass = clazz.isAnnotationPresent(TestThisClass.class);
+		return testThisClass;
 	}
 }
