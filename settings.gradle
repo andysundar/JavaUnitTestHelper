@@ -15,4 +15,4 @@ include 'api'
 include 'services:webservice'
 */
 rootProject.name = 'JavaUnitTestProject'
-include 'POJOTester'
+include ':POJOTester'
