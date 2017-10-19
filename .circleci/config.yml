@@ -32,7 +32,7 @@ jobs:
           - v1-dependencies-
 
       - run: gradle dependencies
-      - run: gradle buildNeeded
+     
 
       - save_cache:
           paths:
@@ -40,7 +40,7 @@ jobs:
           key: v1-dependencies-{{ checksum "build.gradle" }}
         
       # run tests!
-      - run: gradle buildDependents
+      - run: gradle test
 
 
 
