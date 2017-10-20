@@ -2,7 +2,10 @@ apply plugin: 'java-library'
 
 // In this section you declare where to find the dependencies of your project
 subprojects {
-
+	apply plugin: 'java-library'
+	repositories {
+       jcenter()
+	}
 }
 
 dependencies {
