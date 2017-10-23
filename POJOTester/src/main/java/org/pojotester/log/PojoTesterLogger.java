@@ -26,10 +26,14 @@ public abstract class PojoTesterLogger {
 																	JavaLogger.class			
 																  };
 	static {
-		createLoggerObject();
+		try {
+			createLoggerObject();
+		} catch (ClassNotFoundException | NoClassDefFoundError e) {
+			e.printStackTrace();
+		}
 	}
 
-	private static void createLoggerObject() {
+	private static void createLoggerObject() throws ClassNotFoundException, NoClassDefFoundError {
 		for(Class<?> clazz : LOGGERS){
 			try {
 				logger = (PojoTesterLogger) clazz.newInstance();
