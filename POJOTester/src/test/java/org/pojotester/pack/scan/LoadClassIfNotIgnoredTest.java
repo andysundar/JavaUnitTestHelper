@@ -42,7 +42,7 @@ public class LoadClassIfNotIgnoredTest {
 		assertFalse(classSet.isEmpty());
 		for(Class<?> clazz : classSet){
 			String className = clazz.getName();
-			assertTrue(className.contains("org.pojotester.testing.mypack.another"));
+			assertTrue(className.contains("org.pojotester.testing.mypack"));
 		}
 	}
 	
@@ -60,7 +60,7 @@ public class LoadClassIfNotIgnoredTest {
 	
 	@Test
 	public void testDetermineRootDir_WhenPackageAndClassNameContainsWildchar() { 
-		String []packagesToScan = { "org.*tester.pack.**.mypack.MyClass0*.class"	};
+		String []packagesToScan = { "org.*tester.**.mypack.MyClass0*.class"	};
 		Set<Class<?>> classSet = packageScan.getClasses(packagesToScan);
 		assertNotNull(classSet);
 		assertFalse(classSet.isEmpty());

@@ -16,76 +16,93 @@
 package org.pojotester.pack.scan;
 
 import static java.nio.file.FileVisitResult.CONTINUE;
-import static java.nio.file.FileVisitResult.SKIP_SIBLINGS;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.Collections;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 class DirectoryFinder  extends SimpleFileVisitor<Path> {
 	
-	private boolean patternsPresent; 
 	private PathMatcher matcher;
-    private File directory;
-    private String pattern = "*.class";
-    private List<String> patterns;
-    private boolean postDirLock;
+	private Set<File> directories = new HashSet<>();
+    private Path currentPath;
+    private int numMatches = 0;
+    private boolean lastPattern; 
+    private boolean firstPattern;
+    private boolean afterWildCard;
     
-    public DirectoryFinder(List<String> patterns) {
-    	this.patterns = Collections.emptyList();
-    	patternsPresent = (patterns != null && !patterns.isEmpty());
-		if (patternsPresent) {
-			pattern = patterns.get(0);
-			matcher = FileSystems.getDefault().getPathMatcher("glob:" + pattern);
-			patterns.remove(0);
-			this.patterns = patterns;
+    public DirectoryFinder() {
+    	
+    }
+
+    public void createMatcher(String pattern){
+        matcher = FileSystems.getDefault()
+                .getPathMatcher("glob:" + pattern);
+    }
+    
+	void find(Path file) {
+		Path name = file.getFileName();
+		if (name != null && matcher.matches(name)) {
+			numMatches++;
+			currentPath = file;
+			if (lastPattern) {
+				addDirectory(file.toFile());
+			}
 		}
-     }
+	}
 
-    
-     boolean find(Path file) {
-    	 boolean flag = false;
-         Path name = file.getFileName();
-         if (name != null && matcher.matches(name)) {
-        	 flag = true;
-         }
-         return flag;
-     }
-
-     public File getPackage(){
-    	 return directory;
-     }
        
      @Override
      public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
-    	 postDirLock = false;
-    	 if(patternsPresent && find(dir)){
-    		 directory = dir.toFile();
-    		 patternsPresent = (patterns != null && !patterns.isEmpty());
-			if (patternsPresent) {
-				pattern = patterns.get(0);
-				matcher = FileSystems.getDefault().getPathMatcher("glob:" + pattern);
-				patterns.remove(0);
-			}
-			postDirLock = true;
-    	 }
+    	 find(dir);
     	 return CONTINUE;
      }
-     @Override 
-     public FileVisitResult postVisitDirectory(Path dir, IOException exc){
-    	 if(patternsPresent && postDirLock){
-    		 
-    		 return SKIP_SIBLINGS;
-    	 }
-		return CONTINUE;
-    	 
-     }
+
+    public void addDirectory(File directory){
+    	directories.add(directory);
+    }
+
+	public Path getCurrentPath() {
+		return currentPath;
+	}
+
+	public Set<File> getDirectories() {
+		return directories;
+	}
+
+	public boolean isLastPattern() {
+		return lastPattern;
+	}
+
+	public void setLastPattern(boolean lastPattern) {
+		this.lastPattern = lastPattern;
+	}
+
+	public boolean isFirstPattern() {
+		return firstPattern;
+	}
+
+	public void setFirstPattern(boolean firstPattern) {
+		this.firstPattern = firstPattern;
+	}
+
+	public boolean isAfterWildCard() {
+		return afterWildCard;
+	}
+
+	public void setAfterWildCard(boolean afterWildCard) {
+		this.afterWildCard = afterWildCard;
+	}
+
+	public int getNumMatches() {
+		return numMatches;
+	}
+     
 
 }

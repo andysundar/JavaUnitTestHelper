@@ -32,7 +32,9 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
+import org.pojotester.log.PojoTesterLogger;
 import org.pojotester.utils.ClassUtilities;
 
 public abstract class PackageScan {
@@ -46,54 +48,61 @@ public abstract class PackageScan {
 	private static final String CLASS_SUFFIX = "class";
 	private static final String ILLEGAL_PACKAGE = "Package cannot start with " + WILDCARD_REGX ;
 	
-	 public Set<Class<?>> getClasses(final String... packagesToScan){
+	public Set<Class<?>> getClasses(final String... packagesToScan) {
 		Set<Class<?>> classSet = Collections.emptySet();
-		if(packagesToScan != null){
+		if (packagesToScan != null) {
 			classSet = new HashSet<Class<?>>();
-			for(String location : packagesToScan){
-				if(location.startsWith(WILDCARD_REGX)){
+			for (String location : packagesToScan) {
+				if (location.startsWith(WILDCARD_REGX)) {
 					throw new IllegalArgumentException(ILLEGAL_PACKAGE + " [ " + location + " ]");
 				}
 				String startPackage = location.split(DOT)[0];
-			
+
 				location = processLocations(location);
 				String rootDirectory = determineRootDirectory(location);
-				String patternString  = "";
-				if(!location.equals(rootDirectory)){
-					patternString  = location.substring(rootDirectory.length() + 1);
-				} 
-				
-				if(patternString.isEmpty()){
+				String patternString = "";
+				if (!location.equals(rootDirectory)) {
+					patternString = location.substring(rootDirectory.length() + 1);
+				}
+
+				if (patternString.isEmpty()) {
 					// When exact path is given [e.g. mypack.MyClass.class]
 					String binaryClassName = getQualifiedClassName(startPackage, rootDirectory);
 					Class<?> clazz = loadClass(binaryClassName);
-					if(isClass(clazz)){
+					if (isClass(clazz)) {
 						classSet.add(clazz);
 					}
-				}  else {
-					// Goto root directory and match pattern to search directories/files [e.g. mypack.**.My*.class, mypack.**.MyClass.class]
+				} else {
+					// Goto root directory and match pattern to search
+					// directories/files [e.g. mypack.**.My*.class,
+					// mypack.**.MyClass.class]
 					List<String> patterns = new LinkedList<String>();
-					String[] patternStrings = patternString.split(PATH_SEPARATOR);
+					String[] patternStringArray = patternString.split(PATH_SEPARATOR);
 					String classFilePattern = WILDCARD_CHAR + CLASS_FILE_SUFFIX;
-					for(String pattern : patternStrings){
-						if(pattern.endsWith(CLASS_FILE_SUFFIX)){
+					for (String pattern : patternStringArray) {
+						if (pattern.endsWith(CLASS_FILE_SUFFIX)) {
 							classFilePattern = pattern;
-						} else if(!WILDCARD_REGX.equals(pattern)){
+						} else if (!WILDCARD_REGX.equals(pattern)) {
 							patterns.add(pattern);
-						} 
-					}
-					File packageDirectory = findPackageDirectory(rootDirectory, patterns);
-					Path path = packageDirectory.toPath();
-					Set<String> classFiles = findClassFiles(path, classFilePattern);
-					for(String className : classFiles){
-						String binaryClassName = getQualifiedClassName(startPackage, className);
-						Class<?> clazz = loadClass(binaryClassName);
-						if(isClass(clazz)){
-							classSet.add(clazz);
 						}
 					}
+					Set<String> classFiles = Collections.emptySet();
+					// Check for class 
+					Set<File> packageDirectories = findPackageDirectory(rootDirectory, patternStringArray);
+					for (File packageDirectory : packageDirectories) {
+						Path path = packageDirectory.toPath();
+						classFiles = findClassFiles(path, classFilePattern);
+						for (String className : classFiles) {
+							String binaryClassName = getQualifiedClassName(startPackage, className);
+							Class<?> clazz = loadClass(binaryClassName);
+							if (isClass(clazz)) {
+								classSet.add(clazz);
+							}
+						}
+					}
+
 				}
-				
+
 			}
 		}
 		return classSet;
@@ -156,40 +165,64 @@ public abstract class PackageScan {
 		return location;
 	}
 	
-	private File findPackageDirectory(String rootDirectory, List<String> patterns) {
+	private Set<File> findPackageDirectory(String rootDirectory, String[] patternStringArray) {
 		ClassLoader classLoader = ClassUtilities.getDefaultClassLoader();
 		URL url = classLoader.getResource(rootDirectory);
 		URI uri = null;
-		File packageDirectory = null;
+		Set<File> packageDirectories = Collections.emptySet();
 		try {
 			uri = url.toURI();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
 		}
-		if(uri != null){
-			if(!patterns.isEmpty()){
-				packageDirectory = patternMaching(patterns, uri);
+		if (uri != null) {
+			if (patternStringArray.length > 0 && !patternStringArray[0].endsWith(CLASS_FILE_SUFFIX)) {
+				patternStringArray = Arrays.copyOfRange(patternStringArray, 0, (patternStringArray.length - 1));
+				packageDirectories = patternMaching(uri, patternStringArray);
 			} else {
-				packageDirectory = new File(uri);
+				packageDirectories = new TreeSet<>();
+				packageDirectories.add(new File(uri));
 			}
-			
-		} 
-		return packageDirectory;
+
+		}
+		return packageDirectories;
 	}
 
-	private File patternMaching(List<String> patterns, URI uri) {
-		File packageDirectory;
-		DirectoryFinder visitor = new DirectoryFinder(patterns);
-		
-		try {
-			Path startDirectory = Paths.get(uri);
-			Files.walkFileTree(startDirectory, visitor);
-		} catch (IOException e) {
-			e.printStackTrace();
+	private Set<File> patternMaching(URI uri, String[] patternStringArray) {
+		Set<File> packageDirectories = Collections.emptySet();
+		int index = 0;
+		int previousIndex = -1;
+		int lastIndex = patternStringArray.length - 1;
+		DirectoryFinder visitor = new DirectoryFinder();
+		Path startDirectory = Paths.get(uri);
+		for (String pattern : patternStringArray) {
+			if (!isWildCard(pattern) || index == lastIndex) {
+				visitor.createMatcher(pattern);
+				visitor.setFirstPattern((index == 0));
+				visitor.setAfterWildCard((previousIndex != -1 && (isWildCard(patternStringArray[previousIndex]))));
+				visitor.setLastPattern((index == lastIndex));
+				try {
+					Files.walkFileTree(startDirectory, visitor);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				Path path = visitor.getCurrentPath();
+
+				if (path != null) {
+					startDirectory = path;
+				}
+
+			}
+
+			index++;
+			previousIndex++;
+			if (!isWildCard(pattern) && visitor.getNumMatches() == 0) {
+				break;
+			}
 		}
-		
-		packageDirectory = visitor.getPackage();
-		return packageDirectory;
+
+		packageDirectories = visitor.getDirectories();
+		return packageDirectories;
 	}
 	
 	private Set<String> findClassFiles(Path dir, String patternString) {
@@ -204,7 +237,7 @@ public abstract class PackageScan {
 			}
 		} catch (DirectoryIteratorException | IOException ex) {
 	         ex.printStackTrace();
-	       }
+	     }
 		return classFiles;
 	}
 	
@@ -222,10 +255,14 @@ public abstract class PackageScan {
 		return classNamePath;
 	}
 
-	protected abstract Class<?> loadClass(String className);
-	
-		
 	private boolean isClass(Class<?> clazz) {
 		return (clazz != null) && (!clazz.isAnnotation()) && (!clazz.isInterface()) && (!clazz.isEnum()) && (!Modifier.isAbstract(clazz.getModifiers()));
 	}
+	
+	private boolean isWildCard(String pattern) {
+		return WILDCARD_REGX.equals(pattern) || Character.toString(WILDCARD_CHAR).equals(pattern);
+	}
+	
+	protected abstract Class<?> loadClass(String className);
+	
 }
