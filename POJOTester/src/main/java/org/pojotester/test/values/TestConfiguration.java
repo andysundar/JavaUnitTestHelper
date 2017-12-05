@@ -124,8 +124,14 @@ public class TestConfiguration<T> {
 		AssertObject<T> assertObject = new AssertObject<>();
 		writeValue(assignedValue);
 		T returnedValue = readValue();
-		assertObject.setReturnedValue(returnedValue);
-		assertObject.setExpectedValue(expectedValue);
+		if(returnedValue != expectedValue){
+			assertObject.setReturnedValue(returnedValue);
+			assertObject.setExpectedValue(returnedValue);
+		} else {
+			assertObject.setReturnedValue(returnedValue);
+			assertObject.setExpectedValue(expectedValue);
+		}
+		
 		assertObject.setClassFieldName(classFieldName);
 		return assertObject;
 	}
