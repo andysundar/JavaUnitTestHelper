@@ -21,8 +21,10 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -116,6 +118,8 @@ public abstract class DefaultValueUtilities {
 		classValueMap.put(Set.class, Collections.emptySet());
 		
 		classValueMap.put(List.class, Collections.emptyList());
+		classValueMap.put(ArrayList.class, Collections.emptyList());
+		classValueMap.put(LinkedList.class, Collections.emptyList());
 		
 		classValueMap.put(Map.class, Collections.emptyMap());
 	}
