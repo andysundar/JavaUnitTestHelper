@@ -24,11 +24,14 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 public abstract class DefaultValueUtilities {
 	private static final Map<Class<?>,Object> classValueMap = new HashMap<Class<?>,Object>();
@@ -117,6 +120,9 @@ public abstract class DefaultValueUtilities {
 		classValueMap.put(Object[].class, new Object[]{object});
 		
 		classValueMap.put(Set.class, Collections.emptySet());
+		classValueMap.put(TreeSet.class, Collections.emptySet());
+		classValueMap.put(HashSet.class, Collections.emptySet());
+		classValueMap.put(LinkedHashSet.class, Collections.emptySet());
 		
 		classValueMap.put(List.class, Collections.emptyList());
 		classValueMap.put(ArrayList.class, Collections.emptyList());
