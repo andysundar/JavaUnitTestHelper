@@ -24,6 +24,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -122,6 +123,8 @@ public abstract class DefaultValueUtilities {
 		classValueMap.put(LinkedList.class, Collections.emptyList());
 		
 		classValueMap.put(Map.class, Collections.emptyMap());
+		classValueMap.put(HashMap.class, Collections.emptyMap());
+		classValueMap.put(Hashtable.class, Collections.emptyMap());
 	}
 	
 	public static Object getValueFromMap(final Class<?> clazz){
