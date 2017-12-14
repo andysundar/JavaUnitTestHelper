@@ -33,16 +33,16 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.regex.Matcher;
 
-import org.pojotester.log.PojoTesterLogger;
 import org.pojotester.utils.ClassUtilities;
 
 public abstract class PackageScan {
 	
-	private static final char PATH_SEPARATOR_CHAR = '/'; //File.separatorChar;
+	private static final char PATH_SEPARATOR_CHAR = File.separatorChar;
 	private static final char WILDCARD_CHAR = '*';
 	private static final String WILDCARD_REGX = "**";
-	private static final String PATH_SEPARATOR = "/";//File.separator;
+	private static final String PATH_SEPARATOR = File.separator;
 	private static final String DOT = "\\.";
 	private static final String CLASS_FILE_SUFFIX = ".class";
 	private static final String CLASS_SUFFIX = "class";
@@ -77,7 +77,7 @@ public abstract class PackageScan {
 					// directories/files [e.g. mypack.**.My*.class,
 					// mypack.**.MyClass.class]
 					List<String> patterns = new LinkedList<String>();
-					String[] patternStringArray = patternString.split(PATH_SEPARATOR);
+					String[] patternStringArray = patternString.split(Matcher.quoteReplacement(PATH_SEPARATOR));
 					String classFilePattern = WILDCARD_CHAR + CLASS_FILE_SUFFIX;
 					for (String pattern : patternStringArray) {
 						if (pattern.endsWith(CLASS_FILE_SUFFIX)) {
@@ -143,7 +143,7 @@ public abstract class PackageScan {
 	}
 	
 	private String processLocations(String location) {
-		location = location.replaceAll(DOT, PATH_SEPARATOR);
+		location = location.replaceAll(DOT, Matcher.quoteReplacement(PATH_SEPARATOR));
 		String pathSeparatorClassSuffix = PATH_SEPARATOR + CLASS_SUFFIX;
 		if(location.endsWith(pathSeparatorClassSuffix)){
 			int endIndex = location.length() - pathSeparatorClassSuffix.length();
