@@ -1,9 +1,13 @@
-/.gradle/
-/bin/
+.gradle/buildOutputCleanup/cache.properties
+*.lock
+.gradle/buildOutputCleanup/built.bin
+*.bin
+*.prefs
+
+
 # Eclipse
 .classpath
 .project
-POJOTester/.settings/
 /bin/
 
 
@@ -25,3 +29,4 @@ site/
 .gradle/
 /.gradle/
 POJOTester/.gradle/
+
