@@ -8,10 +8,21 @@
 
 group 'org.pojotester'
 //artifact 'pojotester'
-version '0.1-SNAPSHOT'
+version '1.0-SNAPSHOT'
 
 // Apply the java-library plugin to add support for Java Library
 apply plugin: 'java'
+apply plugin: 'maven-publish'
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3"
+    }
+}
+apply plugin: 'com.jfrog.bintray'
 
 // In this section you declare where to find the dependencies of your project
 repositories {
@@ -36,4 +47,82 @@ dependencies {
     testCompile 'junit:junit:4.12'
     testCompile 'org.hamcrest:hamcrest-junit:2.0.0.0'
 }
+
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+// Create the pom configuration:
+def pomConfig = {
+    licenses {
+        license {
+            name "The Apache Software License, Version 2.0"
+            url "http://www.apache.org/licenses/LICENSE-2.0.txt"
+            distribution "repo"
+        }
+    }
+    developers {
+        developer {
+            name "Anindya Bandopadhyay"
+            email "anindyabandopadhyay@gmail.com"
+        }
+    }
+    
+    scm {
+       url "https://github.com/andysundar/JavaUnitTestHelper"
+    }
+}
+
+
+// Create the publication with the pom configuration:
+publishing {
+    publications {
+        MyPublication(MavenPublication) {
+            from components.java
+            //artifact sourcesJar
+            //artifact javadocJar
+            groupId 'org.pojotester'
+            artifactId 'pojo-tester'
+            version '1.0'
+            pom.withXml {
+                def root = asNode()
+                root.appendNode('description', 'Framework to automate Java POJO classes unit testing.')
+                root.appendNode('name', 'POJO Tester')
+                root.appendNode('url', 'https://github.com/andysundar/JavaUnitTestHelper')
+                root.children().last() + pomConfig
+            }
+        }
+    }
+}
+
+bintray {   
+    user = System.getenv('BINTRAY_USER')
+    key = System.getenv('BINTRAY_KEY')
+    pkg {
+        repo = 'JavaUnitTestHelper'
+        name = 'pojo-tester'
+        //userOrg = 'bintray_user'
+        licenses = ['Apache-2.0']
+        vcsUrl = 'https://github.com/andysundar/JavaUnitTestHelper.git'
+        version {
+        	name = '1.0-Final'
+        	desc = 'POJO Tester 1.0 final'
+        	released  = new Date()
+        	vcsTag = '1.0.0'
+        	attributes = ['pojo-tester': 'org.pojotester:org.pojotester.test:pojo-tester']
+    	}
+    }
+     publications = ['MyPublication'] 
+}
+
+
+
+
 
