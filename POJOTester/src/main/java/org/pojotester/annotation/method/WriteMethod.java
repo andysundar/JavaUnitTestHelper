@@ -20,9 +20,21 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * {@code WriteMethod} is an annotation that is used to specify the annotated method 
+ * will be used map a field name with write method.
+ * 
+ * @author Anindya Bandopadhyay
+ * @since 1.0
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value={ElementType.METHOD})
 public @interface WriteMethod {
 
+	/**
+	 * 
+	 * @return field name
+	 * @since 1.0
+	 */
 	String fieldName();
 }

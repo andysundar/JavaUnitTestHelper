@@ -20,6 +20,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * {@code IgnoreClass} is an annotation that is used to ignore the annotated class.
+ * @author Anindya Bandopadhyay
+ * @since 1.0
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = {ElementType.TYPE})
 public @interface IgnoreClass {

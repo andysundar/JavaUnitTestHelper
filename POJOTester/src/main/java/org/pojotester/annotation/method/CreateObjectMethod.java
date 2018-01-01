@@ -20,6 +20,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * {@code CreateObjectMethod} is an annotation that is used to specify the annotated method 
+ * will be used for object creation.
+ * 
+ * @author Anindya Bandopadhyay
+ * @since 1.0
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = {ElementType.METHOD})
 public @interface CreateObjectMethod {

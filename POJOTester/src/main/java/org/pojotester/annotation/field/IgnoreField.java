@@ -20,6 +20,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * {@code IgnoreField}  is an annotation that is used to ignore the annotated field.
+ * @author Anindya Bandopadhyay
+ * @since 1.0
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = {ElementType.FIELD})
 public @interface IgnoreField {

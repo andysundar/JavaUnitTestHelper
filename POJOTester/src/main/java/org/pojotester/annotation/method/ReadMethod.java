@@ -20,9 +20,21 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * {@code ReadMethod} is an annotation that is used to specify the annotated method 
+ * will be used map a field name with read method.
+ * 
+ * @author Anindya Bandopadhyay
+ * @since 1.0
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value={ElementType.METHOD})
 public @interface ReadMethod {
 
+	/**
+	 * 
+	 * @return field name
+	 * @since 1.0
+	 */
 	String fieldName();
 }
