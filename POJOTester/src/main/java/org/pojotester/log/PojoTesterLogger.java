@@ -15,6 +15,11 @@
  ******************************************************************************/
 package org.pojotester.log;
 
+/**
+ * This class is to support abstraction of different types of logger.
+ * @author Anindya Bandopadhyay
+ * @version 1.0
+ */
 public abstract class PojoTesterLogger {
 
 	private static PojoTesterLogger logger;

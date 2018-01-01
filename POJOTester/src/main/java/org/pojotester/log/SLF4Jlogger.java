@@ -18,6 +18,11 @@ package org.pojotester.log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * This class is to support {@link org.slf4j.Logger} type logger.
+ * @author Anindya Bandopadhyay
+ * @version 1.0
+ */
 class SLF4Jlogger extends PojoTesterLogger {
 
 	private final static Logger LOGGER = LoggerFactory.getLogger(PojoTesterLogger.class);

@@ -18,6 +18,12 @@ package org.pojotester.log;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * This class is to support {@link java.util.logging.Logger} type logger.
+ * @author Anindya Bandopadhyay
+ * @version 1.0
+ */
+
 class JavaLogger extends PojoTesterLogger {
 
 	private static final Logger LOGGER = Logger.getLogger(PojoTesterLogger.class.getName());

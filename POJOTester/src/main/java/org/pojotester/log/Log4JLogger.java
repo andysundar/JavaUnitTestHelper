@@ -18,6 +18,11 @@ package org.pojotester.log;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+/**
+ * This class is to support {@link org.apache.log4j.LogManager} type logger.
+ * @author Anindya Bandopadhyay
+ * @version 1.0
+ */
 class Log4JLogger extends PojoTesterLogger {
 
 	private final static Logger LOGGER = LogManager.getLogger(PojoTesterLogger.class);

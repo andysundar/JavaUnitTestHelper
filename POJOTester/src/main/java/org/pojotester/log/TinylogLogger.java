@@ -17,6 +17,11 @@ package org.pojotester.log;
 
 import org.pmw.tinylog.Logger;
 
+/**
+ * This class is to support {@link org.pmw.tinylog.Logger} type logger.
+ * @author Anindya Bandopadhyay
+ * @version 1.0
+ */
 class TinylogLogger extends PojoTesterLogger {
 
 	@Override
