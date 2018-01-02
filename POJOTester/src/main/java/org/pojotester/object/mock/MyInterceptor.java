@@ -22,6 +22,11 @@ import org.pojotester.utils.ClassUtilities;
 import net.bytebuddy.implementation.bind.annotation.Origin;
 import net.bytebuddy.implementation.bind.annotation.RuntimeType;
 
+/**
+ * This class is acting as a proxy interceptor.
+ * @author Anindya Bandopadhyay
+ * @since 1.0
+ */
 public class MyInterceptor {
 	  @RuntimeType
 	  public static Object intercept(@Origin Method method) {

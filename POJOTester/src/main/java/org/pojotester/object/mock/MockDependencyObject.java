@@ -25,6 +25,11 @@ import net.bytebuddy.dynamic.DynamicType.Unloaded;
 import net.bytebuddy.implementation.MethodDelegation;
 import net.bytebuddy.matcher.ElementMatchers;
 
+/**
+ * This class create a proxy interceptor object of the class.
+ * @author Anindya Bandopadhyay
+ * @since 1.0
+ */
 public class MockDependencyObject {
 
 	public Object getProxyObject(Class<?> clazz){

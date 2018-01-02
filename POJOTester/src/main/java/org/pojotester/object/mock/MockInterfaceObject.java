@@ -21,6 +21,11 @@ import java.lang.reflect.Proxy;
 
 import org.pojotester.utils.ClassUtilities;
 
+/**
+ * This class create a proxy interceptor object of the interfaces.
+ * @author Anindya Bandopadhyay
+ * @since 1.0
+ */
 public class MockInterfaceObject implements InvocationHandler {
 
 	private Object proxy;
