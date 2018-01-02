@@ -33,6 +33,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+/**
+ * This class has a global map of most widely used data types.
+ * @author Anindya Bandopadhyay
+ * @since 1.0
+ */
 public abstract class DefaultValueUtilities {
 	private static final Map<Class<?>,Object> classValueMap = new HashMap<Class<?>,Object>();
 	
@@ -133,6 +138,12 @@ public abstract class DefaultValueUtilities {
 		classValueMap.put(Hashtable.class, Collections.emptyMap());
 	}
 	
+	/**
+	 * This method return default value of parameter class type. 
+	 * @param clazz
+	 * @return default object value
+	 * @since 1.0
+	 */
 	public static Object getValueFromMap(final Class<?> clazz){
 		return classValueMap.get(clazz);
 	}

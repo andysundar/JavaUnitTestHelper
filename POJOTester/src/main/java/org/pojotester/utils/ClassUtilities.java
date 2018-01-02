@@ -27,9 +27,20 @@ import org.pojotester.object.mock.MockDependencyObject;
 import org.pojotester.object.mock.MockInterfaceObject;
 import org.pojotester.reflection.annotation.ReflectionMethodLevel;
 
+/**
+ * This class provide class level reflection utilities like {@code ClassLoader}, loading class , 
+ * creating object of the argument class and return default values of some widely used data types. 
+ * @author Anindya Bandopadhyay
+ * @since 1.0
+ */
 public abstract class ClassUtilities {
 		
-
+	/**
+	 * This method first try to get context class loader from current thread then it try to get it from default class loader, 
+	 * then it try to get it from system class loader. 
+	 * @return {@code ClassLoader} object if found else {@code null}
+	 * @since 1.0
+	 */
 	public static ClassLoader getDefaultClassLoader(){
 		ClassLoader classLoader = null;
 		Thread currentThread = Thread.currentThread();
@@ -47,6 +58,12 @@ public abstract class ClassUtilities {
 		return classLoader;
 	}
 	
+	/**
+	 * This method load the class then return the class object else return {@code null}.
+	 * @param className
+	 * @return {@code Class} object if loaded else {@code null}
+	 * @since 1.0
+	 */
 	public static Class<?> loadClass(final String className){
 		ClassLoader classLoader = getDefaultClassLoader();
 		Class<?> clazz = null;
@@ -59,6 +76,12 @@ public abstract class ClassUtilities {
 		return clazz;
 	}
 	
+	/**
+	 * This method create object of parameter class using default constructor. 
+	 * @param clazz
+	 * @return object of parameter class
+	 * @since 1.0
+	 */
 	public static Object createObject(final Class<?> clazz){
 		Object object = null;
 		try {
@@ -71,6 +94,12 @@ public abstract class ClassUtilities {
 		return object;
 	}
 	
+	/**
+	 * This method create object of parameter class using other constructor. 
+	 * @param clazz
+	 * @return object of parameter class
+	 * @since 1.0
+	 */
 	public static Object createObjectUsingOtherConstructor(final Class<?> clazz){
 		Object object = null;
 		Constructor<?>[] constructors = clazz.getConstructors();
@@ -108,6 +137,12 @@ public abstract class ClassUtilities {
 		return object;
 	}
 	
+	/**
+	 * This method create object of parameter class using method. 
+	 * @param clazz, method
+	 * @return object of parameter class
+	 * @since 1.0
+	 */
 	public static Object createObjectUsingStaticMethod(final Class<?> clazz, Method method) {
 		Object object = null;
 		boolean isCreateMethod = ReflectionMethodLevel.isCreateMethod(method);
@@ -123,6 +158,12 @@ public abstract class ClassUtilities {
 		return object;
 	}
 	
+	/**
+	 * This method return default value of parameter class type. 
+	 * @param clazz
+	 * @return default object value
+	 * @since 1.0
+	 */
 	public static Object getValueFromMap(Class<?> clazz){
 		return DefaultValueUtilities.getValueFromMap(clazz);
 	}
