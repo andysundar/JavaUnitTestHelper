@@ -15,6 +15,11 @@
  ******************************************************************************/
 package org.pojotester.type.convertor;
 
+/**
+ * This is an utility class which convert wrapper type array object value into primitive type array.
+ * @author Anindya Bandopadhyay
+ * @since 1.0
+ */
 public abstract class ObjectToPrimitiveArray {
 
 	public static boolean[] convertObjectToPrimitiveArray(Boolean[] objects){
