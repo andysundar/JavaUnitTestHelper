@@ -37,6 +37,11 @@ import java.util.regex.Matcher;
 
 import org.pojotester.utils.ClassUtilities;
 
+/**
+ * This class is responsible to scan the package and load the classes which is suppose to be unit tested.
+ * @author Anindya Bandopadhyay
+ * @since 1.0
+ */
 public abstract class PackageScan {
 	
 	private static final char PATH_SEPARATOR_CHAR = File.separatorChar;
@@ -48,6 +53,12 @@ public abstract class PackageScan {
 	private static final String CLASS_SUFFIX = "class";
 	private static final String ILLEGAL_PACKAGE = "Package cannot start with " + WILDCARD_REGX ;
 	
+	/**
+	 * This method load the qualified classes and return the unique list.
+	 * @param packagesToScan
+	 * @return unique list of qualified classes
+	 * @since 1.0
+	 */
 	public Set<Class<?>> getClasses(final String... packagesToScan) {
 		Set<Class<?>> classSet = Collections.emptySet();
 		if (packagesToScan != null) {
