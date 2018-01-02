@@ -19,13 +19,30 @@ package org.pojotester.reflection.annotation;
 import org.pojotester.annotation.clazz.IgnoreClass;
 import org.pojotester.annotation.clazz.TestThisClass;
 
+/**
+ * {@code ReflectionClassLevel} is an utility class to check annotation present at class level.
+ * @author Anindya Bandopadhyay
+ * @since 1.0
+ */
 public abstract class ReflectionClassLevel {
 
+	/**
+	 * This method check whether {@link IgnoreClass} annotation present on parameter class.
+	 * @param clazz 
+	 * @return {@code true} if {@code @IgnoreClass} present else {@code false}. 
+	 * @since 1.0
+	 */
 	public static boolean ignoreClass(Class<?> clazz){
 	   boolean ignoreThisClass =	clazz.isAnnotationPresent(IgnoreClass.class);
 	   return ignoreThisClass;
 	}
 	
+	/**
+	 * This method check whether {@link TestThisClass} annotation present on parameter class.
+	 * @param clazz 
+	 * @return {@code true} if {@code @TestThisClass} present else {@code false}. 
+	 * @since 1.0
+	 */
 	public static boolean testThisClass(Class<?> clazz) {
 		boolean testThisClass = clazz.isAnnotationPresent(TestThisClass.class);
 		return testThisClass;
