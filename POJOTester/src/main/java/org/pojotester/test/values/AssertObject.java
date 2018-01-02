@@ -16,6 +16,12 @@
 
 package org.pojotester.test.values;
 
+/**
+ * This class hold the value of field return value and expected result value.
+ * @author Anindya Bandopadhyay
+ * @since 1.0
+ * @param <T> field data type
+ */
 public class AssertObject<T> {
 	private String classFieldName;
 	

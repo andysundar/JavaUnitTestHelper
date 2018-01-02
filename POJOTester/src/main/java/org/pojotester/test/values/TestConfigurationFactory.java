@@ -25,8 +25,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * This class is the factory class which return an object {@link TestConfiguration}.
+ * @author Anindya Bandopadhyay
+ * @since 1.0
+ */
 public abstract class TestConfigurationFactory {
 
+	/**
+	 * This method create an object of {@link TestConfiguration} based on data type.
+	 * @param typeClass
+	 * @return {@code TestConfiguration} type object.
+	 */
 	public static TestConfiguration<?> createTestConfigurationObject(final Class<?> typeClass){
 		 TestConfiguration<?>  testValues = null;
 		 if(typeClass == Boolean.class || typeClass == boolean.class 

@@ -28,7 +28,11 @@ import org.pojotester.type.convertor.PrimitiveToObjectArray;
 import org.pojotester.utils.ClassUtilities;
 import org.pojotester.utils.DefaultValueUtilities;
 
-
+/**
+ * This class is responsible to hold all configuration value to do reflection call of methods. 
+ * @author Anindya Bandopadhyay
+ * @since 1.0
+ */
 public class TestConfiguration<T> {
 
 	private String classFieldName;
@@ -40,6 +44,11 @@ public class TestConfiguration<T> {
 	private Method readMethod;
 	private Method writeMethod;
 
+	/**
+	 * This method create list of {@link AssertObject} objects which contains the return value from the field and expected value. 
+	 * @param clazz
+	 * @return list of {@code AssertObject} objects
+	 */
 	public List<AssertObject<?>> assertAssignedValues(Class<?> clazz) {
 		if (field != null) {
 			field.setAccessible(true);
