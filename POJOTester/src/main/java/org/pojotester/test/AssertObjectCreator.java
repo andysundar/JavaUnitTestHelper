@@ -38,17 +38,40 @@ import org.pojotester.reflection.annotation.ReflectionMethodLevel;
 import org.pojotester.test.values.AssertObject;
 import org.pojotester.test.values.TestConfiguration;
 
+/**
+ * This class create assert object for unit testing. 
+ * @author Anindya Bandopadhyay
+ * @since 1.0
+ */
 public class AssertObjectCreator {
 
 	private boolean loadClassesAskedFor;
 	
+	/**
+	 * Object created using this constructor will consider all classes in a package for unit testing 
+	 * if and only if {@code @IgnoreClass} is declared. 
+	 * @since 1.0
+	 */
 	public AssertObjectCreator(){
 		this(false);
 	}
+	
+	/**
+	 * Object created using this constructor with parameter as {@code true} will consider only {@code @TestThisClass} 
+	 * declared classes in a package for unit testing and if it is used with parameter {@code false} it is act same 
+	 * as default constructor. 
+	 * @since 1.0
+	 */
 	public AssertObjectCreator(boolean loadClassesAskedFor){
 		this.loadClassesAskedFor = loadClassesAskedFor;
 	}
 	
+	/**
+	 * This method return list of assertion objects created from the classes which are present in parameterised packages.   
+	 * @param packagesToScan
+	 * @return list of {@code AssertObject} objects
+	 * @since 1.0
+	 */
 	public List<AssertObject<?>> getAssertObjects(final String... packagesToScan) {
 		List<AssertObject<?>> assertObjectList = new LinkedList<AssertObject<?>>();
 		PackageScan packageScan = loadClassesAskedFor ? new LoadClassIfAskedFor():new LoadClassIfNotIgnored();
