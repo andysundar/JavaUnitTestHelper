@@ -86,8 +86,8 @@ publishing {
     publications {
         MyPublication(MavenPublication) {
             from components.java
-            //artifact sourcesJar
-            //artifact javadocJar
+            artifact sourcesJar
+            artifact javadocJar
             groupId 'org.pojotester'
             artifactId 'pojo-tester'
             version '1.0'
