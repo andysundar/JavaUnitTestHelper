@@ -18,6 +18,12 @@ package org.pojotester.pack.scan;
 import org.pojotester.reflection.annotation.ReflectionClassLevel;
 import org.pojotester.utils.ClassUtilities;
 
+/**
+ * This class extends {@link PackageScan} and load all classes except which have {@code @IgnoreClass}
+ * annotation declared. 
+ * @author Anindya Bandopadhyay
+ * @since 1.0
+ */
 public class LoadClassIfNotIgnored extends PackageScan {
 	
 	@Override

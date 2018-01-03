@@ -18,7 +18,13 @@ package org.pojotester.pack.scan;
 import org.pojotester.reflection.annotation.ReflectionClassLevel;
 import org.pojotester.utils.ClassUtilities;
 
-public final class LoadClassIfAskedFor extends PackageScan{
+/**
+ * This class extends {@link PackageScan} and load only those classes which have {@code @TestThisClass}
+ * annotation declared. 
+ * @author Anindya Bandopadhyay
+ * @since 1.0
+ */
+public final class LoadClassIfAskedFor extends PackageScan {
 	
 	@Override
 	protected Class<?> loadClass(String className){

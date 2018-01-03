@@ -27,6 +27,11 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * This class extends {@link SimpleFileVisitor} to find matching package pattern. 
+ * @author Anindya Bandopadhyay
+ * @since 1.0
+ */
 class DirectoryFinder  extends SimpleFileVisitor<Path> {
 	
 	private PathMatcher matcher;
