@@ -46,6 +46,7 @@ public abstract class PackageScan {
 	
 	private static final char PATH_SEPARATOR_CHAR = File.separatorChar;
 	private static final char WILDCARD_CHAR = '*';
+	private static final char QUESTION_CHAR = '?';
 	private static final String WILDCARD_REGX = "**";
 	private static final String PATH_SEPARATOR = File.separator;
 	private static final String DOT = "\\.";
@@ -125,16 +126,16 @@ public abstract class PackageScan {
 		char[] sources = location.toCharArray();
 		int endIndex = 0;
 		String rootDirectory = location;
-		int indexOfWildcard = indexofWildcardChar(sources);
+		int indexOfAsteriskOrQuestion = indexOfAsteriskOrQuestionChar(sources);
 		
-		if(indexOfWildcard < sources.length){
-			for(int index = indexOfWildcard ; index > -1 ; index--){
+		if(indexOfAsteriskOrQuestion < sources.length){
+			for(int index = indexOfAsteriskOrQuestion ; index > -1 ; index--){
 				if(sources[index] == PATH_SEPARATOR_CHAR){
 					break;
 				}
 				endIndex++;
 			}
-			endIndex = indexOfWildcard - endIndex;
+			endIndex = indexOfAsteriskOrQuestion - endIndex;
 			char[] rootDirChars = Arrays.copyOfRange(sources, 0, endIndex);
 			rootDirectory = new String(rootDirChars);
 		}
@@ -142,10 +143,10 @@ public abstract class PackageScan {
 		return rootDirectory;
 	}
 
-	private int indexofWildcardChar(char[] sources) {
+	private int indexOfAsteriskOrQuestionChar(char[] sources) {
 		int indexOfWildcard = 0;
 		for(char chr : sources){
-			if(chr == WILDCARD_CHAR){
+			if(chr == WILDCARD_CHAR || chr == QUESTION_CHAR){
 				break;
 			}
 			indexOfWildcard++;
@@ -207,10 +208,10 @@ public abstract class PackageScan {
 		DirectoryFinder visitor = new DirectoryFinder();
 		Path startDirectory = Paths.get(uri);
 		for (String pattern : patternStringArray) {
-			if (!isWildCard(pattern) || index == lastIndex) {
+			if (!isPattern(pattern) || index == lastIndex) {
 				visitor.createMatcher(pattern);
 				visitor.setFirstPattern((index == 0));
-				visitor.setAfterWildCard((previousIndex != -1 && (isWildCard(patternStringArray[previousIndex]))));
+				visitor.setAfterWildCard((previousIndex != -1 && (isPattern(patternStringArray[previousIndex]))));
 				visitor.setLastPattern((index == lastIndex));
 				try {
 					Files.walkFileTree(startDirectory, visitor);
@@ -227,7 +228,7 @@ public abstract class PackageScan {
 
 			index++;
 			previousIndex++;
-			if (!isWildCard(pattern) && visitor.getNumMatches() == 0) {
+			if (!isPattern(pattern) && visitor.getNumMatches() == 0) {
 				break;
 			}
 		}
@@ -270,8 +271,8 @@ public abstract class PackageScan {
 		return (clazz != null) && (!clazz.isAnnotation()) && (!clazz.isInterface()) && (!clazz.isEnum()) && (!Modifier.isAbstract(clazz.getModifiers()));
 	}
 	
-	private boolean isWildCard(String pattern) {
-		return WILDCARD_REGX.equals(pattern) || Character.toString(WILDCARD_CHAR).equals(pattern);
+	private boolean isPattern(String pattern) {
+		return WILDCARD_REGX.equals(pattern) || Character.toString(WILDCARD_CHAR).equals(pattern) || Character.toString(QUESTION_CHAR).equals(pattern);
 	}
 	
 	protected abstract Class<?> loadClass(String className);

@@ -111,4 +111,16 @@ public class AssertObjectCreatorTest {
 			assertEquals(assertObject.getClassFieldName(), assertObject.getExpectedValue(), assertObject.getReturnedValue());
 		}
 	}
+	
+	@Test
+	public void testGetAssertObjects_WhenQuestionPattern() {
+		String []packagesToScan = {"org.pojotester.testing.pack.d?o", "org.pojo?ester.testing.pack.dto"};
+		List<AssertObject<?>> assertObjects = assertObjectCreator.getAssertObjects(packagesToScan);
+		assertFalse(assertObjects.isEmpty());
+		for(AssertObject<?> assertObject : assertObjects) {
+			assertEquals(assertObject.getClassFieldName(), assertObject.getExpectedValue(), assertObject.getReturnedValue());
+		}
+	}
+	
+
 }
