@@ -122,5 +122,15 @@ public class AssertObjectCreatorTest {
 		}
 	}
 	
+	@Test
+	public void testGetAssertObjects_WhenDefineClassNotFound() {
+		String []packagesToScan = {"org.pojoTester.testing.mypack.dto.MyAbc.class"};
+		List<AssertObject<?>> assertObjects = assertObjectCreator.getAssertObjects(packagesToScan);
+		assertFalse(assertObjects.isEmpty());
+		for(AssertObject<?> assertObject : assertObjects) {
+			assertEquals(assertObject.getClassFieldName(), assertObject.getExpectedValue(), assertObject.getReturnedValue());
+		}
+	}
+	
 
 }
