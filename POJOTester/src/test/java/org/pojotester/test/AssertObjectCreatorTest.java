@@ -114,7 +114,7 @@ public class AssertObjectCreatorTest {
 	
 	@Test
 	public void testGetAssertObjects_WhenQuestionPattern() {
-		String []packagesToScan = {"org.pojotester.testing.pack.d?o", "org.pojo?ester.testing.pack.dto"};
+		String []packagesToScan = {"org.pojotester.testing.pack.d?o", "org.pojo?ester.testing.mypack.dto"};
 		List<AssertObject<?>> assertObjects = assertObjectCreator.getAssertObjects(packagesToScan);
 		assertFalse(assertObjects.isEmpty());
 		for(AssertObject<?> assertObject : assertObjects) {
