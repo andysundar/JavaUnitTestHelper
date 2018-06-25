@@ -28,6 +28,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -35,7 +36,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 
-import org.pojotester.utils.ClassUtilities;
+import org.pojotester.log.PojoTesterLogger;
 
 /**
  * This class is responsible to scan the package and load the classes which is suppose to be unit tested.
@@ -44,6 +45,7 @@ import org.pojotester.utils.ClassUtilities;
  */
 public abstract class PackageScan {
 	
+	private static final String FILE = "file";
 	private static final char PATH_SEPARATOR_CHAR = File.separatorChar;
 	private static final char WILDCARD_CHAR = '*';
 	private static final char QUESTION_CHAR = '?';
@@ -63,7 +65,7 @@ public abstract class PackageScan {
 	public Set<Class<?>> getClasses(final String... packagesToScan) {
 		Set<Class<?>> classSet = Collections.emptySet();
 		if (packagesToScan != null) {
-			classSet = new HashSet<Class<?>>();
+			classSet = new HashSet<>();
 			for (String location : packagesToScan) {
 				if (location.startsWith(WILDCARD_REGX)) {
 					throw new IllegalArgumentException(ILLEGAL_PACKAGE + " [ " + location + " ]");
@@ -88,7 +90,7 @@ public abstract class PackageScan {
 					// Goto root directory and match pattern to search
 					// directories/files [e.g. mypack.**.My*.class,
 					// mypack.**.MyClass.class]
-					List<String> patterns = new LinkedList<String>();
+					List<String> patterns = new LinkedList<>();
 					String[] patternStringArray = patternString.split(Matcher.quoteReplacement(PATH_SEPARATOR));
 					String classFilePattern = WILDCARD_CHAR + CLASS_FILE_SUFFIX;
 					for (String pattern : patternStringArray) {
@@ -98,7 +100,7 @@ public abstract class PackageScan {
 							patterns.add(pattern);
 						}
 					}
-					Set<String> classFiles = Collections.emptySet();
+					Set<String> classFiles = null;
 					// Check for class 
 					Set<File> packageDirectories = findPackageDirectory(rootDirectory, patternStringArray);
 					for (File packageDirectory : packageDirectories) {
@@ -178,36 +180,61 @@ public abstract class PackageScan {
 	}
 	
 	private Set<File> findPackageDirectory(String rootDirectory, String[] patternStringArray) {
-		ClassLoader classLoader = ClassUtilities.getDefaultClassLoader();
-		URL url = classLoader.getResource(rootDirectory);
-		URI uri = null;
-		Set<File> packageDirectories = Collections.emptySet();
+		Set<File> packageDirectories = new TreeSet<>();
+		Enumeration<URL> urls = null;
 		try {
-			uri = url.toURI();
-		} catch (URISyntaxException e1) {
-			e1.printStackTrace();
+			urls = ClassLoader.getSystemResources(rootDirectory);
+		} catch (IOException e) {
+			PojoTesterLogger.debugMessage("Not able to find resources in class path", e);
 		}
-		if (uri != null) {
-			if (patternStringArray.length > 0 && !patternStringArray[0].endsWith(CLASS_FILE_SUFFIX)) {
-				patternStringArray = Arrays.copyOfRange(patternStringArray, 0, (patternStringArray.length - 1));
-				packageDirectories = patternMaching(uri, patternStringArray);
-			} else {
-				packageDirectories = new TreeSet<>();
-				packageDirectories.add(new File(uri));
-			}
 
-		}
+        if(urls == null) {
+        	PojoTesterLogger.debugMessage("No resource found in class path. ", null);
+        } else {
+        	while(urls.hasMoreElements()){
+            	URL url = urls.nextElement();
+            	PojoTesterLogger.debugMessage("In class path " + url.getFile(), null);
+            	
+            	if(!FILE.equals(url.getProtocol())) continue;
+            	
+            	URI uri = null;
+        		
+        		try {
+        			uri = url.toURI();
+        			Path startDirectory = Paths.get(uri);
+        			
+        			if (patternStringArray.length > 0 && !patternStringArray[0].endsWith(CLASS_FILE_SUFFIX)) {
+        				patternStringArray = Arrays.copyOfRange(patternStringArray, 0, (patternStringArray.length - 1));
+        				Set<File> directories = patternMaching(startDirectory, patternStringArray);
+        				if(directories != null && !directories.isEmpty()) {
+        					packageDirectories.addAll(directories);
+        				}
+        			} else {
+        				packageDirectories.add(startDirectory.toFile());
+        			}
+
+        		} catch (URISyntaxException e) {
+        			PojoTesterLogger.debugMessage("Class loader resource URL issue. ", e);
+        		}
+        		
+            }
+        }
+
+		
 		return packageDirectories;
 	}
 
-	private Set<File> patternMaching(URI uri, String[] patternStringArray) {
-		Set<File> packageDirectories = Collections.emptySet();
+	private Set<File> patternMaching(Path startDirectory, String[] patternStringArray) {
+		
 		int index = 0;
 		int previousIndex = -1;
 		int lastIndex = patternStringArray.length - 1;
 		DirectoryFinder visitor = new DirectoryFinder();
-		Path startDirectory = Paths.get(uri);
+	
+		
 		for (String pattern : patternStringArray) {
+			PojoTesterLogger.debugMessage("pattern " + pattern, null);
+			visitor.setNumMatches(0);
 			if (!isPattern(pattern) || index == lastIndex) {
 				visitor.createMatcher(pattern);
 				visitor.setFirstPattern((index == 0));
@@ -216,7 +243,7 @@ public abstract class PackageScan {
 				try {
 					Files.walkFileTree(startDirectory, visitor);
 				} catch (IOException e) {
-					e.printStackTrace();
+					PojoTesterLogger.debugMessage("File tree walk failed." , e);
 				}
 				Path path = visitor.getCurrentPath();
 
@@ -232,15 +259,17 @@ public abstract class PackageScan {
 				break;
 			}
 		}
-
-		packageDirectories = visitor.getDirectories();
-		return packageDirectories;
+		
+		Set<File> directories = visitor.getDirectories();
+		
+		return directories;
 	}
+
 	
 	private Set<String> findClassFiles(Path dir, String patternString) {
 		Set<String> classFiles = Collections.emptySet();
 		try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir, patternString)){
-			classFiles = new HashSet<String>();
+			classFiles = new HashSet<>();
 			for(Path path : stream){
 				File file = path.toFile();
 				if(file.isFile()){
@@ -248,7 +277,7 @@ public abstract class PackageScan {
 				}
 			}
 		} catch (DirectoryIteratorException | IOException ex) {
-	         ex.printStackTrace();
+	         PojoTesterLogger.debugMessage("Directory iterator failed", ex);
 	     }
 		return classFiles;
 	}

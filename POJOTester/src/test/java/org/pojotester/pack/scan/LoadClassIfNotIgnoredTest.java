@@ -20,11 +20,13 @@ public class LoadClassIfNotIgnoredTest {
 	@Rule
 	public ExpectedException throwE = ExpectedException.none();
 	
+	
+
 	@Before
-	public void setUp(){
+	public void setUp() {
 		packageScan = new LoadClassIfNotIgnored();
 	}
-	
+
 	@Test
 	public void testDetermineRootDir_WhenArgumentIsNull() { 
 		String []packagesToScan = null;
@@ -42,6 +44,9 @@ public class LoadClassIfNotIgnoredTest {
 		assertFalse(classSet.isEmpty());
 		for(Class<?> clazz : classSet){
 			String className = clazz.getName();
+			if(className.contains("org.pojotester.test.")) {
+				System.out.println("className " + className);
+			}
 			assertTrue(className.contains("org.pojotester.testing.mypack"));
 		}
 	}

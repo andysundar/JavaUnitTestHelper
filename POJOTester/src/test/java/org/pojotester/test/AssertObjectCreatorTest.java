@@ -1,14 +1,14 @@
 package org.pojotester.test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.pojotester.test.values.AssertObject;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 public class AssertObjectCreatorTest {
 
@@ -18,6 +18,8 @@ public class AssertObjectCreatorTest {
 	public void setup(){
 		assertObjectCreator = new AssertObjectCreator();
 	}
+	
+	
 	@Test
 	public void testGetAssertObjects_WhenMultiPackage() {
 		String []packagesToScan = {"org.*tester.pack.**.mypack","org.pojotester.testing.mypack.dto"};
@@ -102,6 +104,7 @@ public class AssertObjectCreatorTest {
 		}
 	}
 	
+	
 	@Test
 	public void testGetAssertObjects_WhenMethodLevelAnnotationUsed() {
 		String []packagesToScan = {"org.pojotester.testing.pack.dto"};
@@ -111,6 +114,7 @@ public class AssertObjectCreatorTest {
 			assertEquals(assertObject.getClassFieldName(), assertObject.getExpectedValue(), assertObject.getReturnedValue());
 		}
 	}
+	
 	
 	@Test
 	public void testGetAssertObjects_WhenQuestionPattern() {
@@ -126,10 +130,7 @@ public class AssertObjectCreatorTest {
 	public void testGetAssertObjects_WhenDefineClassNotFound() {
 		String []packagesToScan = {"org.pojoTester.testing.mypack.dto.MyAbc.class"};
 		List<AssertObject<?>> assertObjects = assertObjectCreator.getAssertObjects(packagesToScan);
-		assertFalse(assertObjects.isEmpty());
-		for(AssertObject<?> assertObject : assertObjects) {
-			assertEquals(assertObject.getClassFieldName(), assertObject.getExpectedValue(), assertObject.getReturnedValue());
-		}
+		assertTrue(assertObjects.isEmpty());
 	}
 	
 

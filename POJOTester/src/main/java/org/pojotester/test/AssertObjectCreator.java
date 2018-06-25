@@ -46,7 +46,8 @@ import org.pojotester.test.values.TestConfiguration;
 public class AssertObjectCreator {
 
 	private boolean loadClassesAskedFor;
-	
+
+
 	/**
 	 * Object created using this constructor will consider all classes in a package for unit testing 
 	 * if and only if {@code @IgnoreClass} is declared. 
@@ -73,11 +74,11 @@ public class AssertObjectCreator {
 	 * @since 1.0
 	 */
 	public List<AssertObject<?>> getAssertObjects(final String... packagesToScan) {
-		List<AssertObject<?>> assertObjectList = new LinkedList<AssertObject<?>>();
+		List<AssertObject<?>> assertObjectList = new LinkedList<>();
 		PackageScan packageScan = loadClassesAskedFor ? new LoadClassIfAskedFor():new LoadClassIfNotIgnored();
 		Set<Class<?>> uniqueClasses = packageScan.getClasses(packagesToScan);
 		for (Class<?> clazz : uniqueClasses) {
-			Map<String, TestConfiguration<?>> fieldAssertObjectMap = new HashMap<String, TestConfiguration<?>>();
+			Map<String, TestConfiguration<?>> fieldAssertObjectMap = new HashMap<>();
 			Method[] methods = clazz.getDeclaredMethods();
 			Method createObjectMethod = findCreateObjectMethod(methods);
 			createTestConfigurationsFromIntospection(clazz, fieldAssertObjectMap, createObjectMethod);
@@ -91,12 +92,14 @@ public class AssertObjectCreator {
 	private void createTestConfigurationsFromIntospection(Class<?> clazz,
 			Map<String, TestConfiguration<?>> fieldAssertObjectMap, Method createObjectMethod) {
 		BeanInfo beanInfo = null;
+		PropertyDescriptor propertyDescriptors[] = null;
 		try {
 			beanInfo = Introspector.getBeanInfo(clazz, Object.class);
+			propertyDescriptors = beanInfo.getPropertyDescriptors();
 		} catch (IntrospectionException e) {
-			e.printStackTrace();
+			PojoTesterLogger.debugMessage("Not able to load properties" , e);
 		}
-		PropertyDescriptor propertyDescriptors[] = beanInfo.getPropertyDescriptors();
+		 
 		if (propertyDescriptors != null) {
 			for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
 				Method readMethod = propertyDescriptor.getReadMethod();
@@ -162,7 +165,7 @@ public class AssertObjectCreator {
 		List<AssertObject<?>> assertObjectList = Collections.emptyList();
 		Set<String> classFieldNameSet = fieldAssertObjectMap.keySet();
 		if (classFieldNameSet != null && !classFieldNameSet.isEmpty()) {
-			assertObjectList = new LinkedList<AssertObject<?>>();
+			assertObjectList = new LinkedList<>();
 			for (String classFieldName : classFieldNameSet) {
 				TestConfiguration<?> testConfiguration = fieldAssertObjectMap.get(classFieldName);
 				if(testConfiguration != null){

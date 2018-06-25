@@ -42,9 +42,6 @@ class DirectoryFinder  extends SimpleFileVisitor<Path> {
     private boolean firstPattern;
     private boolean afterWildCard;
     
-    public DirectoryFinder() {
-    	
-    }
 
     public void createMatcher(String pattern){
         matcher = FileSystems.getDefault()
@@ -107,6 +104,10 @@ class DirectoryFinder  extends SimpleFileVisitor<Path> {
 
 	public int getNumMatches() {
 		return numMatches;
+	}
+
+	public void setNumMatches(int numMatches) {
+		this.numMatches = numMatches;
 	}
      
 

@@ -49,13 +49,23 @@ public abstract class ClassUtilities {
 			classLoader = currentThread.getContextClassLoader();
 		} else {
 			// Default class loader 
-			classLoader = ClassUtilities.getDefaultClassLoader();
+			classLoader = ClassUtilities.class.getClassLoader();
 			if(classLoader == null) {
 				// boot strap loader
 				classLoader = ClassLoader.getSystemClassLoader();
 			}
 		}
 		return classLoader;
+	}
+	
+	/**
+	 * This method the system class loader. 
+	 * @return {@code ClassLoader} object if found else {@code null}
+	 * @since 1.0
+	 */
+	public static ClassLoader getSystemClassLoader(){
+		
+		return ClassLoader.getSystemClassLoader();
 	}
 	
 	/**
