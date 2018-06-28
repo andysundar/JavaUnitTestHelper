@@ -6,7 +6,7 @@
  * user guide available at https://docs.gradle.org/3.4.1/userguide/java_library_plugin.html
  */
 
-group 'org.pojotester'
+group 'com.github.andysundar'
 //artifact 'pojotester'
 version '1.0-SNAPSHOT'
 
@@ -89,8 +89,8 @@ publishing {
             from components.java
             artifact sourcesJar
             artifact javadocJar
-            groupId 'org.pojotester'
-            artifactId 'pojo-tester'
+            groupId 'com.github.andysundar'
+            artifactId 'pojoclasstester'
             version '1.0'
             pom.withXml {
                 def root = asNode()
@@ -118,11 +118,11 @@ bintray {
     }
     dryRun = false //[Default: false] Whether to run this as dry-run, without deploying
     publish = true //[Default: false] Whether version should be auto published after an upload    
-    override = false //[Default: false] Whether to override version artifacts already published    
+    override = true //[Default: false] Whether to override version artifacts already published    
     
     pkg {
-        repo = 'JavaUnitTestHelper'
-        name = 'pojo-tester'
+        repo = 'PojoTester'
+        name = 'pojoclasstester'
         //userOrg = 'bintray_user'
         licenses = ['Apache-2.0']
         vcsUrl = 'https://github.com/andysundar/JavaUnitTestHelper.git'
@@ -131,7 +131,7 @@ bintray {
         	desc = 'POJO Tester 1.0 final'
         	released  = new Date()
         	vcsTag = '1.0.0'
-        	attributes = ['pojo-tester': 'org.pojotester:org.pojotester.test:pojo-tester']
+        	attributes = ['pojoclasstester': 'com.github.andysundar:org.pojotester.test:pojo-tester']
         	
         	//Optional configuration for GPG signing
             gpg {
