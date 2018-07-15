@@ -52,6 +52,7 @@ public abstract class PackageScan {
 	private static final String WILDCARD_REGX = "**";
 	private static final String PATH_SEPARATOR = File.separator;
 	private static final String DOT = "\\.";
+	private static final String JAVA_PACKAGE_SEPARATOR = ".";
 	private static final String CLASS_FILE_SUFFIX = ".class";
 	private static final String CLASS_SUFFIX = "class";
 	private static final String ILLEGAL_PACKAGE = "Package cannot start with " + WILDCARD_REGX ;
@@ -288,9 +289,9 @@ public abstract class PackageScan {
 		classNamePath = classNamePath.substring(startIndex, endIndex);
 		if(classNamePath.contains(File.separator)){
 			String separator = File.separator + File.separator ;
-			classNamePath = classNamePath.replaceAll(separator, DOT);
+			classNamePath = classNamePath.replaceAll(separator, JAVA_PACKAGE_SEPARATOR);
 		} else {
-			classNamePath = classNamePath.replaceAll(PATH_SEPARATOR, DOT);
+			classNamePath = classNamePath.replaceAll(PATH_SEPARATOR, JAVA_PACKAGE_SEPARATOR);
 		}
 		
 		return classNamePath;
