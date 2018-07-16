@@ -45,6 +45,7 @@ import org.pojotester.log.PojoTesterLogger;
  */
 public abstract class PackageScan {
 	
+	private static final String WIN_PATH_SEPARATOR = "\\";
 	private static final String FILE = "file";
 	private static final char PATH_SEPARATOR_CHAR = File.separatorChar;
 	private static final char WILDCARD_CHAR = '*';
@@ -288,7 +289,7 @@ public abstract class PackageScan {
 		int startIndex = classNamePath.indexOf(startPackage);
 		classNamePath = classNamePath.substring(startIndex, endIndex);
 		if(classNamePath.contains(File.separator)){
-			String separator = File.separator + File.separator ;
+			String separator = File.separator.equals(WIN_PATH_SEPARATOR) ? (File.separator + File.separator) : File.separator;
 			classNamePath = classNamePath.replaceAll(separator, JAVA_PACKAGE_SEPARATOR);
 		} else {
 			classNamePath = classNamePath.replaceAll(PATH_SEPARATOR, JAVA_PACKAGE_SEPARATOR);
