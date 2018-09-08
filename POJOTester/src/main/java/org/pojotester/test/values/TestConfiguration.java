@@ -22,11 +22,12 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.pojotester.log.PojoTesterLogger;
 import org.pojotester.type.convertor.ObjectToPrimitiveArray;
 import org.pojotester.type.convertor.PrimitiveToObjectArray;
 import org.pojotester.utils.ClassUtilities;
 import org.pojotester.utils.DefaultValueUtilities;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class is responsible to hold all configuration value to do reflection call of methods. 
@@ -35,6 +36,8 @@ import org.pojotester.utils.DefaultValueUtilities;
  */
 public class TestConfiguration<T> {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(TestConfiguration.class);
+	
 	private String classFieldName;
 	private Object object;
 	private Method createObjectMethod;
@@ -157,14 +160,14 @@ public class TestConfiguration<T> {
 				try {
 					writeMethod.invoke(object, args);
 				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-					PojoTesterLogger.debugMessage(writeMethod.getName() + " invoke fail.", e);
+					LOGGER.debug(writeMethod.getName() + " invoke fail.", e);
 					e.printStackTrace();
 				}
 			} else {
 				try {
 					field.set(object, args[0]);
 				} catch (IllegalArgumentException | IllegalAccessException e) {
-					PojoTesterLogger.debugMessage(field.getName() + " field set fail.", e);
+					LOGGER.debug(field.getName() + " field set fail.", e);
 					e.printStackTrace();
 				}
 
@@ -182,14 +185,14 @@ public class TestConfiguration<T> {
 			try {
 				returnValue = (T) readMethod.invoke(object, null);
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-				PojoTesterLogger.debugMessage(readMethod.getName() + " method invoke fail.", e);
+				LOGGER.debug(readMethod.getName() + " method invoke fail.", e);
 				e.printStackTrace();
 			}
 		} else {
 			try {
 				returnValue = (T) field.get(object);
 			} catch (IllegalArgumentException | IllegalAccessException e) {
-				PojoTesterLogger.debugMessage(field.getName() + " field set fail.", e);
+				LOGGER.debug(field.getName() + " field set fail.", e);
 				e.printStackTrace();
 			}
 		}
@@ -246,14 +249,14 @@ public class TestConfiguration<T> {
 					try {
 						writeMethod.invoke(object, args);
 					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-						PojoTesterLogger.debugMessage(writeMethod.getName() + " method invoke fail.", e);
+						LOGGER.debug(writeMethod.getName() + " method invoke fail.", e);
 						e.printStackTrace();
 					}
 				} else {
 					try {
 						field.set(object, primitives);
 					} catch (IllegalArgumentException | IllegalAccessException e) {
-						PojoTesterLogger.debugMessage(field.getName() + " field set fail.", e);
+						LOGGER.debug(field.getName() + " field set fail.", e);
 						e.printStackTrace();
 					}
 
@@ -266,14 +269,14 @@ public class TestConfiguration<T> {
 					try {
 						writeMethod.invoke(object, args);
 					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-						PojoTesterLogger.debugMessage(writeMethod.getName() + " method invoke fail.", e);
+						LOGGER.debug(writeMethod.getName() + " method invoke fail.", e);
 						e.printStackTrace();
 					}
 				} else {
 					try {
 						field.set(object, primitives);
 					} catch (IllegalArgumentException | IllegalAccessException e) {
-						PojoTesterLogger.debugMessage(field.getName() + " field set fail.", e);
+						LOGGER.debug(field.getName() + " field set fail.", e);
 						e.printStackTrace();
 					}
 
@@ -286,14 +289,14 @@ public class TestConfiguration<T> {
 					try {
 						writeMethod.invoke(object, args);
 					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-						PojoTesterLogger.debugMessage(writeMethod.getName() + " method invoke fail.", e);
+						LOGGER.debug(writeMethod.getName() + " method invoke fail.", e);
 						e.printStackTrace();
 					}
 				} else {
 					try {
 						field.set(object, primitives);
 					} catch (IllegalArgumentException | IllegalAccessException e) {
-						PojoTesterLogger.debugMessage(field.getName() + " field set fail.", e);
+						LOGGER.debug(field.getName() + " field set fail.", e);
 						e.printStackTrace();
 					}
 
@@ -306,14 +309,14 @@ public class TestConfiguration<T> {
 					try {
 						writeMethod.invoke(object, args);
 					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-						PojoTesterLogger.debugMessage(writeMethod.getName() + " method invoke fail.", e);
+						LOGGER.debug(writeMethod.getName() + " method invoke fail.", e);
 						e.printStackTrace();
 					}
 				} else {
 					try {
 						field.set(object, primitives);
 					} catch (IllegalArgumentException | IllegalAccessException e) {
-						PojoTesterLogger.debugMessage(field.getName() + " field set fail.", e);
+						LOGGER.debug(field.getName() + " field set fail.", e);
 						e.printStackTrace();
 					}
 
@@ -326,14 +329,14 @@ public class TestConfiguration<T> {
 					try {
 						writeMethod.invoke(object, args);
 					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-						PojoTesterLogger.debugMessage(writeMethod.getName() + " method invoke fail.", e);
+						LOGGER.debug(writeMethod.getName() + " method invoke fail.", e);
 						e.printStackTrace();
 					}
 				} else {
 					try {
 						field.set(object, primitives);
 					} catch (IllegalArgumentException | IllegalAccessException e) {
-						PojoTesterLogger.debugMessage(field.getName() + " field set fail.", e);
+						LOGGER.debug(field.getName() + " field set fail.", e);
 						e.printStackTrace();
 					}
 
@@ -346,14 +349,14 @@ public class TestConfiguration<T> {
 					try {
 						writeMethod.invoke(object, args);
 					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-						PojoTesterLogger.debugMessage(writeMethod.getName() + " method invoke fail.", e);
+						LOGGER.debug(writeMethod.getName() + " method invoke fail.", e);
 						e.printStackTrace();
 					}
 				} else {
 					try {
 						field.set(object, primitives);
 					} catch (IllegalArgumentException | IllegalAccessException e) {
-						PojoTesterLogger.debugMessage(field.getName() + " field set fail.", e);
+						LOGGER.debug(field.getName() + " field set fail.", e);
 						e.printStackTrace();
 					}
 
@@ -366,14 +369,14 @@ public class TestConfiguration<T> {
 					try {
 						writeMethod.invoke(object, args);
 					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-						PojoTesterLogger.debugMessage(writeMethod.getName() + " method invoke fail.", e);
+						LOGGER.debug(writeMethod.getName() + " method invoke fail.", e);
 						e.printStackTrace();
 					}
 				} else {
 					try {
 						field.set(object, primitives);
 					} catch (IllegalArgumentException | IllegalAccessException e) {
-						PojoTesterLogger.debugMessage(field.getName() + " field set fail.", e);
+						LOGGER.debug(field.getName() + " field set fail.", e);
 						e.printStackTrace();
 					}
 
@@ -386,14 +389,14 @@ public class TestConfiguration<T> {
 					try {
 						writeMethod.invoke(object, args);
 					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-						PojoTesterLogger.debugMessage(writeMethod.getName() + " method invoke fail.", e);
+						LOGGER.debug(writeMethod.getName() + " method invoke fail.", e);
 						e.printStackTrace();
 					}
 				} else {
 					try {
 						field.set(object, primitives);
 					} catch (IllegalArgumentException | IllegalAccessException e) {
-						PojoTesterLogger.debugMessage(field.getName() + " field set fail.", e);
+						LOGGER.debug(field.getName() + " field set fail.", e);
 						e.printStackTrace();
 					}
 

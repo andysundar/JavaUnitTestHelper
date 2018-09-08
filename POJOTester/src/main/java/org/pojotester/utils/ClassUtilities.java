@@ -22,10 +22,11 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 
-import org.pojotester.log.PojoTesterLogger;
 import org.pojotester.object.mock.MockDependencyObject;
 import org.pojotester.object.mock.MockInterfaceObject;
 import org.pojotester.reflection.annotation.ReflectionMethodLevel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class provide class level reflection utilities like {@code ClassLoader}, loading class , 
@@ -34,7 +35,9 @@ import org.pojotester.reflection.annotation.ReflectionMethodLevel;
  * @since 1.0
  */
 public abstract class ClassUtilities {
-		
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(ClassUtilities.class);
+	
 	/**
 	 * This method first try to get context class loader from current thread then it try to get it from default class loader, 
 	 * then it try to get it from system class loader. 
@@ -80,7 +83,7 @@ public abstract class ClassUtilities {
 		try {
 			clazz = (classLoader != null) ?  classLoader.loadClass(className) : Class.forName(className);
 		} catch (ClassNotFoundException e) {
-			PojoTesterLogger.debugMessage("Not able to load " + className, e);
+			LOGGER.debug("Not able to load " + className, e);
 			e.printStackTrace();
 		}
 		return clazz;
@@ -97,7 +100,7 @@ public abstract class ClassUtilities {
 		try {
 			object = clazz.newInstance();
 		} catch (InstantiationException | IllegalAccessException e) {
-			PojoTesterLogger.debugMessage("Not able to initialize using default constructor of " + clazz.getName() + 
+			LOGGER.debug("Not able to initialize using default constructor of " + clazz.getName() + 
 					".\n Now trying with other constructor (if any).", e);
 			object =  createObjectUsingOtherConstructor(clazz);
 		}
@@ -141,7 +144,7 @@ public abstract class ClassUtilities {
 				break;
 			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
 					| InvocationTargetException ex) {
-				PojoTesterLogger.debugMessage("Not able to initialize using other constructor of " + clazz.getName(), ex);
+				LOGGER.debug("Not able to initialize using other constructor of " + clazz.getName(), ex);
 			}
 		}
 		return object;
@@ -161,7 +164,7 @@ public abstract class ClassUtilities {
 			try {
 				object = method.invoke(null, null);
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-				PojoTesterLogger.debugMessage("Not able to invoke " + method.getName() + " in " + clazz.getName(), e);
+				LOGGER.debug("Not able to invoke " + method.getName() + " in " + clazz.getName(), e);
 			}
 		}
 

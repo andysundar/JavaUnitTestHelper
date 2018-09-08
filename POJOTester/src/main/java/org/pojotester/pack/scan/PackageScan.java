@@ -36,7 +36,8 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 
-import org.pojotester.log.PojoTesterLogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class is responsible to scan the package and load the classes which is suppose to be unit tested.
@@ -44,6 +45,8 @@ import org.pojotester.log.PojoTesterLogger;
  * @since 1.0
  */
 public abstract class PackageScan {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(PackageScan.class);
 	
 	private static final String WIN_PATH_SEPARATOR = "\\";
 	private static final String FILE = "file";
@@ -187,15 +190,15 @@ public abstract class PackageScan {
 		try {
 			urls = ClassLoader.getSystemResources(rootDirectory);
 		} catch (IOException e) {
-			PojoTesterLogger.debugMessage("Not able to find resources in class path", e);
+			LOGGER.debug("Not able to find resources in class path", e);
 		}
 
         if(urls == null) {
-        	PojoTesterLogger.debugMessage("No resource found in class path. ", null);
+        	LOGGER.debug("No resource found in class path. ");
         } else {
         	while(urls.hasMoreElements()){
             	URL url = urls.nextElement();
-            	PojoTesterLogger.debugMessage("In class path " + url.getFile(), null);
+            	LOGGER.debug("In class path " + url.getFile());
             	
             	if(!FILE.equals(url.getProtocol())) continue;
             	
@@ -216,7 +219,7 @@ public abstract class PackageScan {
         			}
 
         		} catch (URISyntaxException e) {
-        			PojoTesterLogger.debugMessage("Class loader resource URL issue. ", e);
+        			LOGGER.debug("Class loader resource URL issue. ", e);
         		}
         		
             }
@@ -235,7 +238,6 @@ public abstract class PackageScan {
 	
 		
 		for (String pattern : patternStringArray) {
-			PojoTesterLogger.debugMessage("pattern " + pattern, null);
 			visitor.setNumMatches(0);
 			if (!isPattern(pattern) || index == lastIndex) {
 				visitor.createMatcher(pattern);
@@ -245,7 +247,7 @@ public abstract class PackageScan {
 				try {
 					Files.walkFileTree(startDirectory, visitor);
 				} catch (IOException e) {
-					PojoTesterLogger.debugMessage("File tree walk failed." , e);
+					LOGGER.debug("File tree walk failed." , e);
 				}
 				Path path = visitor.getCurrentPath();
 
@@ -279,7 +281,7 @@ public abstract class PackageScan {
 				}
 			}
 		} catch (DirectoryIteratorException | IOException ex) {
-	         PojoTesterLogger.debugMessage("Directory iterator failed", ex);
+	         LOGGER.debug("Directory iterator failed", ex);
 	     }
 		return classFiles;
 	}

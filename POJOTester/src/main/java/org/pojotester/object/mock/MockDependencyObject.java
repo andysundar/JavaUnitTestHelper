@@ -16,8 +16,9 @@
 package org.pojotester.object.mock;
 
 
-import org.pojotester.log.PojoTesterLogger;
 import org.pojotester.utils.ClassUtilities;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.dynamic.DynamicType.Builder;
@@ -32,6 +33,8 @@ import net.bytebuddy.matcher.ElementMatchers;
  */
 public class MockDependencyObject {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(MockDependencyObject.class);
+	
 	public Object getProxyObject(Class<?> clazz){
 		Object object = null;
 		if(clazz != null){
@@ -44,7 +47,7 @@ public class MockDependencyObject {
 		    try {
 				object = subclazz.newInstance();
 			} catch (InstantiationException | IllegalAccessException e) {
-				PojoTesterLogger.debugMessage("Not able to create proxy object of dependent's proxy.\n"
+				LOGGER.debug("Not abōle to create proxy object of dependent's proxy.\n"
 						+ "If this is happend during constructor invoke then if possible please use @CreateObjectMethod annotation.\n", e);
 			}
 		}

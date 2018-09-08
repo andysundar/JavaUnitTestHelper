@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.pojotester.log.PojoTesterLogger;
 import org.pojotester.pack.scan.LoadClassIfAskedFor;
 import org.pojotester.pack.scan.LoadClassIfNotIgnored;
 import org.pojotester.pack.scan.PackageScan;
@@ -37,6 +36,8 @@ import org.pojotester.reflection.annotation.ReflectionFieldLevel;
 import org.pojotester.reflection.annotation.ReflectionMethodLevel;
 import org.pojotester.test.values.AssertObject;
 import org.pojotester.test.values.TestConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class create assert object for unit testing. 
@@ -45,6 +46,8 @@ import org.pojotester.test.values.TestConfiguration;
  */
 public class AssertObjectCreator {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(AssertObjectCreator.class);
+	
 	private boolean loadClassesAskedFor;
 
 
@@ -97,7 +100,7 @@ public class AssertObjectCreator {
 			beanInfo = Introspector.getBeanInfo(clazz, Object.class);
 			propertyDescriptors = beanInfo.getPropertyDescriptors();
 		} catch (IntrospectionException e) {
-			PojoTesterLogger.debugMessage("Not able to load properties" , e);
+			LOGGER.debug("Not able to load properties" , e);
 		}
 		 
 		if (propertyDescriptors != null) {
@@ -202,7 +205,7 @@ public class AssertObjectCreator {
 				}
 			}
 		} else {
-			PojoTesterLogger.debugMessage(fieldName + " not found in " + clazz.getName() , null);
+			LOGGER.debug(fieldName + " not found in " + clazz.getName());
 		}
 		return testConfiguration;
 	}
@@ -218,7 +221,7 @@ public class AssertObjectCreator {
 				message = writeMethod.getName() + " write method did not have any paramter";
 			}
 		}
-		PojoTesterLogger.debugMessage(message, null);
+		LOGGER.debug(message);
 	}
 
 	private void logReadMethodMessage(Method readMethod, Field field) {
@@ -227,7 +230,7 @@ public class AssertObjectCreator {
 			message = readMethod.getName() + " read method return " + readMethod.getReturnType()
 					+ " but field [" + field.getName() + "] type is " + field.getType();
 		}
-		PojoTesterLogger.debugMessage(message, null);
+		LOGGER.debug(message);
 	}
 
 
@@ -247,7 +250,7 @@ public class AssertObjectCreator {
 		try {
 			field = clazz.getDeclaredField(fieldName);
 		} catch (NoSuchFieldException | SecurityException e) {
-			PojoTesterLogger.debugMessage(fieldName + " field name is not present in " + clazz.getName(), e);
+			LOGGER.debug(fieldName + " field name is not present in " + clazz.getName(), e);
 		}
 		return field;
 	}
