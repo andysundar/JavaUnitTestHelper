@@ -23,7 +23,7 @@ package org.pojotester.test.values;
  * @param <T> field data type
  */
 public class AssertObject<T> {
-	private String classFieldName;
+	private String message;
 	
 	private T returnedValue;
 	private T expectedValue;
@@ -40,10 +40,18 @@ public class AssertObject<T> {
 	public void setReturnedValue(T returnedValue) {
 		this.returnedValue = returnedValue;
 	}
+	/**
+	 * This method is replaced by {@code getMessage}
+	 * @return field or method name 
+	 */
+	@Deprecated
 	public String getClassFieldName() {
-		return classFieldName;
+		return message;
 	}
-	public void setClassFieldName(String classFieldName) {
-		this.classFieldName = classFieldName;
+	public String getMessage() {
+		return message;
+	}
+	public void setMessage(String classFieldName) {
+		this.message = classFieldName;
 	}
 }

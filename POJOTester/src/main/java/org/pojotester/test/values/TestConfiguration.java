@@ -137,14 +137,12 @@ public class TestConfiguration<T> {
 		writeValue(assignedValue);
 		T returnedValue = readValue();
 		if(returnedValue != expectedValue){
-			assertObject.setReturnedValue(returnedValue);
 			assertObject.setExpectedValue(returnedValue);
 		} else {
-			assertObject.setReturnedValue(returnedValue);
 			assertObject.setExpectedValue(expectedValue);
 		}
-		
-		assertObject.setClassFieldName(classFieldName);
+		assertObject.setReturnedValue(returnedValue);
+		assertObject.setMessage(classFieldName);
 		return assertObject;
 	}
 

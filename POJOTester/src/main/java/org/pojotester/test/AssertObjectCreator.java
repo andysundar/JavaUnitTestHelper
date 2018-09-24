@@ -81,12 +81,12 @@ public class AssertObjectCreator {
 		PackageScan packageScan = loadClassesAskedFor ? new LoadClassIfAskedFor():new LoadClassIfNotIgnored();
 		Set<Class<?>> uniqueClasses = packageScan.getClasses(packagesToScan);
 		for (Class<?> clazz : uniqueClasses) {
-			Map<String, TestConfiguration<?>> fieldAssertObjectMap = new HashMap<>();
+			Map<String, TestConfiguration<?>> fieldTestConfigurationMap = new HashMap<>();
 			Method[] methods = clazz.getDeclaredMethods();
 			Method createObjectMethod = findCreateObjectMethod(methods);
-			createTestConfigurationsFromIntospection(clazz, fieldAssertObjectMap, createObjectMethod);
-			createTestConfigurationsFromAnnotations(clazz, fieldAssertObjectMap, methods, createObjectMethod);
-			List<AssertObject<?>> assertObjects = createAssertObject(clazz, fieldAssertObjectMap);
+			createTestConfigurationsFromIntospection(clazz, fieldTestConfigurationMap, createObjectMethod);
+			createTestConfigurationsFromAnnotations(clazz, fieldTestConfigurationMap, methods, createObjectMethod);
+			List<AssertObject<?>> assertObjects = createAssertObject(clazz, fieldTestConfigurationMap);
 			assertObjectList.addAll(assertObjects);
 		}
 		return assertObjectList;
