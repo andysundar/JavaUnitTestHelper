@@ -21,12 +21,14 @@ import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.pojotester.pack.scan.LoadClassIfAskedFor;
@@ -36,6 +38,7 @@ import org.pojotester.reflection.annotation.ReflectionFieldLevel;
 import org.pojotester.reflection.annotation.ReflectionMethodLevel;
 import org.pojotester.test.values.AssertObject;
 import org.pojotester.test.values.TestConfiguration;
+import org.pojotester.utils.ClassUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -81,15 +84,109 @@ public class AssertObjectCreator {
 		PackageScan packageScan = loadClassesAskedFor ? new LoadClassIfAskedFor():new LoadClassIfNotIgnored();
 		Set<Class<?>> uniqueClasses = packageScan.getClasses(packagesToScan);
 		for (Class<?> clazz : uniqueClasses) {
-			Map<String, TestConfiguration<?>> fieldTestConfigurationMap = new HashMap<>();
 			Method[] methods = clazz.getDeclaredMethods();
 			Method createObjectMethod = findCreateObjectMethod(methods);
-			createTestConfigurationsFromIntospection(clazz, fieldTestConfigurationMap, createObjectMethod);
-			createTestConfigurationsFromAnnotations(clazz, fieldTestConfigurationMap, methods, createObjectMethod);
+			Map<String, TestConfiguration<?>> fieldTestConfigurationMap = createFieldAndTestConfiguration(clazz, methods, createObjectMethod);
 			List<AssertObject<?>> assertObjects = createAssertObject(clazz, fieldTestConfigurationMap);
 			assertObjectList.addAll(assertObjects);
+			
+			Object objectX1 = null;
+			Object objectX2 = null;
+			Object objectY1 = null;
+			Object objectY2 = null;
+			
+			Method toStringMethod = null;
+			try {
+				toStringMethod = clazz.getDeclaredMethod("toString", null);
+			} catch (NoSuchMethodException | SecurityException e) {
+				LOGGER.error("toString method not overriden", e);
+			}
+			if(toStringMethod != null) {
+				Map<String, TestConfiguration<?>> fieldTestConfigurationMapX1 =  createFieldAndTestConfiguration(clazz, methods, createObjectMethod);
+				Map<String, TestConfiguration<?>> fieldTestConfigurationMapY2 =  createFieldAndTestConfiguration(clazz, methods, createObjectMethod);
+				Set<Entry<String, TestConfiguration<?>>> setX1 = fieldTestConfigurationMap.entrySet();
+				Set<Entry<String, TestConfiguration<?>>> setX2 = fieldTestConfigurationMapX1.entrySet();
+				Set<Entry<String, TestConfiguration<?>>> setY2 = fieldTestConfigurationMapY2.entrySet();
+				objectX1 = retrieveObject(setX1, clazz);
+				objectX2 = retrieveObject(setX2, clazz);
+				
+				String x1Str = invokeMethod(objectX1, toStringMethod);
+				String x2Str = invokeMethod(objectX2, toStringMethod);
+				AssertObject<String> whenBothSameValues = new AssertObject<>();
+				whenBothSameValues.setMessage("toString method when different object but same value(s).");
+				whenBothSameValues.setReturnedValue(x1Str);
+				whenBothSameValues.setExpectedValue(x2Str);
+				assertObjectList.add(whenBothSameValues);
+				
+				objectY2 = retrieveObject(setY2, clazz);
+				objectY1 = createObject(clazz, createObjectMethod);
+				
+				
+				String y1Str = invokeMethod(objectY1, toStringMethod);
+				String y2Str = invokeMethod(objectY2, toStringMethod);
+				AssertObject<Boolean> whenDifferentValues = new AssertObject<>();
+				whenDifferentValues.setMessage("toString method when different object and different value(s).");
+				whenDifferentValues.setReturnedValue(y2Str.equals(y1Str));
+				whenDifferentValues.setExpectedValue(false);
+				assertObjectList.add(whenDifferentValues);
+			}
+			Method hashCodeMethod = null;
+			try {
+				hashCodeMethod = clazz.getDeclaredMethod("hashCode", null);
+			} catch (NoSuchMethodException | SecurityException e) {
+				LOGGER.debug("hashCode method not overriden", e);
+			}
+			
+			Method equalsMethod = null;
+			try {
+				equalsMethod = clazz.getDeclaredMethod("equals", Object.class);
+			} catch (NoSuchMethodException | SecurityException e) {
+				LOGGER.debug("equals method not overriden", e);
+			}
+			
 		}
 		return assertObjectList;
+	}
+
+	private String invokeMethod(Object object, Method method) {
+		String str = "";
+		try {
+			Object[] args = {};
+			str = (String) method.invoke(object, args);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			LOGGER.error("Not able to invoke toString method", e);
+		}
+		return str;
+	}
+
+	private Object createObject(Class<?> clazz, Method createObjectMethod) {
+		Object object = null;
+		if(createObjectMethod == null) {
+			object = ClassUtilities.createObject(clazz);
+		} else {
+			object = ClassUtilities.createObjectUsingStaticMethod(clazz, createObjectMethod);
+		}
+		return object;
+	}
+	
+	private Object retrieveObject(Set<Entry<String, TestConfiguration<?>>> set, Class<?> clazz) {
+		Object object = null;
+		for(Entry<String, TestConfiguration<?>> x : set) {
+			TestConfiguration<?> testConfiguration = x.getValue();
+			if(testConfiguration != null) {
+				testConfiguration.assertAssignedValues(clazz);
+				object = testConfiguration.getObject();
+			}
+		}
+		return object;
+	}
+
+	private Map<String, TestConfiguration<?>> createFieldAndTestConfiguration(Class<?> clazz, Method[] methods, Method createObjectMethod) {
+		Map<String, TestConfiguration<?>> fieldTestConfigurationMap = new HashMap<>();
+		
+		createTestConfigurationsFromIntospection(clazz, fieldTestConfigurationMap, createObjectMethod);
+		createTestConfigurationsFromAnnotations(clazz, fieldTestConfigurationMap, methods, createObjectMethod);
+		return fieldTestConfigurationMap;
 	}
 
 	private void createTestConfigurationsFromIntospection(Class<?> clazz,

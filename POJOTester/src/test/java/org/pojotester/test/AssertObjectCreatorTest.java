@@ -26,7 +26,7 @@ public class AssertObjectCreatorTest {
 		List<AssertObject<?>> assertObjects = assertObjectCreator.getAssertObjects(packagesToScan);
 		assertFalse(assertObjects.isEmpty());
 		for(AssertObject<?> assertObject : assertObjects) {
-			assertEquals(assertObject.getClassFieldName(),assertObject.getExpectedValue(), assertObject.getReturnedValue());
+			assertEquals(assertObject.getMessage(),assertObject.getExpectedValue(), assertObject.getReturnedValue());
 		}
 	}
 	
@@ -36,7 +36,7 @@ public class AssertObjectCreatorTest {
 		List<AssertObject<?>> assertObjects = assertObjectCreator.getAssertObjects(packagesToScan);
 		assertFalse(assertObjects.isEmpty());
 		for(AssertObject<?> assertObject : assertObjects) {
-			assertEquals(assertObject.getClassFieldName(),assertObject.getExpectedValue(), assertObject.getReturnedValue());
+			assertEquals(assertObject.getMessage(),assertObject.getExpectedValue(), assertObject.getReturnedValue());
 		}
 	}
 	
@@ -46,7 +46,7 @@ public class AssertObjectCreatorTest {
 		List<AssertObject<?>> assertObjects = assertObjectCreator.getAssertObjects(packagesToScan);
 		assertFalse(assertObjects.isEmpty());
 		for(AssertObject<?> assertObject : assertObjects) {
-			assertEquals(assertObject.getClassFieldName(),assertObject.getExpectedValue(), assertObject.getReturnedValue());
+			assertEquals(assertObject.getMessage(),assertObject.getExpectedValue(), assertObject.getReturnedValue());
 		}
 	}
 	
@@ -56,7 +56,7 @@ public class AssertObjectCreatorTest {
 		List<AssertObject<?>> assertObjects = assertObjectCreator.getAssertObjects(packagesToScan);
 		assertFalse(assertObjects.isEmpty());
 		for(AssertObject<?> assertObject : assertObjects) {
-			assertEquals(assertObject.getClassFieldName(),assertObject.getExpectedValue(), assertObject.getReturnedValue());
+			assertEquals(assertObject.getMessage(),assertObject.getExpectedValue(), assertObject.getReturnedValue());
 		}
 	}
 	
@@ -80,7 +80,7 @@ public class AssertObjectCreatorTest {
 		List<AssertObject<?>> assertObjects = assertObjectCreator.getAssertObjects(packagesToScan);
 		assertFalse(assertObjects.isEmpty());
 		for(AssertObject<?> assertObject : assertObjects) {
-			assertEquals(assertObject.getClassFieldName(), assertObject.getExpectedValue(), assertObject.getReturnedValue());
+			assertEquals(assertObject.getMessage(), assertObject.getExpectedValue(), assertObject.getReturnedValue());
 		}
 	}
 	
@@ -90,7 +90,7 @@ public class AssertObjectCreatorTest {
 		List<AssertObject<?>> assertObjects = assertObjectCreator.getAssertObjects(packagesToScan);
 		assertFalse(assertObjects.isEmpty());
 		for(AssertObject<?> assertObject : assertObjects) {
-			assertEquals(assertObject.getClassFieldName(), assertObject.getExpectedValue(), assertObject.getReturnedValue());
+			assertEquals(assertObject.getMessage(), assertObject.getExpectedValue(), assertObject.getReturnedValue());
 		}
 	}
 	
@@ -100,7 +100,7 @@ public class AssertObjectCreatorTest {
 		List<AssertObject<?>> assertObjects = assertObjectCreator.getAssertObjects(packagesToScan);
 		assertFalse(assertObjects.isEmpty());
 		for(AssertObject<?> assertObject : assertObjects) {
-			assertEquals(assertObject.getClassFieldName(), assertObject.getExpectedValue(), assertObject.getReturnedValue());
+			assertEquals(assertObject.getMessage(), assertObject.getExpectedValue(), assertObject.getReturnedValue());
 		}
 	}
 	
@@ -111,7 +111,7 @@ public class AssertObjectCreatorTest {
 		List<AssertObject<?>> assertObjects = assertObjectCreator.getAssertObjects(packagesToScan);
 		assertFalse(assertObjects.isEmpty());
 		for(AssertObject<?> assertObject : assertObjects) {
-			assertEquals(assertObject.getClassFieldName(), assertObject.getExpectedValue(), assertObject.getReturnedValue());
+			assertEquals(assertObject.getMessage(), assertObject.getExpectedValue(), assertObject.getReturnedValue());
 		}
 	}
 	
@@ -122,7 +122,7 @@ public class AssertObjectCreatorTest {
 		List<AssertObject<?>> assertObjects = assertObjectCreator.getAssertObjects(packagesToScan);
 		assertFalse(assertObjects.isEmpty());
 		for(AssertObject<?> assertObject : assertObjects) {
-			assertEquals(assertObject.getClassFieldName(), assertObject.getExpectedValue(), assertObject.getReturnedValue());
+			assertEquals(assertObject.getMessage(), assertObject.getExpectedValue(), assertObject.getReturnedValue());
 		}
 	}
 	
@@ -133,5 +133,14 @@ public class AssertObjectCreatorTest {
 		assertTrue(assertObjects.isEmpty());
 	}
 	
+	@Test
+	public void testGetAssertObjects_WhenDefineToStringMethod() {
+		String []packagesToScan = {"org.pojotester.testing.mypack.MyClass02.class"};
+		List<AssertObject<?>> assertObjects = assertObjectCreator.getAssertObjects(packagesToScan);
+		assertFalse(assertObjects.isEmpty());
+		for(AssertObject<?> assertObject : assertObjects) {
+			assertEquals(assertObject.getMessage(), assertObject.getExpectedValue(), assertObject.getReturnedValue());
+		}
+	}
 
 }

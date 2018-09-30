@@ -1,5 +1,6 @@
 package org.pojotester.testing.mypack;
 
+import java.util.Arrays;
 import java.util.Date;
 
 public class MyClass02 {
@@ -11,6 +12,7 @@ public class MyClass02 {
 	private float[] floats;
 	private Date[] dates;
 	private MyClass03[] myClass03es;
+	private MyClass01 myClass01;
 	
 	public int[] getInts() {
 		return ints;
@@ -54,4 +56,19 @@ public class MyClass02 {
 	public void setMyClass03es(MyClass03[] myClass03es) {
 		this.myClass03es = myClass03es;
 	}
+	
+	public MyClass01 getMyClass01() {
+		return myClass01;
+	}
+	public void setMyClass01(MyClass01 myClass01) {
+		this.myClass01 = myClass01;
+	}
+	@Override
+	public String toString() {
+		return "MyClass02 [ints=" + Arrays.toString(ints) + ", booleans=" + Arrays.toString(booleans) + ", shorts="
+				+ Arrays.toString(shorts) + ", longs=" + Arrays.toString(longs) + ", floats=" + Arrays.toString(floats)
+				+ ", dates=" + Arrays.toString(dates) + ", myClass03es=" + Arrays.toString(myClass03es) + ", myClass01="
+				+ myClass01 + "]";
+	}
+	
 }

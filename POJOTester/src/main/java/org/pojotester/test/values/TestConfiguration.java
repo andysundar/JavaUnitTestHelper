@@ -15,6 +15,7 @@
  ******************************************************************************/
 package org.pojotester.test.values;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -57,55 +58,66 @@ public class TestConfiguration<T> {
 			field.setAccessible(true);
 		}
 
-		if(createObjectMethod == null) {
-			object = ClassUtilities.createObject(clazz);
-		} else {
-			object = ClassUtilities.createObjectUsingStaticMethod(clazz, createObjectMethod);
-		}
+		createObject(clazz);
 		List<AssertObject<?>> values = Collections.emptyList();
 		if(object != null){
 			if(assignedValues != null){
-				values = populateAnnotatedValues();
+				values = populateValues();
 			} else {
-				Object object = DefaultValueUtilities.getValueFromMap(field.getType());
+				Object fieldValueObject = DefaultValueUtilities.getValueFromMap(field.getType());
 				Class<?> fieldType = field.getType();
 				boolean isArray = fieldType.isArray();
 				fieldType = isArray ? fieldType.getComponentType() : fieldType;
 				if(isArray && fieldType.isPrimitive()){
 
 					if (fieldType == boolean.class) {
-						Boolean[] valueArray = PrimitiveToObjectArray.convertPrimitiveToObjectArray((boolean[]) object) ;
+						Boolean[] valueArray = PrimitiveToObjectArray.convertPrimitiveToObjectArray((boolean[]) fieldValueObject) ;
 						assignedValues = (T[]) valueArray;
 					} else if (fieldType == byte.class) {
-						Byte[] valueArray = PrimitiveToObjectArray.convertPrimitiveToObjectArray((byte[]) object) ;
+						Byte[] valueArray = PrimitiveToObjectArray.convertPrimitiveToObjectArray((byte[]) fieldValueObject) ;
 						assignedValues = (T[]) valueArray;
 					} else if (fieldType == char.class) {
-						Character[] valueArray = PrimitiveToObjectArray.convertPrimitiveToObjectArray((char[]) object);
+						Character[] valueArray = PrimitiveToObjectArray.convertPrimitiveToObjectArray((char[]) fieldValueObject);
 						assignedValues = (T[]) valueArray;
 					} else if (fieldType == double.class) {
-						Double[] valueArray = PrimitiveToObjectArray.convertPrimitiveToObjectArray((double[]) object);
+						Double[] valueArray = PrimitiveToObjectArray.convertPrimitiveToObjectArray((double[]) fieldValueObject);
 						assignedValues = (T[]) valueArray;
 					} else if (fieldType == float.class) {
-						Float[] valueArray = PrimitiveToObjectArray.convertPrimitiveToObjectArray((float[]) object);
+						Float[] valueArray = PrimitiveToObjectArray.convertPrimitiveToObjectArray((float[]) fieldValueObject);
 						assignedValues = (T[]) valueArray;
 					} else if (fieldType == int.class) {
-						Integer[] valueArray = PrimitiveToObjectArray.convertPrimitiveToObjectArray((int[]) object);
+						Integer[] valueArray = PrimitiveToObjectArray.convertPrimitiveToObjectArray((int[]) fieldValueObject);
 						assignedValues = (T[]) valueArray;
 					} else if (fieldType == long.class) {
-						Long[] valueArray = PrimitiveToObjectArray.convertPrimitiveToObjectArray((long[]) object);
+						Long[] valueArray = PrimitiveToObjectArray.convertPrimitiveToObjectArray((long[]) fieldValueObject);
 						assignedValues = (T[]) valueArray;							
 					} else if (fieldType == short.class) {
-						Short[] valueArray =  PrimitiveToObjectArray.convertPrimitiveToObjectArray((short[]) object);
+						Short[] valueArray =  PrimitiveToObjectArray.convertPrimitiveToObjectArray((short[]) fieldValueObject);
 						assignedValues = (T[]) valueArray;
 					}
 				
 				
-					values = populateAnnotatedValues();
-				} else { 
-					values = new LinkedList<AssertObject<?>>();
-					@SuppressWarnings("unchecked")
-					AssertObject<T> assertObject = invokeReadWriteMethod((T)object, (T)object);
-					values.add(assertObject);
+					values = populateValues();
+				} else {
+					AssertObject<T> assertObject = null;
+					if (fieldValueObject == null) {
+						fieldValueObject = ClassUtilities.createObjectUsingOtherConstructor(fieldType);
+						assignedValues = (T[])Array.newInstance(fieldType, 1);
+						if(isArray){
+							assignedValues[0] = (T) fieldValueObject;	
+							assertObject = invokeReadWriteMethod((T) assignedValues,	(T) assignedValues);
+						} else {
+							assertObject = invokeReadWriteMethod((T) fieldValueObject,	(T) fieldValueObject);
+						}
+						
+					} else {
+						assertObject = invokeReadWriteMethod((T) fieldValueObject,	(T) fieldValueObject);
+					}
+
+					if (assertObject != null) {
+						values = new LinkedList<AssertObject<?>>();
+						values.add(assertObject);
+					}
 				}
 				
 			}
@@ -113,7 +125,15 @@ public class TestConfiguration<T> {
 		return values;
 	}
 
-	private List<AssertObject<?>> populateAnnotatedValues() {
+	private void createObject(Class<?> clazz) {
+		if(createObjectMethod == null) {
+			object = ClassUtilities.createObject(clazz);
+		} else {
+			object = ClassUtilities.createObjectUsingStaticMethod(clazz, createObjectMethod);
+		}
+	}
+
+	private List<AssertObject<?>> populateValues() {
 		List<AssertObject<?>> values = new LinkedList<AssertObject<?>>();
 		int length = 0;
 		if(expectedValues == null){
@@ -147,13 +167,14 @@ public class TestConfiguration<T> {
 	}
 
 	private void writeValue(T value) {
-		Object args[] = { value };
 		Class<?> fieldType = field.getType();
 		boolean isArray = fieldType.isArray();
 		fieldType = isArray ? fieldType.getComponentType() : fieldType;
 		if(isArray && fieldType.isPrimitive()){
 			convertObjectToPrimitiveForWriteMethod(value);
 		} else {
+			Object args[] = { value };
+			
 			if (writeMethod != null) {
 				try {
 					writeMethod.invoke(object, args);
@@ -458,6 +479,10 @@ public class TestConfiguration<T> {
 
 	public void setClassFieldName(String classFieldName) {
 		this.classFieldName = classFieldName;
+	}
+
+	public Object getObject() {
+		return object;
 	}
 
 }
