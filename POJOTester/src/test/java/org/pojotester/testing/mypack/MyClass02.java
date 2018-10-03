@@ -70,5 +70,61 @@ public class MyClass02 {
 				+ ", dates=" + Arrays.toString(dates) + ", myClass03es=" + Arrays.toString(myClass03es) + ", myClass01="
 				+ myClass01 + "]";
 	}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + Arrays.hashCode(booleans);
+		result = prime * result + Arrays.hashCode(dates);
+		result = prime * result + Arrays.hashCode(floats);
+		result = prime * result + Arrays.hashCode(ints);
+		result = prime * result + Arrays.hashCode(longs);
+		result = prime * result + ((myClass01 == null) ? 0 : myClass01.hashCode());
+		result = prime * result + Arrays.hashCode(myClass03es);
+		result = prime * result + Arrays.hashCode(shorts);
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof MyClass02)) {
+			return false;
+		}
+		MyClass02 other = (MyClass02) obj;
+		if (!Arrays.equals(booleans, other.booleans)) {
+			return false;
+		}
+		if (!Arrays.equals(dates, other.dates)) {
+			return false;
+		}
+		if (!Arrays.equals(floats, other.floats)) {
+			return false;
+		}
+		if (!Arrays.equals(ints, other.ints)) {
+			return false;
+		}
+		if (!Arrays.equals(longs, other.longs)) {
+			return false;
+		}
+		if (myClass01 == null) {
+			if (other.myClass01 != null) {
+				return false;
+			}
+		} else if (!myClass01.equals(other.myClass01)) {
+			return false;
+		}
+		if (!Arrays.equals(myClass03es, other.myClass03es)) {
+			return false;
+		}
+		if (!Arrays.equals(shorts, other.shorts)) {
+			return false;
+		}
+		return true;
+	}
 	
 }

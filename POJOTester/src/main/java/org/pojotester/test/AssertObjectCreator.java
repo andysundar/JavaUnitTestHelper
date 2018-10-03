@@ -47,12 +47,17 @@ import org.slf4j.LoggerFactory;
  * @author Anindya Bandopadhyay
  * @since 1.0
  */
-public class AssertObjectCreator {
+public class AssertObjectCreator implements IAssertObjectCreator {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AssertObjectCreator.class);
+	private static final String EQUALS = "equals";
+	private static final String HASH_CODE = "hashCode";
+	private static final String TO_STRING = "toString";
 	
 	private boolean loadClassesAskedFor;
-
+	private boolean testToStringMethod;
+	private boolean testHashCodeMethod;
+	private boolean testEqualsMethod;
 
 	/**
 	 * Object created using this constructor will consider all classes in a package for unit testing 
@@ -87,76 +92,185 @@ public class AssertObjectCreator {
 			Method[] methods = clazz.getDeclaredMethods();
 			Method createObjectMethod = findCreateObjectMethod(methods);
 			Map<String, TestConfiguration<?>> fieldTestConfigurationMap = createFieldAndTestConfiguration(clazz, methods, createObjectMethod);
-			List<AssertObject<?>> assertObjects = createAssertObject(clazz, fieldTestConfigurationMap);
+			List<AssertObject<?>> assertObjects = createAssertObjectList(clazz, fieldTestConfigurationMap);
 			assertObjectList.addAll(assertObjects);
+	
+			Method toStringMethod = getDeclaredMethod(clazz, TO_STRING, null);
+			Method hashCodeMethod = getDeclaredMethod(clazz, HASH_CODE, null);	
+			Method equalsMethod = getDeclaredMethod(clazz, EQUALS, Object.class);
+		
 			
 			Object objectX1 = null;
 			Object objectX2 = null;
 			Object objectY1 = null;
 			Object objectY2 = null;
-			
-			Method toStringMethod = null;
-			try {
-				toStringMethod = clazz.getDeclaredMethod("toString", null);
-			} catch (NoSuchMethodException | SecurityException e) {
-				LOGGER.error("toString method not overriden", e);
-			}
-			if(toStringMethod != null) {
+			if(toStringMethod != null || hashCodeMethod != null || equalsMethod != null) {
 				Map<String, TestConfiguration<?>> fieldTestConfigurationMapX1 =  createFieldAndTestConfiguration(clazz, methods, createObjectMethod);
 				Map<String, TestConfiguration<?>> fieldTestConfigurationMapY2 =  createFieldAndTestConfiguration(clazz, methods, createObjectMethod);
 				Set<Entry<String, TestConfiguration<?>>> setX1 = fieldTestConfigurationMap.entrySet();
 				Set<Entry<String, TestConfiguration<?>>> setX2 = fieldTestConfigurationMapX1.entrySet();
 				Set<Entry<String, TestConfiguration<?>>> setY2 = fieldTestConfigurationMapY2.entrySet();
-				objectX1 = retrieveObject(setX1, clazz);
-				objectX2 = retrieveObject(setX2, clazz);
-				
-				String x1Str = invokeMethod(objectX1, toStringMethod);
-				String x2Str = invokeMethod(objectX2, toStringMethod);
-				AssertObject<String> whenBothSameValues = new AssertObject<>();
-				whenBothSameValues.setMessage("toString method when different object but same value(s).");
-				whenBothSameValues.setReturnedValue(x1Str);
-				whenBothSameValues.setExpectedValue(x2Str);
-				assertObjectList.add(whenBothSameValues);
-				
-				objectY2 = retrieveObject(setY2, clazz);
+				objectX1 = getObject(setX1, clazz);
+				objectX2 = getObject(setX2, clazz);
 				objectY1 = createObject(clazz, createObjectMethod);
-				
-				
-				String y1Str = invokeMethod(objectY1, toStringMethod);
-				String y2Str = invokeMethod(objectY2, toStringMethod);
-				AssertObject<Boolean> whenDifferentValues = new AssertObject<>();
-				whenDifferentValues.setMessage("toString method when different object and different value(s).");
-				whenDifferentValues.setReturnedValue(y2Str.equals(y1Str));
-				whenDifferentValues.setExpectedValue(false);
-				assertObjectList.add(whenDifferentValues);
-			}
-			Method hashCodeMethod = null;
-			try {
-				hashCodeMethod = clazz.getDeclaredMethod("hashCode", null);
-			} catch (NoSuchMethodException | SecurityException e) {
-				LOGGER.debug("hashCode method not overriden", e);
+				objectY2 = getObject(setY2, clazz);
 			}
 			
-			Method equalsMethod = null;
-			try {
-				equalsMethod = clazz.getDeclaredMethod("equals", Object.class);
-			} catch (NoSuchMethodException | SecurityException e) {
-				LOGGER.debug("equals method not overriden", e);
-			}
+			createTestForToString(assertObjectList, toStringMethod, objectX1, objectX2, objectY1, objectY2);
 			
+			
+			
+			
+
+			if (equalsMethod != null) {
+				// object.equals(null) should return false
+				AssertObject<Boolean> objectEqualsNull = createAssertObject(objectX1.equals(null), false,
+						"object.equals(null) must return false");
+				assertObjectList.add(objectEqualsNull);
+
+				// object.equals(objectEqualsOtherObject) should return false
+				AssertObject<Boolean> objectEqualsOtherObject = createAssertObject(objectX1.equals(new Object()), false,
+						"object.equals(otherObject) must return false");
+				assertObjectList.add(objectEqualsOtherObject);
+				
+				// Reflexive
+				AssertObject<Boolean> reflexiveEquals = createAssertObject(objectX1.equals(objectX1), true,
+						"Reflexive Test: x.equals(x) return true.");
+				assertObjectList.add(reflexiveEquals);
+				if (hashCodeMethod != null) {
+					AssertObject<Integer> reflexiveHashCode = createAssertObject(objectX1.hashCode(),
+							objectX1.hashCode(), "Reflexive Test: x.hashCode() == x.hashCode()");
+					assertObjectList.add(reflexiveHashCode);
+
+					Boolean reflexiveEqualsMaintained = reflexiveEquals.getExpectedValue()
+							.equals(reflexiveEquals.getReturnedValue());
+					Boolean reflexiveHashCodeMaintained = reflexiveHashCode.getExpectedValue()
+							.equals(reflexiveHashCode.getReturnedValue());
+					AssertObject<Boolean> reflexiveHashCodeEquals = createAssertObject(reflexiveEqualsMaintained,
+							reflexiveHashCodeMaintained, "Both hashCode & equals must maintained reflexive property ");
+					assertObjectList.add(reflexiveHashCodeEquals);
+				}
+				// Symmetric
+				AssertObject<Boolean> symmetricEquals = createAssertObject(objectX1.equals(objectX2),
+						objectX2.equals(objectX1), "Symmetric Test: x.equals(y) == y.equals(x)");
+				assertObjectList.add(symmetricEquals);
+
+				if (hashCodeMethod != null) {
+					AssertObject<Integer> symmetricHashCode = createAssertObject(objectX1.hashCode(),
+							objectX2.hashCode(),
+							"Symmetric Test: If values of x & y are same then x.hashCode() == y.hashCode()");
+					assertObjectList.add(symmetricHashCode);
+
+					Boolean symmetricEqualsMaintained = symmetricEquals.getExpectedValue()
+							.equals(symmetricEquals.getReturnedValue());
+					Boolean symmetricHashCodeMaintained = symmetricHashCode.getExpectedValue()
+							.equals(symmetricHashCode.getReturnedValue());
+					AssertObject<Boolean> symmetricHashCodeEquals = createAssertObject(symmetricEqualsMaintained,
+							symmetricHashCodeMaintained, "Both hashCode & equals must maintained symmetric property");
+					assertObjectList.add(symmetricHashCodeEquals);
+				}
+
+				// Transitive
+				AssertObject<Boolean> transitiveEquals = createAssertObject(
+						objectX1.equals(objectX2) && objectX2.equals(objectY2), objectY2.equals(objectX1),
+						"Transitive Test: if x.equals(y) return true and y.equals(z) return true then \n z.equals(x) also return true");
+				assertObjectList.add(transitiveEquals);
+
+				if (hashCodeMethod != null) {
+					AssertObject<Boolean> transitiveHashCode = createAssertObject(
+							(objectX1.hashCode() == objectX2.hashCode() && objectY2.hashCode() == objectX1.hashCode()),
+							(objectY2.hashCode() == objectX2.hashCode()),
+							"Transitive Test: If values of x & y are same then x.hashCode() == y.hashCode()");
+					assertObjectList.add(transitiveHashCode);
+
+					Boolean transitiveEqualsMaintained = transitiveEquals.getExpectedValue()
+							.equals(transitiveEquals.getReturnedValue());
+					Boolean transitiveHashCodeMaintained = transitiveHashCode.getExpectedValue()
+							.equals(transitiveHashCode.getReturnedValue());
+					AssertObject<Boolean> transitiveHashCodeEquals = createAssertObject(transitiveEqualsMaintained,
+							transitiveHashCodeMaintained, "Both hashCode & equals must maintained transitive property");
+					assertObjectList.add(transitiveHashCodeEquals);
+				}
+
+				// Consistent
+				AssertObject<Boolean> consistentEquals = createAssertObject(objectX1.equals(objectY1),
+						objectY1.equals(objectX1),
+						"Consistent Test: If x1 and x2 different object and different value(s) \n x1.equals(x2) return false and x2.equals(x1) also return false.");
+				assertObjectList.add(consistentEquals);
+				if (hashCodeMethod != null) {
+					AssertObject<Boolean> consistentHashCode = createAssertObject(
+							(objectX1.hashCode() == objectY1.hashCode()), false,
+							"Consistent Test: If x1 and x2 different object and different value(s) \n x1.hashCode() !+ x2.hashCode()");
+					assertObjectList.add(consistentHashCode);
+
+					Boolean consistentEqualsMaintained = consistentEquals.getExpectedValue()
+							.equals(consistentEquals.getReturnedValue());
+					Boolean consistentHashCodeMaintained = consistentHashCode.getExpectedValue()
+							.equals(consistentHashCode.getReturnedValue());
+					AssertObject<Boolean> consistentHashCodeEquals = createAssertObject(consistentEqualsMaintained,
+							consistentHashCodeMaintained, "Both hashCode & equals must maintained consistent property");
+					assertObjectList.add(consistentHashCodeEquals);
+				}
+			} else if (hashCodeMethod != null) {
+
+				AssertObject<Integer> reflexiveHashCode = createAssertObject(objectX1.hashCode(), objectX1.hashCode(),
+						"Reflexive Test: x.hashCode() == x.hashCode()");
+				assertObjectList.add(reflexiveHashCode);
+				
+				AssertObject<Integer> symmetricHashCode = createAssertObject(objectX1.hashCode(), objectX2.hashCode(),
+						"Symmetric Test: If values of x & y are same then x.hashCode() == y.hashCode()");
+				assertObjectList.add(symmetricHashCode);
+				
+				AssertObject<Boolean> transitiveHashCode = createAssertObject(
+						(objectX1.hashCode() == objectX2.hashCode() && objectY2.hashCode() == objectX1.hashCode() ), 
+						(objectY2.hashCode() == objectX2.hashCode()),
+						"Transitive Test: If values of x & y are same then x.hashCode() == y.hashCode()");
+				assertObjectList.add(transitiveHashCode);
+				
+				AssertObject<Boolean> consistentHashCode = createAssertObject((objectX1.hashCode() == objectY1.hashCode()), false,
+						"Consistent Test: If x1 and x2 different object and different value(s) \n x1.hashCode() !+ x2.hashCode()");
+				assertObjectList.add(consistentHashCode);
+			}
 		}
 		return assertObjectList;
 	}
 
-	private String invokeMethod(Object object, Method method) {
-		String str = "";
-		try {
-			Object[] args = {};
-			str = (String) method.invoke(object, args);
-		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-			LOGGER.error("Not able to invoke toString method", e);
+	private void createTestForToString(List<AssertObject<?>> assertObjectList, Method toStringMethod, Object objectX1,
+			Object objectX2, Object objectY1, Object objectY2) {
+		if(toStringMethod != null) {
+			
+			String x1Str = objectX1.toString();
+			String x2Str = objectX2.toString();
+			AssertObject<String> whenBothSameValues = createAssertObject(x1Str, x2Str, 
+					"toString method when different objects but same value(s).");
+			assertObjectList.add(whenBothSameValues);
+			
+			
+			
+			String y1Str = objectY1.toString();
+			String y2Str = objectY2.toString();
+			AssertObject<Boolean> whenDifferentValues = createAssertObject(y2Str.equals(y1Str), false, 
+					"toString method when different objects and different value(s).");
+			assertObjectList.add(whenDifferentValues);
 		}
-		return str;
+	}
+
+	private <T> AssertObject<T> createAssertObject(T returnedValue, T expectedValue, String message) {
+		AssertObject<T> assertObject = new AssertObject<>();
+		assertObject.setMessage(message);
+		assertObject.setReturnedValue(returnedValue);
+		assertObject.setExpectedValue(expectedValue);
+		return assertObject;
+	}
+
+	private Method getDeclaredMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
+		Method method = null;
+		try {
+			method = clazz.getDeclaredMethod(methodName, parameterTypes);
+		} catch (NoSuchMethodException | SecurityException e) {
+			LOGGER.error(String.format("%s method not found", methodName), e);
+		}
+		return method;
 	}
 
 	private Object createObject(Class<?> clazz, Method createObjectMethod) {
@@ -169,7 +283,7 @@ public class AssertObjectCreator {
 		return object;
 	}
 	
-	private Object retrieveObject(Set<Entry<String, TestConfiguration<?>>> set, Class<?> clazz) {
+	private Object getObject(Set<Entry<String, TestConfiguration<?>>> set, Class<?> clazz) {
 		Object object = null;
 		for(Entry<String, TestConfiguration<?>> x : set) {
 			TestConfiguration<?> testConfiguration = x.getValue();
@@ -260,7 +374,7 @@ public class AssertObjectCreator {
 		}
 	}
 
-	private List<AssertObject<?>> createAssertObject( Class<?> clazz,
+	private List<AssertObject<?>> createAssertObjectList( Class<?> clazz,
 			Map<String, TestConfiguration<?>> fieldAssertObjectMap) {
 		List<AssertObject<?>> assertObjectList = Collections.emptyList();
 		Set<String> classFieldNameSet = fieldAssertObjectMap.keySet();
