@@ -21,17 +21,28 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.SortedSet;
+import java.util.Stack;
+import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.UUID;
+import java.util.Vector;
+import java.util.stream.Stream;
 
 /**
  * This class has a global map of most widely used data types.
@@ -39,7 +50,7 @@ import java.util.TreeSet;
  * @since 1.0
  */
 public abstract class DefaultValueUtilities {
-	private static final Map<Class<?>,Object> classValueMap = new HashMap<Class<?>,Object>();
+	private static final Map<Class<?>,Object> classValueMap = new HashMap<Class<?>,Object>(100);
 	
 	static {
 		classValueMap.put(boolean.class, Boolean.TRUE);
@@ -113,6 +124,9 @@ public abstract class DefaultValueUtilities {
 		classValueMap.put(Instant.class, instant);
 		classValueMap.put(Instant[].class, new Instant[]{instant, instant});
 		
+		ZonedDateTime zonedDateTime = ZonedDateTime.now();
+		classValueMap.put(ZonedDateTime.class, zonedDateTime);
+		classValueMap.put(ZonedDateTime[].class, new ZonedDateTime[]{zonedDateTime, zonedDateTime});
 		
 		classValueMap.put(BigDecimal.class, BigDecimal.TEN);
 		classValueMap.put(BigDecimal[].class, new BigDecimal[]{BigDecimal.TEN , BigDecimal.ONE });
@@ -128,14 +142,27 @@ public abstract class DefaultValueUtilities {
 		classValueMap.put(TreeSet.class, Collections.emptySet());
 		classValueMap.put(HashSet.class, Collections.emptySet());
 		classValueMap.put(LinkedHashSet.class, Collections.emptySet());
+		classValueMap.put(SortedSet.class, Collections.emptySet());
 		
 		classValueMap.put(List.class, Collections.emptyList());
 		classValueMap.put(ArrayList.class, Collections.emptyList());
 		classValueMap.put(LinkedList.class, Collections.emptyList());
+		classValueMap.put(Deque.class, Collections.emptyList());
+		classValueMap.put(Queue.class, Collections.emptyList());
+		classValueMap.put(Stack.class, Collections.emptyList());
+		classValueMap.put(Vector.class, Collections.emptyList());
 		
 		classValueMap.put(Map.class, Collections.emptyMap());
 		classValueMap.put(HashMap.class, Collections.emptyMap());
 		classValueMap.put(Hashtable.class, Collections.emptyMap());
+		classValueMap.put(LinkedHashMap.class, Collections.emptyMap());
+		classValueMap.put(SortedMap.class, Collections.emptyMap());
+		classValueMap.put(TreeMap.class, Collections.emptyMap());
+		
+		
+		classValueMap.put(Stream.class, Stream.empty());
+		
+		classValueMap.put(UUID.class, UUID.randomUUID());
 	}
 	
 	/**
