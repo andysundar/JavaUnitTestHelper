@@ -21,7 +21,6 @@ import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.HashMap;
@@ -55,9 +54,9 @@ public class AssertObjectCreator implements IAssertObjectCreator {
 	private static final String TO_STRING = "toString";
 	
 	private boolean loadClassesAskedFor;
-	private boolean testToStringMethod;
-	private boolean testHashCodeMethod;
-	private boolean testEqualsMethod;
+//	private boolean testToStringMethod;
+//	private boolean testHashCodeMethod;
+//	private boolean testEqualsMethod;
 
 	/**
 	 * Object created using this constructor will consider all classes in a package for unit testing 
@@ -95,8 +94,9 @@ public class AssertObjectCreator implements IAssertObjectCreator {
 			List<AssertObject<?>> assertObjects = createAssertObjectList(clazz, fieldTestConfigurationMap);
 			assertObjectList.addAll(assertObjects);
 	
-			Method toStringMethod = getDeclaredMethod(clazz, TO_STRING, null);
-			Method hashCodeMethod = getDeclaredMethod(clazz, HASH_CODE, null);	
+			Class<?>[] args = {};
+			Method toStringMethod = getDeclaredMethod(clazz, TO_STRING, args);
+			Method hashCodeMethod = getDeclaredMethod(clazz, HASH_CODE, args);	
 			Method equalsMethod = getDeclaredMethod(clazz, EQUALS, Object.class);
 		
 			

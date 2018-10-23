@@ -50,119 +50,119 @@ import java.util.stream.Stream;
  * @since 1.0
  */
 public abstract class DefaultValueUtilities {
-	private static final Map<Class<?>,Object> classValueMap = new HashMap<Class<?>,Object>(100);
+	private static final Map<Class<?>,Object> CLASS_VALUE_MAP = new HashMap<Class<?>,Object>(100);
 	
 	static {
-		classValueMap.put(boolean.class, Boolean.TRUE);
-		classValueMap.put(Boolean.class, Boolean.TRUE);
-		classValueMap.put(boolean[].class, new boolean[]{Boolean.TRUE , Boolean.FALSE});
-		classValueMap.put(Boolean[].class, new Boolean[]{Boolean.TRUE , Boolean.FALSE});
+		CLASS_VALUE_MAP.put(boolean.class, Boolean.TRUE);
+		CLASS_VALUE_MAP.put(Boolean.class, Boolean.TRUE);
+		CLASS_VALUE_MAP.put(boolean[].class, new boolean[]{Boolean.TRUE , Boolean.FALSE});
+		CLASS_VALUE_MAP.put(Boolean[].class, new Boolean[]{Boolean.TRUE , Boolean.FALSE});
 		
-		classValueMap.put(byte.class, Byte.MAX_VALUE);
-		classValueMap.put(Byte.class, Byte.MAX_VALUE);
-		classValueMap.put(byte[].class, new byte[]{Byte.MIN_VALUE , Byte.MAX_VALUE});
-		classValueMap.put(Byte[].class, new Byte[]{Byte.MIN_VALUE , Byte.MAX_VALUE});
+		CLASS_VALUE_MAP.put(byte.class, Byte.MAX_VALUE);
+		CLASS_VALUE_MAP.put(Byte.class, Byte.MAX_VALUE);
+		CLASS_VALUE_MAP.put(byte[].class, new byte[]{Byte.MIN_VALUE , Byte.MAX_VALUE});
+		CLASS_VALUE_MAP.put(Byte[].class, new Byte[]{Byte.MIN_VALUE , Byte.MAX_VALUE});
 		
-		classValueMap.put(char.class, 'A');
-		classValueMap.put(Character.class, 'A');
-		classValueMap.put(char[].class, new char[]{'A' , 'B'});
-		classValueMap.put(Character[].class, new Character[]{'A' , 'B'});
+		CLASS_VALUE_MAP.put(char.class, 'A');
+		CLASS_VALUE_MAP.put(Character.class, 'A');
+		CLASS_VALUE_MAP.put(char[].class, new char[]{'A' , 'B'});
+		CLASS_VALUE_MAP.put(Character[].class, new Character[]{'A' , 'B'});
 		
-		classValueMap.put(double.class, Double.MAX_VALUE);
-		classValueMap.put(Double.class, Double.MAX_VALUE);
-		classValueMap.put(double[].class, new double[]{Double.MIN_VALUE , Double.MAX_VALUE});
-		classValueMap.put(Double[].class, new Double[]{Double.MIN_VALUE , Double.MAX_VALUE});
+		CLASS_VALUE_MAP.put(double.class, Double.MAX_VALUE);
+		CLASS_VALUE_MAP.put(Double.class, Double.MAX_VALUE);
+		CLASS_VALUE_MAP.put(double[].class, new double[]{Double.MIN_VALUE , Double.MAX_VALUE});
+		CLASS_VALUE_MAP.put(Double[].class, new Double[]{Double.MIN_VALUE , Double.MAX_VALUE});
 		
-		classValueMap.put(float.class, Float.MAX_VALUE);
-		classValueMap.put(Float.class, Float.MAX_VALUE);
-		classValueMap.put(float[].class, new float[]{Float.MIN_VALUE , Float.MAX_VALUE});
-		classValueMap.put(Float[].class, new Float[]{Float.MIN_VALUE , Float.MAX_VALUE});
+		CLASS_VALUE_MAP.put(float.class, Float.MAX_VALUE);
+		CLASS_VALUE_MAP.put(Float.class, Float.MAX_VALUE);
+		CLASS_VALUE_MAP.put(float[].class, new float[]{Float.MIN_VALUE , Float.MAX_VALUE});
+		CLASS_VALUE_MAP.put(Float[].class, new Float[]{Float.MIN_VALUE , Float.MAX_VALUE});
 		
-		classValueMap.put(int.class, Integer.MAX_VALUE);
-		classValueMap.put(Integer.class, Integer.MAX_VALUE);
-		classValueMap.put(int[].class, new int[]{Integer.MIN_VALUE , Integer.MAX_VALUE});
-		classValueMap.put(Integer[].class, new Integer[]{Integer.MIN_VALUE , Integer.MAX_VALUE});
+		CLASS_VALUE_MAP.put(int.class, Integer.MAX_VALUE);
+		CLASS_VALUE_MAP.put(Integer.class, Integer.MAX_VALUE);
+		CLASS_VALUE_MAP.put(int[].class, new int[]{Integer.MIN_VALUE , Integer.MAX_VALUE});
+		CLASS_VALUE_MAP.put(Integer[].class, new Integer[]{Integer.MIN_VALUE , Integer.MAX_VALUE});
 		
-		classValueMap.put(long.class, Long.MAX_VALUE);
-		classValueMap.put(Long.class, Long.MAX_VALUE);
-		classValueMap.put(long[].class, new long[]{Long.MIN_VALUE , Long.MAX_VALUE});
-		classValueMap.put(Long[].class, new Long[]{Long.MIN_VALUE , Long.MAX_VALUE});
+		CLASS_VALUE_MAP.put(long.class, Long.MAX_VALUE);
+		CLASS_VALUE_MAP.put(Long.class, Long.MAX_VALUE);
+		CLASS_VALUE_MAP.put(long[].class, new long[]{Long.MIN_VALUE , Long.MAX_VALUE});
+		CLASS_VALUE_MAP.put(Long[].class, new Long[]{Long.MIN_VALUE , Long.MAX_VALUE});
 		
-		classValueMap.put(short.class, Short.MAX_VALUE);
-		classValueMap.put(Short.class, Short.MAX_VALUE);
-		classValueMap.put(short[].class, new short[]{Short.MIN_VALUE , Short.MAX_VALUE});
-		classValueMap.put(Short[].class, new Short[]{Short.MIN_VALUE , Short.MAX_VALUE});
+		CLASS_VALUE_MAP.put(short.class, Short.MAX_VALUE);
+		CLASS_VALUE_MAP.put(Short.class, Short.MAX_VALUE);
+		CLASS_VALUE_MAP.put(short[].class, new short[]{Short.MIN_VALUE , Short.MAX_VALUE});
+		CLASS_VALUE_MAP.put(Short[].class, new Short[]{Short.MIN_VALUE , Short.MAX_VALUE});
 		
-		classValueMap.put(String.class, "String");
-		classValueMap.put(String[].class, new String[]{"String" , "" });
+		CLASS_VALUE_MAP.put(String.class, "String");
+		CLASS_VALUE_MAP.put(String[].class, new String[]{"String" , "" });
 		
 		java.util.Date utilDate = new java.util.Date();
-		classValueMap.put(java.util.Date.class, utilDate);
-		classValueMap.put(java.util.Date[].class, new java.util.Date[]{utilDate});
+		CLASS_VALUE_MAP.put(java.util.Date.class, utilDate);
+		CLASS_VALUE_MAP.put(java.util.Date[].class, new java.util.Date[]{utilDate});
 		
 		java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
-		classValueMap.put(java.sql.Date.class, sqlDate);
-		classValueMap.put(java.sql.Date[].class, new java.sql.Date[]{sqlDate});
+		CLASS_VALUE_MAP.put(java.sql.Date.class, sqlDate);
+		CLASS_VALUE_MAP.put(java.sql.Date[].class, new java.sql.Date[]{sqlDate});
 		
 		java.util.Calendar calendar = java.util.Calendar.getInstance();
-		classValueMap.put(java.util.Calendar.class, calendar);
-		classValueMap.put(java.util.Calendar[].class, new java.util.Calendar[]{calendar});
+		CLASS_VALUE_MAP.put(java.util.Calendar.class, calendar);
+		CLASS_VALUE_MAP.put(java.util.Calendar[].class, new java.util.Calendar[]{calendar});
 		
 		LocalDate localDate = LocalDate.now();
-		classValueMap.put(LocalDate.class, localDate);
-		classValueMap.put(LocalDate[].class, new LocalDate[]{localDate});
+		CLASS_VALUE_MAP.put(LocalDate.class, localDate);
+		CLASS_VALUE_MAP.put(LocalDate[].class, new LocalDate[]{localDate});
 		
 		LocalTime localTime = LocalTime.now();
-		classValueMap.put(LocalTime.class, localTime);
-		classValueMap.put(LocalTime[].class, new LocalTime[]{localTime});
+		CLASS_VALUE_MAP.put(LocalTime.class, localTime);
+		CLASS_VALUE_MAP.put(LocalTime[].class, new LocalTime[]{localTime});
 		
 		LocalDateTime localDateTime = LocalDateTime.now();
-		classValueMap.put(LocalDateTime.class, localDateTime);
-		classValueMap.put(LocalDateTime[].class, new LocalDateTime[]{localDateTime});
+		CLASS_VALUE_MAP.put(LocalDateTime.class, localDateTime);
+		CLASS_VALUE_MAP.put(LocalDateTime[].class, new LocalDateTime[]{localDateTime});
 		
 		Instant instant = Instant.now();
-		classValueMap.put(Instant.class, instant);
-		classValueMap.put(Instant[].class, new Instant[]{instant, instant});
+		CLASS_VALUE_MAP.put(Instant.class, instant);
+		CLASS_VALUE_MAP.put(Instant[].class, new Instant[]{instant, instant});
 		
 		ZonedDateTime zonedDateTime = ZonedDateTime.now();
-		classValueMap.put(ZonedDateTime.class, zonedDateTime);
-		classValueMap.put(ZonedDateTime[].class, new ZonedDateTime[]{zonedDateTime, zonedDateTime});
+		CLASS_VALUE_MAP.put(ZonedDateTime.class, zonedDateTime);
+		CLASS_VALUE_MAP.put(ZonedDateTime[].class, new ZonedDateTime[]{zonedDateTime, zonedDateTime});
 		
-		classValueMap.put(BigDecimal.class, BigDecimal.TEN);
-		classValueMap.put(BigDecimal[].class, new BigDecimal[]{BigDecimal.TEN , BigDecimal.ONE });
+		CLASS_VALUE_MAP.put(BigDecimal.class, BigDecimal.TEN);
+		CLASS_VALUE_MAP.put(BigDecimal[].class, new BigDecimal[]{BigDecimal.TEN , BigDecimal.ONE });
 		
-		classValueMap.put(BigInteger.class, BigInteger.TEN);
-		classValueMap.put(BigInteger[].class, new BigInteger[]{BigInteger.TEN , BigInteger.ONE });
+		CLASS_VALUE_MAP.put(BigInteger.class, BigInteger.TEN);
+		CLASS_VALUE_MAP.put(BigInteger[].class, new BigInteger[]{BigInteger.TEN , BigInteger.ONE });
 		
 		Object object = new Object();
-		classValueMap.put(Object.class, new Object());
-		classValueMap.put(Object[].class, new Object[]{object});
+		CLASS_VALUE_MAP.put(Object.class, new Object());
+		CLASS_VALUE_MAP.put(Object[].class, new Object[]{object});
 		
-		classValueMap.put(Set.class, Collections.emptySet());
-		classValueMap.put(TreeSet.class, Collections.emptySet());
-		classValueMap.put(HashSet.class, Collections.emptySet());
-		classValueMap.put(LinkedHashSet.class, Collections.emptySet());
-		classValueMap.put(SortedSet.class, Collections.emptySet());
+		CLASS_VALUE_MAP.put(Set.class, Collections.emptySet());
+		CLASS_VALUE_MAP.put(TreeSet.class, Collections.emptySet());
+		CLASS_VALUE_MAP.put(HashSet.class, Collections.emptySet());
+		CLASS_VALUE_MAP.put(LinkedHashSet.class, Collections.emptySet());
+		CLASS_VALUE_MAP.put(SortedSet.class, Collections.emptySet());
 		
-		classValueMap.put(List.class, Collections.emptyList());
-		classValueMap.put(ArrayList.class, Collections.emptyList());
-		classValueMap.put(LinkedList.class, Collections.emptyList());
-		classValueMap.put(Deque.class, Collections.emptyList());
-		classValueMap.put(Queue.class, Collections.emptyList());
-		classValueMap.put(Stack.class, Collections.emptyList());
-		classValueMap.put(Vector.class, Collections.emptyList());
+		CLASS_VALUE_MAP.put(List.class, Collections.emptyList());
+		CLASS_VALUE_MAP.put(ArrayList.class, Collections.emptyList());
+		CLASS_VALUE_MAP.put(LinkedList.class, Collections.emptyList());
+		CLASS_VALUE_MAP.put(Deque.class, Collections.emptyList());
+		CLASS_VALUE_MAP.put(Queue.class, Collections.emptyList());
+		CLASS_VALUE_MAP.put(Stack.class, Collections.emptyList());
+		CLASS_VALUE_MAP.put(Vector.class, Collections.emptyList());
 		
-		classValueMap.put(Map.class, Collections.emptyMap());
-		classValueMap.put(HashMap.class, Collections.emptyMap());
-		classValueMap.put(Hashtable.class, Collections.emptyMap());
-		classValueMap.put(LinkedHashMap.class, Collections.emptyMap());
-		classValueMap.put(SortedMap.class, Collections.emptyMap());
-		classValueMap.put(TreeMap.class, Collections.emptyMap());
+		CLASS_VALUE_MAP.put(Map.class, Collections.emptyMap());
+		CLASS_VALUE_MAP.put(HashMap.class, Collections.emptyMap());
+		CLASS_VALUE_MAP.put(Hashtable.class, Collections.emptyMap());
+		CLASS_VALUE_MAP.put(LinkedHashMap.class, Collections.emptyMap());
+		CLASS_VALUE_MAP.put(SortedMap.class, Collections.emptyMap());
+		CLASS_VALUE_MAP.put(TreeMap.class, Collections.emptyMap());
 		
 		
-		classValueMap.put(Stream.class, Stream.empty());
+		CLASS_VALUE_MAP.put(Stream.class, Stream.empty());
 		
-		classValueMap.put(UUID.class, UUID.randomUUID());
+		CLASS_VALUE_MAP.put(UUID.class, UUID.randomUUID());
 	}
 	
 	/**
@@ -172,7 +172,7 @@ public abstract class DefaultValueUtilities {
 	 * @since 1.0
 	 */
 	public static Object getValueFromMap(final Class<?> clazz){
-		return classValueMap.get(clazz);
+		return CLASS_VALUE_MAP.get(clazz);
 	}
 		
 }
