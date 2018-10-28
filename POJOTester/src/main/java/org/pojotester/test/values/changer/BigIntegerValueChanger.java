@@ -2,7 +2,7 @@ package org.pojotester.test.values.changer;
 
 import java.math.BigInteger;
 
-public class BigIntergerValueChanger implements ValueChanger<BigInteger> {
+public class BigIntegerValueChanger implements ValueChanger<BigInteger> {
 
 	@Override
 	public BigInteger changedValue(BigInteger value) {
