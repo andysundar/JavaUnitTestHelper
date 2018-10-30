@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public class ValueChangerFactory {
 
-	public <T> ValueChanger<?> getValueChanger(T value, Class<?> type) {
+	public <T> ValueChanger<?> getValueChanger(Class<?> type) {
 		ValueChanger<?> valueChanger = null;
 		if(BigDecimal.class.equals(type)){
 			valueChanger = new BigDecimalValueChanger();
@@ -34,6 +34,8 @@ public class ValueChangerFactory {
 			valueChanger = new StringValueChanger();
 		} else if(UUID.class.equals(type)) {
 			valueChanger = new UUIDValueChanger();
+		} else if(Enum.class.equals(type)){
+			valueChanger = new EnumValueChanger();
 		}
 		
 		return valueChanger;
