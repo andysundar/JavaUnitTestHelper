@@ -2,7 +2,7 @@ package org.pojotester.test.values.changer;
 
 import java.util.UUID;
 
-public class UUIDValueChanger implements ValueChanger<UUID> {
+class UUIDValueChanger extends AbstractFieldValueChanger<UUID> {
 
 
 	@Override

@@ -1,6 +1,6 @@
 package org.pojotester.test.values.changer;
 
-public class FloatValueChanger implements ValueChanger<Float> {
+class FloatValueChanger extends AbstractFieldValueChanger<Float> {
 
 	@Override
 	public Float changedValue(Float value) {

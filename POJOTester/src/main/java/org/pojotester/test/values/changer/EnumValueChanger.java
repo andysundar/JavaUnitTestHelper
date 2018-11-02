@@ -4,7 +4,7 @@ import org.pojotester.test.AssertObjectCreator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class EnumValueChanger implements ValueChanger<Enum<?>> {
+class EnumValueChanger extends AbstractFieldValueChanger<Enum<?>> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AssertObjectCreator.class);
 	

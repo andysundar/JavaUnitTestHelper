@@ -1,6 +1,6 @@
 package org.pojotester.test.values.changer;
 
-public class ShortValueChanger implements ValueChanger<Short> {
+class ShortValueChanger extends AbstractFieldValueChanger<Short> {
 
 	@Override
 	public Short changedValue(Short value) {

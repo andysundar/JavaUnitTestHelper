@@ -1,6 +1,6 @@
 package org.pojotester.test.values.changer;
 
-public class ByteValueChanger implements ValueChanger<Byte> {
+class ByteValueChanger extends AbstractFieldValueChanger<Byte> {
 
 	@Override
 	public Byte changedValue(Byte value) {

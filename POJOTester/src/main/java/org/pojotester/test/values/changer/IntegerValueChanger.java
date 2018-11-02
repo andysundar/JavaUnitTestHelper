@@ -1,6 +1,6 @@
 package org.pojotester.test.values.changer;
 
-public class IntegerValueChanger implements ValueChanger<Integer> {
+class IntegerValueChanger extends AbstractFieldValueChanger<Integer> {
 
 	@Override
 	public Integer changedValue(Integer value) {

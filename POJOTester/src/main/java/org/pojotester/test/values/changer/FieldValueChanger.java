@@ -2,13 +2,10 @@ package org.pojotester.test.values.changer;
 
 import java.lang.reflect.Field;
 
-public class FieldValueChanger {
-	
-	public void changerValue(Field field) {
-		if(field != null ) {
-			Class<?> type = field.getType();
-			
-		}
-	}
+import org.pojotester.test.values.changer.dto.FieldState;
+
+public interface FieldValueChanger<T> {
+
+	FieldState<T> changerValue(Field field, Object obj) throws IllegalArgumentException, IllegalAccessException;
 
 }

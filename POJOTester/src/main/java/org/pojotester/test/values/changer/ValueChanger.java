@@ -1,7 +1,7 @@
 package org.pojotester.test.values.changer;
 
-public interface ValueChanger<T> {
-
+interface ValueChanger<T> extends FieldValueChanger<T>{
+	
 	T changedValue(T value);
 
 }

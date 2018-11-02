@@ -1,6 +1,6 @@
 package org.pojotester.test.values.changer;
 
-public class CharacterValueChanger implements ValueChanger<Character> {
+class CharacterValueChanger extends AbstractFieldValueChanger<Character> {
 
 	@Override
 	public Character changedValue(Character value) {
