@@ -2,7 +2,7 @@ package org.pojotester.test.values.changer;
 
 import java.math.BigDecimal;
 
-class BigDecimalValueChanger extends AbstractFieldValueChanger<BigDecimal> {
+class BigDecimalValueChanger implements ValueChanger<BigDecimal> {
 
 	@Override
 	public BigDecimal changedValue(BigDecimal value) {

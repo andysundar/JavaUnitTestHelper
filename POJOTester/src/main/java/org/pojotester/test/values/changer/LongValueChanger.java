@@ -1,6 +1,6 @@
 package org.pojotester.test.values.changer;
 
-class LongValueChanger extends AbstractFieldValueChanger<Long> {
+class LongValueChanger implements ValueChanger<Long> {
 
 	@Override
 	public Long changedValue(Long value) {

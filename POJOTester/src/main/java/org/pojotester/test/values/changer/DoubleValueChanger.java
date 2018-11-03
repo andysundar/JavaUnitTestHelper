@@ -1,6 +1,6 @@
 package org.pojotester.test.values.changer;
 
-class DoubleValueChanger extends AbstractFieldValueChanger<Double> {
+class DoubleValueChanger implements ValueChanger<Double> {
 
 	@Override
 	public Double changedValue(Double value) {

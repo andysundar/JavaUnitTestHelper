@@ -4,8 +4,8 @@ import java.lang.reflect.Field;
 
 import org.pojotester.test.values.changer.dto.FieldState;
 
-public interface FieldValueChanger<T> {
+public interface FieldValueChanger {
 
-	FieldState<T> changerValue(Field field, Object obj) throws IllegalArgumentException, IllegalAccessException;
+	<T> FieldState<T> changeValue(Field field, Object obj) throws IllegalArgumentException, IllegalAccessException;
 
 }

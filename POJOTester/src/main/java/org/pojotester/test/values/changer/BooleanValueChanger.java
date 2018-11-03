@@ -1,6 +1,6 @@
 package org.pojotester.test.values.changer;
 
-class BooleanValueChanger extends AbstractFieldValueChanger<Boolean> {
+class BooleanValueChanger implements ValueChanger<Boolean> {
 
 	@Override
 	public Boolean changedValue(Boolean value) {

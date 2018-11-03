@@ -2,7 +2,7 @@ package org.pojotester.test.values.changer;
 
 import java.math.BigInteger;
 
-class BigIntegerValueChanger extends AbstractFieldValueChanger<BigInteger> {
+class BigIntegerValueChanger implements ValueChanger<BigInteger> {
 
 	@Override
 	public BigInteger changedValue(BigInteger value) {
