@@ -8,4 +8,6 @@ public interface FieldValueChanger {
 
 	<T> FieldState<T> changeValue(Field field, Object obj) throws IllegalArgumentException, IllegalAccessException;
 
+	FieldValueChanger INSTANCE = new FieldValueChangerImpl();
+	
 }

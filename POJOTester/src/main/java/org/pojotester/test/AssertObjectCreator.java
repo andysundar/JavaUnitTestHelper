@@ -118,9 +118,6 @@ public class AssertObjectCreator implements IAssertObjectCreator {
 			
 			createTestForToString(assertObjectList, toStringMethod, objectX1, objectX2, objectY1, objectY2);
 			
-			
-			
-			
 
 			if (equalsMethod != null) {
 				// object.equals(null) should return false

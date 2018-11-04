@@ -19,6 +19,7 @@ public class FieldValueChangerImpl implements  FieldValueChanger {
 	
 	private static final Map<Class<?>,ValueChanger<?>> CLASS_VALUE_CHANGER_MAP = new HashMap<>();
 	
+	
 	static {
 		CLASS_VALUE_CHANGER_MAP.put(BigDecimal.class, new BigDecimalValueChanger());
 		CLASS_VALUE_CHANGER_MAP.put(BigInteger.class, new BigIntegerValueChanger());
