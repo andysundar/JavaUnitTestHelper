@@ -38,6 +38,7 @@ public abstract class ClassUtilities {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(ClassUtilities.class);
 	
+	private static final String[] CREATE_METHOD = {"now", "getInstance"};
 	/**
 	 * This method first try to get context class loader from current thread then it try to get it from default class loader, 
 	 * then it try to get it from system class loader. 
@@ -145,11 +146,35 @@ public abstract class ClassUtilities {
 			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
 					| InvocationTargetException ex) {
 				LOGGER.debug("Not able to initialize using other constructor of " + clazz.getName(), ex);
+				object = createObjectUsingStaticMethod(clazz);
 			}
 		}
 		return object;
 	}
 	
+	/**
+	 * This method create object of parameter class using standard static factory method like 'now', 'getInstance'.
+	 * @param clazz
+	 * @return object of parameter class
+	 */
+	public static Object createObjectUsingStaticMethod(final Class<?> clazz){
+		Object object = null;
+		Class<?>[] parameterTypes = {};
+		Method method = null;
+		for(String name : CREATE_METHOD) {
+			try {
+				method = clazz.getDeclaredMethod(name, parameterTypes);
+				if(method != null) {
+					object = createObjectUsingStaticMethod(clazz, method);
+					break;
+				}
+			} catch (NoSuchMethodException | SecurityException e) {
+				LOGGER.debug("Not able to find standard create method in this class.", e);
+			}
+		}
+		
+		return object;
+	}
 	/**
 	 * This method create object of parameter class using method. 
 	 * @param clazz, method
@@ -158,9 +183,9 @@ public abstract class ClassUtilities {
 	 */
 	public static Object createObjectUsingStaticMethod(final Class<?> clazz, Method method) {
 		Object object = null;
-		boolean isCreateMethod = ReflectionMethodLevel.isCreateMethod(method);
+		
 		int methodModifier = method.getModifiers();
-		if (isCreateMethod && Modifier.isStatic(methodModifier) && Modifier.isPublic(methodModifier)) {
+		if (Modifier.isStatic(methodModifier) && Modifier.isPublic(methodModifier)) {
 			try {
 				object = method.invoke(null, null);
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
