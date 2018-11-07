@@ -58,7 +58,7 @@ public class FieldValueChanger  {
 
 			if (valueChanger != null) {
 				T newValue = valueChanger.changedValue(value);
-				fieldState = new FieldState<T>(value, newValue, field, obj);
+				fieldState = new FieldState<>(value, newValue, field, obj);
 			} else if (type.isArray()) {
 				int arraySize = 0;
 				int dimension = 1 + type.getName().lastIndexOf('[');
