@@ -27,6 +27,7 @@ import org.pojotester.type.convertor.ObjectToPrimitiveArray;
 import org.pojotester.type.convertor.PrimitiveToObjectArray;
 import org.pojotester.utils.ClassUtilities;
 import org.pojotester.utils.DefaultValueUtilities;
+import org.pojotester.utils.FieldUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,9 +55,7 @@ public class TestConfiguration<T> {
 	 * @return list of {@code AssertObject} objects
 	 */
 	public List<AssertObject<?>> assertAssignedValues(Class<?> clazz) {
-		if (field != null) {
-			field.setAccessible(true);
-		}
+
 
 		createObject(clazz);
 		List<AssertObject<?>> values = Collections.emptyList();
@@ -65,7 +64,7 @@ public class TestConfiguration<T> {
 				values = populateValues();
 			} else {
 				Object fieldValueObject = DefaultValueUtilities.getValueFromMap(field.getType());
-				Class<?> fieldType = field.getType();
+				Class<?> fieldType = FieldUtilities.getFieldType(field);
 				boolean isArray = fieldType.isArray();
 				fieldType = isArray ? fieldType.getComponentType() : fieldType;
 				if(isArray && fieldType.isPrimitive()){
@@ -116,7 +115,7 @@ public class TestConfiguration<T> {
 					}
 
 					if (assertObject != null) {
-						values = new LinkedList<AssertObject<?>>();
+						values = new LinkedList<>();
 						values.add(assertObject);
 					}
 				}
@@ -135,7 +134,7 @@ public class TestConfiguration<T> {
 	}
 
 	private List<AssertObject<?>> populateValues() {
-		List<AssertObject<?>> values = new LinkedList<AssertObject<?>>();
+		List<AssertObject<?>> values = new LinkedList<>();
 		int length = 0;
 		if(expectedValues == null){
 			expectedValues = assignedValues;
@@ -184,13 +183,7 @@ public class TestConfiguration<T> {
 					e.printStackTrace();
 				}
 			} else {
-				try {
-					field.set(object, args[0]);
-				} catch (IllegalArgumentException | IllegalAccessException e) {
-					LOGGER.debug(field.getName() + " field set fail.", e);
-					e.printStackTrace();
-				}
-
+				FieldUtilities.setFieldValue(field, object, args[0]);
 			}
 		}
 		
@@ -203,18 +196,14 @@ public class TestConfiguration<T> {
 		T returnValue = null;
 		if (readMethod != null) {
 			try {
-				returnValue = (T) readMethod.invoke(object, null);
+				Object[] args = {};
+				returnValue = (T) readMethod.invoke(object, args);
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 				LOGGER.debug(readMethod.getName() + " method invoke fail.", e);
 				e.printStackTrace();
 			}
 		} else {
-			try {
-				returnValue = (T) field.get(object);
-			} catch (IllegalArgumentException | IllegalAccessException e) {
-				LOGGER.debug(field.getName() + " field set fail.", e);
-				e.printStackTrace();
-			}
+			returnValue = (T) FieldUtilities.getFieldValue(field, object);
 		}
 		returnValue = convertPrimitiveToObjectForReadMethod(returnValue);
 		return returnValue;
@@ -273,13 +262,7 @@ public class TestConfiguration<T> {
 						e.printStackTrace();
 					}
 				} else {
-					try {
-						field.set(object, primitives);
-					} catch (IllegalArgumentException | IllegalAccessException e) {
-						LOGGER.debug(field.getName() + " field set fail.", e);
-						e.printStackTrace();
-					}
-
+					FieldUtilities.setFieldValue(field, object, primitives);
 				}
 			} else if (fieldType == byte.class) {
 				Byte[] valueArray = { (Byte) value };
@@ -293,13 +276,7 @@ public class TestConfiguration<T> {
 						e.printStackTrace();
 					}
 				} else {
-					try {
-						field.set(object, primitives);
-					} catch (IllegalArgumentException | IllegalAccessException e) {
-						LOGGER.debug(field.getName() + " field set fail.", e);
-						e.printStackTrace();
-					}
-
+					FieldUtilities.setFieldValue(field, object, primitives);
 				}
 			} else if (fieldType == char.class) {
 				Character[] valueArray = { (Character) value };
@@ -313,13 +290,7 @@ public class TestConfiguration<T> {
 						e.printStackTrace();
 					}
 				} else {
-					try {
-						field.set(object, primitives);
-					} catch (IllegalArgumentException | IllegalAccessException e) {
-						LOGGER.debug(field.getName() + " field set fail.", e);
-						e.printStackTrace();
-					}
-
+					FieldUtilities.setFieldValue(field, object, primitives);
 				}
 			} else if (fieldType == double.class) {
 				Double[] valueArray = { (Double) value };
@@ -333,13 +304,7 @@ public class TestConfiguration<T> {
 						e.printStackTrace();
 					}
 				} else {
-					try {
-						field.set(object, primitives);
-					} catch (IllegalArgumentException | IllegalAccessException e) {
-						LOGGER.debug(field.getName() + " field set fail.", e);
-						e.printStackTrace();
-					}
-
+					FieldUtilities.setFieldValue(field, object, primitives);
 				}
 			} else if (fieldType == float.class) {
 				Float[] valueArray = { (Float) value };
@@ -353,13 +318,7 @@ public class TestConfiguration<T> {
 						e.printStackTrace();
 					}
 				} else {
-					try {
-						field.set(object, primitives);
-					} catch (IllegalArgumentException | IllegalAccessException e) {
-						LOGGER.debug(field.getName() + " field set fail.", e);
-						e.printStackTrace();
-					}
-
+					FieldUtilities.setFieldValue(field, object, primitives);
 				}
 			} else if (fieldType == int.class) {
 				Integer[] valueArray = { (Integer) value };
@@ -373,13 +332,7 @@ public class TestConfiguration<T> {
 						e.printStackTrace();
 					}
 				} else {
-					try {
-						field.set(object, primitives);
-					} catch (IllegalArgumentException | IllegalAccessException e) {
-						LOGGER.debug(field.getName() + " field set fail.", e);
-						e.printStackTrace();
-					}
-
+					FieldUtilities.setFieldValue(field, object, primitives);
 				}
 			} else if (fieldType == long.class) {
 				Long[] valueArray = { (Long) value };
@@ -393,13 +346,7 @@ public class TestConfiguration<T> {
 						e.printStackTrace();
 					}
 				} else {
-					try {
-						field.set(object, primitives);
-					} catch (IllegalArgumentException | IllegalAccessException e) {
-						LOGGER.debug(field.getName() + " field set fail.", e);
-						e.printStackTrace();
-					}
-
+					FieldUtilities.setFieldValue(field, object, primitives);
 				}
 			} else if (fieldType == short.class) {
 				Short[] valueArray = { (Short) value };
@@ -413,13 +360,7 @@ public class TestConfiguration<T> {
 						e.printStackTrace();
 					}
 				} else {
-					try {
-						field.set(object, primitives);
-					} catch (IllegalArgumentException | IllegalAccessException e) {
-						LOGGER.debug(field.getName() + " field set fail.", e);
-						e.printStackTrace();
-					}
-
+					FieldUtilities.setFieldValue(field, object, primitives);
 				}
 			}
 		}

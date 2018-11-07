@@ -90,7 +90,7 @@ public abstract class TestConfigurationFactory {
 		 } else  if(typeClass == Map.class || typeClass.getSuperclass() == Map.class){
 			 testValues = new TestConfiguration<Map<?, ?>>();
 		 } else {
-			 testValues = new TestConfiguration<Object>();
+			 testValues = new TestConfiguration<>();
 		 }
 		 return testValues;
 	}

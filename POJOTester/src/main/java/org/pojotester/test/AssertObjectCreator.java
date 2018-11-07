@@ -297,13 +297,13 @@ public class AssertObjectCreator implements IAssertObjectCreator {
 	private Map<String, TestConfiguration<?>> createFieldAndTestConfiguration(Class<?> clazz, Method[] methods, Method createObjectMethod) {
 		Map<String, TestConfiguration<?>> fieldTestConfigurationMap = new HashMap<>();
 		
-		createTestConfigurationsFromIntospection(clazz, fieldTestConfigurationMap, createObjectMethod);
+		createTestConfigurationsFromIntrospection(clazz, fieldTestConfigurationMap, createObjectMethod);
 		createTestConfigurationsFromAnnotations(clazz, fieldTestConfigurationMap, methods, createObjectMethod);
 		return fieldTestConfigurationMap;
 	}
 
-	private void createTestConfigurationsFromIntospection(Class<?> clazz,
-			Map<String, TestConfiguration<?>> fieldAssertObjectMap, Method createObjectMethod) {
+	private void createTestConfigurationsFromIntrospection(Class<?> clazz,
+														   Map<String, TestConfiguration<?>> fieldAssertObjectMap, Method createObjectMethod) {
 		BeanInfo beanInfo = null;
 		PropertyDescriptor[] propertyDescriptors = null;
 		try {

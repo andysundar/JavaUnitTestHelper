@@ -10,6 +10,7 @@ import java.util.UUID;
 
 import org.pojotester.test.values.changer.dto.FieldState;
 import org.pojotester.utils.ClassUtilities;
+import org.pojotester.utils.FieldUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,10 +48,10 @@ public class FieldValueChanger  {
 			throws IllegalArgumentException, IllegalAccessException {
 		FieldState<T> fieldState = null;
 		if (field != null) {
-			Class<?> type = field.getType();
-			field.setAccessible(true);
+			Class<?> type = FieldUtilities.getFieldType(field);
+
 			@SuppressWarnings("unchecked")
-			T value = (T) field.get(obj);
+			T value = (T) FieldUtilities.getFieldValue(field, obj);
 
 			@SuppressWarnings("unchecked")
 			ValueChanger<T> valueChanger = (ValueChanger<T>) CLASS_VALUE_CHANGER_MAP.get(type);
@@ -59,16 +60,16 @@ public class FieldValueChanger  {
 				T newValue = valueChanger.changedValue(value);
 				fieldState = new FieldState<T>(value, newValue, field, obj);
 			} else if (type.isArray()) {
-				int size = 0;
-				int dimention = 1 + type.getName().lastIndexOf('[');
-				int[] length = new int[dimention];
+				int arraySize = 0;
+				int dimension = 1 + type.getName().lastIndexOf('[');
+				int[] length = new int[dimension];
 
 				if (value != null) {
 					if (Array.getLength(value) == 0) {
-						size++;
+						arraySize++;
 					}
-					for (int index = 0; index < dimention; index++) {
-						length[index] = size;
+					for (int index = 0; index < dimension; index++) {
+						length[index] = arraySize;
 					}
 
 					Array.newInstance(type, length);
@@ -94,7 +95,7 @@ public class FieldValueChanger  {
 			} else {
 				@SuppressWarnings("unchecked")
 				T newValue = (T) ClassUtilities.createObject(type);
-				fieldState = new FieldState<T>(value, newValue, field, obj);
+				fieldState = new FieldState<>(value, newValue, field, obj);
 			}
 		}
 		return fieldState;
