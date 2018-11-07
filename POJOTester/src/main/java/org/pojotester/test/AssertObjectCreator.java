@@ -208,6 +208,8 @@ public class AssertObjectCreator implements IAssertObjectCreator {
 							consistentHashCodeMaintained, "Both hashCode & equals must maintained consistent property");
 					assertObjectList.add(consistentHashCodeEquals);
 				}
+				
+				// Equals coverage
 			} else if (hashCodeMethod != null) {
 
 				AssertObject<Integer> reflexiveHashCode = createAssertObject(objectX1.hashCode(), objectX1.hashCode(),
@@ -303,7 +305,7 @@ public class AssertObjectCreator implements IAssertObjectCreator {
 	private void createTestConfigurationsFromIntospection(Class<?> clazz,
 			Map<String, TestConfiguration<?>> fieldAssertObjectMap, Method createObjectMethod) {
 		BeanInfo beanInfo = null;
-		PropertyDescriptor propertyDescriptors[] = null;
+		PropertyDescriptor[] propertyDescriptors = null;
 		try {
 			beanInfo = Introspector.getBeanInfo(clazz, Object.class);
 			propertyDescriptors = beanInfo.getPropertyDescriptors();
@@ -413,7 +415,8 @@ public class AssertObjectCreator implements IAssertObjectCreator {
 				}
 			}
 		} else {
-			LOGGER.debug(fieldName + " not found in " + clazz.getName());
+			String message = String.format(" %s not found in %s", fieldName, clazz.getName());
+			LOGGER.debug(message);
 		}
 		return testConfiguration;
 	}
