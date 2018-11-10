@@ -22,13 +22,8 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.pojotester.pack.scan.LoadClassIfAskedFor;
 import org.pojotester.pack.scan.LoadClassIfNotIgnored;
@@ -37,7 +32,10 @@ import org.pojotester.reflection.annotation.ReflectionFieldLevel;
 import org.pojotester.reflection.annotation.ReflectionMethodLevel;
 import org.pojotester.test.values.AssertObject;
 import org.pojotester.test.values.TestConfiguration;
+import org.pojotester.test.values.changer.FieldValueChanger;
+import org.pojotester.test.values.changer.dto.FieldState;
 import org.pojotester.utils.ClassUtilities;
+import org.pojotester.utils.FieldUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -98,7 +96,11 @@ public class AssertObjectCreator implements IAssertObjectCreator {
 			Method toStringMethod = getDeclaredMethod(clazz, TO_STRING, args);
 			Method hashCodeMethod = getDeclaredMethod(clazz, HASH_CODE, args);	
 			Method equalsMethod = getDeclaredMethod(clazz, EQUALS, Object.class);
-		
+
+			LinkedList<TestConfiguration<?>> testConfigurationsX1 = null;
+			LinkedList<TestConfiguration<?>> testConfigurationsX2 = null;
+			LinkedList<TestConfiguration<?>> testConfigurationsY2 = null;
+
 			
 			Object objectX1 = null;
 			Object objectX2 = null;
@@ -110,10 +112,15 @@ public class AssertObjectCreator implements IAssertObjectCreator {
 				Set<Entry<String, TestConfiguration<?>>> setX1 = fieldTestConfigurationMap.entrySet();
 				Set<Entry<String, TestConfiguration<?>>> setX2 = fieldTestConfigurationMapX1.entrySet();
 				Set<Entry<String, TestConfiguration<?>>> setY2 = fieldTestConfigurationMapY2.entrySet();
-				objectX1 = getObject(setX1, clazz);
-				objectX2 = getObject(setX2, clazz);
+				testConfigurationsX1 = getTestConfigurations(setX1, clazz);
+				testConfigurationsX2 = getTestConfigurations(setX2, clazz);
+				testConfigurationsY2 = getTestConfigurations(setY2, clazz);
+
+				objectX1 = testConfigurationsX1.getLast().getObject();
+				objectX2 = testConfigurationsX2.getLast().getObject();
 				objectY1 = createObject(clazz, createObjectMethod);
-				objectY2 = getObject(setY2, clazz);
+				objectY2 = testConfigurationsY2.getLast().getObject();
+
 			}
 			
 			createTestForToString(assertObjectList, toStringMethod, objectX1, objectX2, objectY1, objectY2);
@@ -210,6 +217,17 @@ public class AssertObjectCreator implements IAssertObjectCreator {
 				}
 				
 				// Equals coverage
+				Object tempObject = testConfigurationsX1.getLast().getObject();
+				FieldValueChanger fieldValueChanger = FieldValueChanger.getInstance();
+				for (TestConfiguration testConfiguration : testConfigurationsX1) {
+					FieldState<?> fieldState = fieldValueChanger.changeValue(testConfiguration.getField(), tempObject);
+					AssertObject<Boolean> coverageEquals = createAssertObject(objectX1.equals(tempObject),
+							tempObject.equals(objectX1), "Symmetric Test: x.equals(y) == y.equals(x)");
+					assertObjectList.add(coverageEquals);
+					FieldUtilities.setFieldValue(fieldState.getField(), fieldState.getObj(), fieldState.getPreviousValue());
+				}
+
+
 			} else if (hashCodeMethod != null) {
 
 				AssertObject<Integer> reflexiveHashCode = createAssertObject(objectX1.hashCode(), objectX1.hashCode(),
@@ -282,17 +300,18 @@ public class AssertObjectCreator implements IAssertObjectCreator {
 		return object;
 	}
 	
-	private Object getObject(Set<Entry<String, TestConfiguration<?>>> set, Class<?> clazz) {
-		Object object = null;
+	private LinkedList<TestConfiguration<?>> getTestConfigurations(Set<Entry<String, TestConfiguration<?>>> set, Class<?> clazz) {
+		LinkedList<TestConfiguration<?>> testConfigurations = new LinkedList<>();
 		for(Entry<String, TestConfiguration<?>> x : set) {
 			TestConfiguration<?> testConfiguration = x.getValue();
 			if(testConfiguration != null) {
 				testConfiguration.assertAssignedValues(clazz);
-				object = testConfiguration.getObject();
+				testConfigurations.add(testConfiguration);
 			}
 		}
-		return object;
+		return testConfigurations;
 	}
+
 
 	private Map<String, TestConfiguration<?>> createFieldAndTestConfiguration(Class<?> clazz, Method[] methods, Method createObjectMethod) {
 		Map<String, TestConfiguration<?>> fieldTestConfigurationMap = new HashMap<>();
@@ -337,14 +356,14 @@ public class AssertObjectCreator implements IAssertObjectCreator {
 				writeMethod = true;
 			}
 			if(fieldName != null && !fieldName.isEmpty()){
-				setAnnotedReadOrWriteMethod(clazz, fieldAssertObjectMap, createObjectMethod, method, fieldName,
+				setAnnotatedReadOrWriteMethod(clazz, fieldAssertObjectMap, createObjectMethod, method, fieldName,
 						writeMethod);
 			}
 		}
 	}
 
-	private void setAnnotedReadOrWriteMethod(Class<?> clazz, Map<String, TestConfiguration<?>> fieldAssertObjectMap,
-			Method createObjectMethod, Method method, String fieldName, boolean writeMethod) {
+	private void setAnnotatedReadOrWriteMethod(Class<?> clazz, Map<String, TestConfiguration<?>> fieldAssertObjectMap,
+											   Method createObjectMethod, Method method, String fieldName, boolean writeMethod) {
 		if(fieldName != null && !fieldName.isEmpty()) {
 			String classFieldName = clazz.getName() + "." + fieldName;
 			TestConfiguration<?> testConfiguration = fieldAssertObjectMap.get(classFieldName);

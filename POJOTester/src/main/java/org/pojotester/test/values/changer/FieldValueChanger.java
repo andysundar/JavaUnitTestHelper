@@ -45,7 +45,7 @@ public class FieldValueChanger  {
 	}
 	
 	public <T> FieldState<T> changeValue(Field field, Object obj)
-			throws IllegalArgumentException, IllegalAccessException {
+			throws IllegalArgumentException {
 		FieldState<T> fieldState = null;
 		if (field != null) {
 			Class<?> type = FieldUtilities.getFieldType(field);
@@ -71,10 +71,9 @@ public class FieldValueChanger  {
 					for (int index = 0; index < dimension; index++) {
 						length[index] = arraySize;
 					}
-
-					Array.newInstance(type, length);
-
 				}
+				T newValue = (T)Array.newInstance(type.getComponentType(), length);
+				fieldState = new FieldState<>(value, newValue, field, obj);
 			} else if (type.isEnum()) {
 				T newValue = null;
 
