@@ -101,8 +101,9 @@ public class TestConfiguration<T> {
 					AssertObject<T> assertObject = null;
 					if (fieldValueObject == null) {
 						fieldValueObject = ClassUtilities.createObjectUsingOtherConstructor(fieldType);
-						assignedValues = (T[])Array.newInstance(fieldType, 1);
+						
 						if(isArray){
+							assignedValues = (T[])Array.newInstance(fieldType, 1);
 							assignedValues[0] = (T) fieldValueObject;	
 							assertObject = invokeReadWriteMethod((T) assignedValues,	(T) expectedValues);
 							assignedValues = null;

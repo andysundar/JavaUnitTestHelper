@@ -22,8 +22,13 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.pojotester.pack.scan.LoadClassIfAskedFor;
 import org.pojotester.pack.scan.LoadClassIfNotIgnored;
@@ -33,9 +38,7 @@ import org.pojotester.reflection.annotation.ReflectionMethodLevel;
 import org.pojotester.test.values.AssertObject;
 import org.pojotester.test.values.TestConfiguration;
 import org.pojotester.test.values.changer.FieldValueChanger;
-import org.pojotester.test.values.changer.dto.FieldState;
 import org.pojotester.utils.ClassUtilities;
-import org.pojotester.utils.FieldUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -217,14 +220,14 @@ public class AssertObjectCreator implements IAssertObjectCreator {
 				}
 				
 				// Equals coverage
-				Object tempObject = testConfigurationsX1.getLast().getObject();
+				
 				FieldValueChanger fieldValueChanger = FieldValueChanger.getInstance();
-				for (TestConfiguration testConfiguration : testConfigurationsX1) {
-					FieldState<?> fieldState = fieldValueChanger.changeValue(testConfiguration.getField(), tempObject);
+				for (TestConfiguration<?> testConfiguration : testConfigurationsX1) {
+					Object tempObject = testConfiguration.getObject();
+				    fieldValueChanger.changeValue(testConfiguration.getField(), tempObject);
 					AssertObject<Boolean> coverageEquals = createAssertObject(objectX1.equals(tempObject),
 							tempObject.equals(objectX1), "Symmetric Test: x.equals(y) == y.equals(x)");
 					assertObjectList.add(coverageEquals);
-					FieldUtilities.setFieldValue(fieldState.getField(), fieldState.getObj(), fieldState.getPreviousValue());
 				}
 
 

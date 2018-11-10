@@ -72,6 +72,7 @@ public class FieldValueChanger  {
 						length[index] = arraySize;
 					}
 				}
+				@SuppressWarnings("unchecked")
 				T newValue = (T)Array.newInstance(type.getComponentType(), length);
 				fieldState = new FieldState<>(value, newValue, field, obj);
 			} else if (type.isEnum()) {
