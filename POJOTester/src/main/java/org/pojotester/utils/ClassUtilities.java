@@ -208,7 +208,7 @@ public abstract class ClassUtilities {
 	}
 	
 	/**
-	 * This method return default value of parameter class type. 
+	 * This method return true if it is a concrete class else false of parameter class. 
 	 * @param clazz
 	 * @return true if it is a concrete class else false
 	 * @since 1.1
@@ -218,7 +218,7 @@ public abstract class ClassUtilities {
 	}
 	
 	/**
-	 * This method return default value of parameter class type. 
+	 * This method return true if it is a class else false of parameter class. 
 	 * @param clazz
 	 * @return true if it is a class else false
 	 * @since 1.1
@@ -227,6 +227,12 @@ public abstract class ClassUtilities {
 		return (clazz != null) && (!clazz.isAnnotation()) && (!clazz.isEnum() && (!clazz.isArray()));
 	}
 
+	/**
+	 * This method return {@code Field} object of parameter class. 
+	 * @param clazz , fieldName
+	 * @return field object if there is a declared field by that name in that class else return null
+	 * @since 1.1
+	 */
 	public static Field getField(Class<?> clazz, String fieldName) {
 		Field field = null;
 		try {
@@ -235,5 +241,21 @@ public abstract class ClassUtilities {
 			LOGGER.debug(fieldName + " field name is not present in " + clazz.getName(), e);
 		}
 		return field;
+	}
+	
+	/**
+	 * This method return {@code Method} object of parameter class type. 
+	 * @param clazz, methodName, parameterTypes
+	 * @return method object if there is a declared method by that name and parameter types in that class else return null
+	 * @since 1.1
+	 */
+	public static Method getDeclaredMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
+		Method method = null;
+		try {
+			method = clazz.getDeclaredMethod(methodName, parameterTypes);
+		} catch (NoSuchMethodException | SecurityException e) {
+			LOGGER.error(String.format("%s method not found", methodName), e);
+		}
+		return method;
 	}
 }

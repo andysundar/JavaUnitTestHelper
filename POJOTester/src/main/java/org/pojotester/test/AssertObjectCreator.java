@@ -98,9 +98,9 @@ public class AssertObjectCreator implements IAssertObjectCreator {
 			assertObjectList.addAll(assertObjects);
 	
 			Class<?>[] args = {};
-			Method toStringMethod = getDeclaredMethod(clazz, TO_STRING, args);
-			Method hashCodeMethod = getDeclaredMethod(clazz, HASH_CODE, args);	
-			Method equalsMethod = getDeclaredMethod(clazz, EQUALS, Object.class);
+			Method toStringMethod = ClassUtilities.getDeclaredMethod(clazz, TO_STRING, args);
+			Method hashCodeMethod = ClassUtilities.getDeclaredMethod(clazz, HASH_CODE, args);	
+			Method equalsMethod = ClassUtilities.getDeclaredMethod(clazz, EQUALS, Object.class);
 
 			LinkedList<TestConfiguration<?>> testConfigurationsX1 = null;
 			LinkedList<TestConfiguration<?>> testConfigurationsX2 = null;
@@ -302,15 +302,7 @@ public class AssertObjectCreator implements IAssertObjectCreator {
 		return assertObject;
 	}
 
-	private Method getDeclaredMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
-		Method method = null;
-		try {
-			method = clazz.getDeclaredMethod(methodName, parameterTypes);
-		} catch (NoSuchMethodException | SecurityException e) {
-			LOGGER.error(String.format("%s method not found", methodName), e);
-		}
-		return method;
-	}
+
 
 	private Object createObject(Class<?> clazz, Method createObjectMethod) {
 		Object object = null;
