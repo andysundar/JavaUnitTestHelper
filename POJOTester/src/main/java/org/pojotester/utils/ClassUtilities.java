@@ -17,6 +17,7 @@ package org.pojotester.utils;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -24,7 +25,6 @@ import java.lang.reflect.Parameter;
 
 import org.pojotester.object.mock.MockDependencyObject;
 import org.pojotester.object.mock.MockInterfaceObject;
-import org.pojotester.reflection.annotation.ReflectionMethodLevel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -187,7 +187,8 @@ public abstract class ClassUtilities {
 		int methodModifier = method.getModifiers();
 		if (Modifier.isStatic(methodModifier) && Modifier.isPublic(methodModifier)) {
 			try {
-				object = method.invoke(null, null);
+				Object[] varargs = null;
+				object = method.invoke(null, varargs);
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 				LOGGER.debug("Not able to invoke " + method.getName() + " in " + clazz.getName(), e);
 			}
@@ -205,5 +206,34 @@ public abstract class ClassUtilities {
 	public static Object getValueFromMap(Class<?> clazz){
 		return DefaultValueUtilities.getValueFromMap(clazz);
 	}
+	
+	/**
+	 * This method return default value of parameter class type. 
+	 * @param clazz
+	 * @return true if it is a concrete class else false
+	 * @since 1.1
+	 */
+	public static boolean isConcreteClass(Class<?> clazz) {
+		return isClass(clazz) && (!clazz.isInterface()) && (!Modifier.isAbstract(clazz.getModifiers()));
+	}
+	
+	/**
+	 * This method return default value of parameter class type. 
+	 * @param clazz
+	 * @return true if it is a class else false
+	 * @since 1.1
+	 */
+	public static boolean isClass(Class<?> clazz) {
+		return (clazz != null) && (!clazz.isAnnotation()) && (!clazz.isEnum() && (!clazz.isArray()));
+	}
 
+	public static Field getField(Class<?> clazz, String fieldName) {
+		Field field = null;
+		try {
+			field = clazz.getDeclaredField(fieldName);
+		} catch (NoSuchFieldException | SecurityException e) {
+			LOGGER.debug(fieldName + " field name is not present in " + clazz.getName(), e);
+		}
+		return field;
+	}
 }

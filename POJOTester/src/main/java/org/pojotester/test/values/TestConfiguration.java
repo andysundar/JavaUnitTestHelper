@@ -54,6 +54,7 @@ public class TestConfiguration<T> {
 	 * @param clazz
 	 * @return list of {@code AssertObject} objects
 	 */
+	@SuppressWarnings("unchecked")
 	public List<AssertObject<?>> assertAssignedValues(Class<?> clazz) {
 
 
@@ -210,6 +211,7 @@ public class TestConfiguration<T> {
 		return returnValue;
 	}
 
+	@SuppressWarnings("unchecked")
 	private T convertPrimitiveToObjectForReadMethod(T returnValue) {
 		Class<?> fieldType = field.getType();
 		boolean isArray = fieldType.isArray();

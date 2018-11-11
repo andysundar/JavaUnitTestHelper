@@ -38,7 +38,9 @@ import org.pojotester.reflection.annotation.ReflectionMethodLevel;
 import org.pojotester.test.values.AssertObject;
 import org.pojotester.test.values.TestConfiguration;
 import org.pojotester.test.values.changer.FieldValueChanger;
+import org.pojotester.test.values.changer.dto.FieldState;
 import org.pojotester.utils.ClassUtilities;
+import org.pojotester.utils.FieldUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -222,15 +224,32 @@ public class AssertObjectCreator implements IAssertObjectCreator {
 				// Equals coverage
 				
 				FieldValueChanger fieldValueChanger = FieldValueChanger.getInstance();
+				
+				Object sameContentObject1 = createObject(clazz, createObjectMethod);
+				Object sameContentObject2 = createObject(clazz, createObjectMethod);
 				for (TestConfiguration<?> testConfiguration : testConfigurationsX1) {
 					Object tempObject = testConfiguration.getObject();
-				    fieldValueChanger.changeValue(testConfiguration.getField(), tempObject);
+					Field field = testConfiguration.getField();
+				    fieldValueChanger.changeValue(field, tempObject);
 					AssertObject<Boolean> coverageEquals = createAssertObject(objectX1.equals(tempObject),
 							tempObject.equals(objectX1), "Symmetric Test: x.equals(y) == y.equals(x)");
 					assertObjectList.add(coverageEquals);
+					
+					FieldState<?> fieldSate = fieldValueChanger.changeValue(field, sameContentObject1);
+					FieldUtilities.setFieldValue(field, sameContentObject1, fieldSate.getCurrentValue());
+					FieldUtilities.setFieldValue(field, sameContentObject2, fieldSate.getCurrentValue());
 				}
 
-
+				AssertObject<Boolean> coverageEquals = createAssertObject(sameContentObject1.equals(sameContentObject2),
+						sameContentObject2.equals(sameContentObject1), "Symmetric Test: x.equals(y) == y.equals(x)");
+				assertObjectList.add(coverageEquals);
+	
+				if (hashCodeMethod != null){
+					AssertObject<Boolean> consistentHashCode = createAssertObject(
+							(sameContentObject1.hashCode() == sameContentObject2.hashCode()), true,
+							"Consistent Test: If x1 and x2 different object but same value(s) \n x1.hashCode() == x2.hashCode()");
+					assertObjectList.add(consistentHashCode);
+				}
 			} else if (hashCodeMethod != null) {
 
 				AssertObject<Integer> reflexiveHashCode = createAssertObject(objectX1.hashCode(), objectX1.hashCode(),
@@ -415,7 +434,7 @@ public class AssertObjectCreator implements IAssertObjectCreator {
 	private TestConfiguration<?> createTestConfiguration(Class<?> clazz, Method createObjectMethod, Method readMethod,
 			Method writeMethod, String fieldName) {
 		TestConfiguration<?> testConfiguration = null;
-		Field field = getField(clazz, fieldName);
+		Field field = ClassUtilities.getField(clazz, fieldName);
 		if (field != null) {
 			boolean ignore = ReflectionFieldLevel.ignoreField(field);
 			if (!ignore) {
@@ -478,13 +497,4 @@ public class AssertObjectCreator implements IAssertObjectCreator {
 		return createObjectMethod;
 	}
 
-	private Field getField(Class<?> clazz, String fieldName) {
-		Field field = null;
-		try {
-			field = clazz.getDeclaredField(fieldName);
-		} catch (NoSuchFieldException | SecurityException e) {
-			LOGGER.debug(fieldName + " field name is not present in " + clazz.getName(), e);
-		}
-		return field;
-	}
 }
