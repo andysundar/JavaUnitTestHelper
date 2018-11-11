@@ -17,7 +17,6 @@ package org.pojotester.pack.scan;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Modifier;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -36,6 +35,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 
+import org.pojotester.utils.ClassUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -88,7 +88,7 @@ public abstract class PackageScan {
 					// When exact path is given [e.g. mypack.MyClass.class]
 					String binaryClassName = getQualifiedClassName(startPackage, rootDirectory);
 					Class<?> clazz = loadClass(binaryClassName);
-					if (isClass(clazz)) {
+					if (ClassUtilities.isConcreteClass(clazz)) {
 						classSet.add(clazz);
 					}
 				} else {
@@ -114,7 +114,7 @@ public abstract class PackageScan {
 						for (String className : classFiles) {
 							String binaryClassName = getQualifiedClassName(startPackage, className);
 							Class<?> clazz = loadClass(binaryClassName);
-							if (isClass(clazz)) {
+							if (ClassUtilities.isConcreteClass(clazz)) {
 								classSet.add(clazz);
 							}
 						}
@@ -300,9 +300,6 @@ public abstract class PackageScan {
 		return classNamePath;
 	}
 
-	private boolean isClass(Class<?> clazz) {
-		return (clazz != null) && (!clazz.isAnnotation()) && (!clazz.isInterface()) && (!clazz.isEnum()) && (!Modifier.isAbstract(clazz.getModifiers()));
-	}
 	
 	private boolean isPattern(String pattern) {
 		return WILDCARD_REGX.equals(pattern) || Character.toString(WILDCARD_CHAR).equals(pattern) || Character.toString(QUESTION_CHAR).equals(pattern);
