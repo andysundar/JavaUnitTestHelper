@@ -258,4 +258,27 @@ public abstract class ClassUtilities {
 		}
 		return method;
 	}
+
+	/**
+	 * This method return {@code Method} objects of parameter class type.
+	 * @param clazz
+	 * @return all declared methods
+	 * @since 1.1
+	 */
+	public static Method[] getDeclaredMethods(Class<?> clazz) {
+		return clazz.getDeclaredMethods();
+	}
+
+	public static Object createObjectUsingAnnotated(Class<?> clazz) {
+		Object object ;
+		Method[] methods = getDeclaredMethods(clazz);
+		Method createObjectMethod = MethodUtilities.findCreateObjectMethod(methods);
+
+		if(createObjectMethod == null) {
+			object = createObject(clazz);
+		} else {
+			object = createObjectUsingStaticMethod(clazz, createObjectMethod);
+		}
+		return object;
+	}
 }

@@ -17,6 +17,15 @@
 package org.pojotester.reflection.annotation;
 
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.pojotester.annotation.field.BooleanTestValue;
 import org.pojotester.annotation.field.ByteTestValue;
@@ -58,7 +67,7 @@ public abstract class ReflectionFieldLevel {
 	 */
 	public static TestConfiguration<?> assignValues(final Field field) {
 		Class<?> typeClass = field.getType();
-		TestConfiguration<?> testValues = null;
+		TestConfiguration<?> testValues ;
 
 		if (typeClass == Boolean.class || typeClass == boolean.class || typeClass == Boolean[].class
 				|| typeClass == boolean[].class) {
@@ -96,17 +105,15 @@ public abstract class ReflectionFieldLevel {
 			StringTestValue stringTestValue = field.getAnnotation(StringTestValue.class);
 			testValues = createTestValues(stringTestValue);
 		} else {
-			testValues = TestConfigurationFactory.createTestConfigurationObject(typeClass);
+			testValues = createTestConfigurationObject(typeClass);
 		}
 
-		if (testValues != null) {
-			testValues.setField(field);
-		}
+		testValues.setField(field);
 		return testValues;
 	}
 
 	protected static TestConfiguration<String> createTestValues(StringTestValue stringTestValue) {
-		TestConfiguration<String> testValues = new TestConfiguration<String>();
+		TestConfiguration<String> testValues = new TestConfiguration<>();
 		if (stringTestValue != null) {
 			String[] assignValues = stringTestValue.assignValues();
 			String[] expectedValues = stringTestValue.expectedValues();
@@ -118,7 +125,7 @@ public abstract class ReflectionFieldLevel {
 	}
 
 	protected static TestConfiguration<Boolean> createTestValues(BooleanTestValue booleanTestValue) {
-		TestConfiguration<Boolean> testValues = new TestConfiguration<Boolean>();
+		TestConfiguration<Boolean> testValues = new TestConfiguration<>();
 		if (booleanTestValue != null) {
 			boolean[] assignValues = booleanTestValue.assignValues();
 			boolean[] expectedValues = booleanTestValue.expectedValues();
@@ -133,7 +140,7 @@ public abstract class ReflectionFieldLevel {
 	}
 
 	protected static TestConfiguration<Byte> createTestValues(ByteTestValue byteTestValue) {
-		TestConfiguration<Byte> testValues = new TestConfiguration<Byte>();
+		TestConfiguration<Byte> testValues = new TestConfiguration<>();
 		if (byteTestValue != null) {
 			byte[] assignValues = byteTestValue.assignValues();
 			byte[] expectedValues = byteTestValue.expectedValues();
@@ -148,7 +155,7 @@ public abstract class ReflectionFieldLevel {
 	}
 
 	protected static TestConfiguration<Character> createTestValues(CharTestValue charTestValue) {
-		TestConfiguration<Character> testValues = new TestConfiguration<Character>();
+		TestConfiguration<Character> testValues = new TestConfiguration<>();
 		if (charTestValue != null) {
 			char[] assignValues = charTestValue.assignValues();
 			char[] expectedValues = charTestValue.expectedValues();
@@ -163,7 +170,7 @@ public abstract class ReflectionFieldLevel {
 	}
 
 	protected static TestConfiguration<Double> createTestValues(DoubleTestValue doubleTestValue) {
-		TestConfiguration<Double> testValues = new TestConfiguration<Double>();
+		TestConfiguration<Double> testValues = new TestConfiguration<>();
 		if (doubleTestValue != null) {
 			double[] assignValues = doubleTestValue.assignValues();
 			double[] expectedValues = doubleTestValue.expectedValues();
@@ -178,7 +185,7 @@ public abstract class ReflectionFieldLevel {
 	}
 
 	protected static TestConfiguration<Float> createTestValues(FloatTestValue floatTestValue) {
-		TestConfiguration<Float> testValues = new TestConfiguration<Float>();
+		TestConfiguration<Float> testValues = new TestConfiguration<>();
 		if (floatTestValue != null) {
 			float[] assignValues = floatTestValue.assignValues();
 			float[] expectedValues = floatTestValue.expectedValues();
@@ -193,7 +200,7 @@ public abstract class ReflectionFieldLevel {
 	}
 
 	protected static TestConfiguration<Integer> createTestValues(IntTestValue intTestValue) {
-		TestConfiguration<Integer> testValues = new TestConfiguration<Integer>();
+		TestConfiguration<Integer> testValues = new TestConfiguration<>();
 		if (intTestValue != null) {
 			int[] assignValues = intTestValue.assignValues();
 			int[] expectedValues = intTestValue.expectedValues();
@@ -208,7 +215,7 @@ public abstract class ReflectionFieldLevel {
 	}
 
 	protected static TestConfiguration<Long> createTestValues(LongTestValue longTestValue) {
-		TestConfiguration<Long> testValues = new TestConfiguration<Long>();
+		TestConfiguration<Long> testValues = new TestConfiguration<>();
 		if (longTestValue != null) {
 			long[] assignValues = longTestValue.assignValues();
 			long[] expectedValues = longTestValue.expectedValues();
@@ -223,7 +230,7 @@ public abstract class ReflectionFieldLevel {
 	}
 
 	protected static TestConfiguration<Short> createTestValues(ShortTestValue shortTestValue) {
-		TestConfiguration<Short> testValues = new TestConfiguration<Short>();
+		TestConfiguration<Short> testValues = new TestConfiguration<>();
 		if (shortTestValue != null) {
 			short[] assignValues = shortTestValue.assignValues();
 			short[] expectedValues = shortTestValue.expectedValues();
@@ -237,6 +244,68 @@ public abstract class ReflectionFieldLevel {
 		return testValues;
 	}
 
+	/**
+	 * This method create an object of {@link TestConfiguration} based on data type.
+	 * @param typeClass
+	 * @return {@code TestConfiguration} type object.
+	 */
+	protected static TestConfiguration<?> createTestConfigurationObject(final Class<?> typeClass){
+		TestConfiguration<?>  testValues = null;
+		if(typeClass == Boolean.class || typeClass == boolean.class
+				|| typeClass == Boolean[].class || typeClass == boolean[].class){
+			testValues = new TestConfiguration<Boolean>();
+		} else  if(typeClass == Byte.class || typeClass == byte.class
+				|| typeClass == Byte[].class || typeClass == byte[].class){
+			testValues = new TestConfiguration<Byte>();
+		} else  if(typeClass == Character.class || typeClass == char.class
+				|| typeClass == Character[].class || typeClass == char[].class){
+			testValues = new TestConfiguration<Character>();
+		}  else  if(typeClass == Double.class || typeClass == double.class
+				|| typeClass == Double[].class || typeClass == double[].class){
+			testValues = new TestConfiguration<Double>();
+		} else  if(typeClass == Float.class || typeClass == float.class
+				|| typeClass == Float[].class || typeClass == float[].class){
+			testValues = new TestConfiguration<Float>();
+		} else  if(typeClass == Integer.class || typeClass == int.class
+				|| typeClass == Integer[].class || typeClass == int[].class){
+			testValues = new TestConfiguration<Integer>();
+		} else  if(typeClass == Long.class || typeClass == long.class
+				|| typeClass == Long[].class || typeClass == long[].class){
+			testValues = new TestConfiguration<Long>();
+		} else  if(typeClass == Short.class || typeClass == short.class
+				|| typeClass == Short[].class || typeClass == short[].class){
+			testValues = new TestConfiguration<Short>();
+		} else  if(typeClass == String.class || typeClass == String[].class){
+			testValues = new TestConfiguration<String>();
+		} else  if(typeClass == java.util.Date.class || typeClass == java.util.Date[].class){
+			testValues = new TestConfiguration<java.util.Date>();
+		} else  if(typeClass == java.sql.Date.class || typeClass == java.sql.Date[].class){
+			testValues = new TestConfiguration<java.sql.Date>();
+		} else  if(typeClass == java.util.Calendar.class || typeClass == java.util.Calendar[].class){
+			testValues = new TestConfiguration<java.util.Calendar>();
+		} else  if(typeClass == LocalDate.class || typeClass == LocalDate[].class){
+			testValues = new TestConfiguration<LocalDate>();
+		} else  if(typeClass == LocalTime.class || typeClass == LocalTime[].class){
+			testValues = new TestConfiguration<LocalTime>();
+		} else  if(typeClass == LocalDateTime.class || typeClass == LocalDateTime[].class){
+			testValues = new TestConfiguration<LocalDateTime>();
+		} else  if(typeClass == Instant.class || typeClass == Instant[].class){
+			testValues = new TestConfiguration<Instant>();
+		} else  if(typeClass == BigDecimal.class || typeClass == BigDecimal[].class){
+			testValues = new TestConfiguration<BigDecimal>();
+		} else  if(typeClass == BigInteger.class || typeClass == BigInteger[].class){
+			testValues = new TestConfiguration<BigInteger>();
+		} else  if(typeClass == Set.class || typeClass.getSuperclass() == Set.class){
+			testValues = new TestConfiguration<Set<?>>();
+		} else  if(typeClass == List.class || typeClass.getSuperclass() == List.class){
+			testValues = new TestConfiguration<List<?>>();
+		} else  if(typeClass == Map.class || typeClass.getSuperclass() == Map.class){
+			testValues = new TestConfiguration<Map<?, ?>>();
+		} else {
+			testValues = new TestConfiguration<>();
+		}
+		return testValues;
+	}
 }
 
 

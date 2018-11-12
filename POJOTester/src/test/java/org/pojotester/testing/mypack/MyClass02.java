@@ -67,8 +67,7 @@ public class MyClass02 {
 	public String toString() {
 		return "MyClass02 [ints=" + Arrays.toString(ints) + ", booleans=" + Arrays.toString(booleans) + ", shorts="
 				+ Arrays.toString(shorts) + ", longs=" + Arrays.toString(longs) + ", floats=" + Arrays.toString(floats)
-				+ ", dates=" + Arrays.toString(dates) + ", myClass03es=" + Arrays.toString(myClass03es) + ", myClass01="
-				+ myClass01 + "]";
+				+ ", dates=" + Arrays.toString(dates) ;
 	}
 	@Override
 	public int hashCode() {
@@ -79,8 +78,6 @@ public class MyClass02 {
 		result = prime * result + Arrays.hashCode(floats);
 		result = prime * result + Arrays.hashCode(ints);
 		result = prime * result + Arrays.hashCode(longs);
-		result = prime * result + ((myClass01 == null) ? 0 : myClass01.hashCode());
-		result = prime * result + Arrays.hashCode(myClass03es);
 		result = prime * result + Arrays.hashCode(shorts);
 		return result;
 	}

@@ -17,12 +17,12 @@ package org.pojotester.test.values;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.pojotester.utils.MethodUtilities;
 import org.pojotester.type.convertor.ObjectToPrimitiveArray;
 import org.pojotester.type.convertor.PrimitiveToObjectArray;
 import org.pojotester.utils.ClassUtilities;
@@ -42,7 +42,6 @@ public class TestConfiguration<T> {
 	
 	private String classFieldName;
 	private Object object;
-	private Method createObjectMethod;
 	private Field field;
 	private T[] assignedValues;
 	private T[] expectedValues;
@@ -50,15 +49,12 @@ public class TestConfiguration<T> {
 	private Method writeMethod;
 
 	/**
-	 * This method create list of {@link AssertObject} objects which contains the return value from the field and expected value. 
-	 * @param clazz
+	 * This method create list of {@link AssertObject} objects which contains the return value from the field and expected value.
 	 * @return list of {@code AssertObject} objects
 	 */
 	@SuppressWarnings("unchecked")
-	public List<AssertObject<?>> assertAssignedValues(Class<?> clazz) {
+	public List<AssertObject<?>> assertAssignedValues() {
 
-
-		createObject(clazz);
 		List<AssertObject<?>> values = Collections.emptyList();
 		if(object != null){
 			if(assignedValues != null){
@@ -127,13 +123,6 @@ public class TestConfiguration<T> {
 		return values;
 	}
 
-	private void createObject(Class<?> clazz) {
-		if(createObjectMethod == null) {
-			object = ClassUtilities.createObject(clazz);
-		} else {
-			object = ClassUtilities.createObjectUsingStaticMethod(clazz, createObjectMethod);
-		}
-	}
 
 	private List<AssertObject<?>> populateValues() {
 		List<AssertObject<?>> values = new LinkedList<>();
@@ -178,12 +167,7 @@ public class TestConfiguration<T> {
 			Object args[] = { value };
 			
 			if (writeMethod != null) {
-				try {
-					writeMethod.invoke(object, args);
-				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-					LOGGER.debug(writeMethod.getName() + " invoke fail.", e);
-					e.printStackTrace();
-				}
+				MethodUtilities.methodInvocation(writeMethod, object, args);
 			} else {
 				FieldUtilities.setFieldValue(field, object, args[0]);
 			}
@@ -197,13 +181,8 @@ public class TestConfiguration<T> {
 	private T readValue() {
 		T returnValue = null;
 		if (readMethod != null) {
-			try {
-				Object[] args = {};
-				returnValue = (T) readMethod.invoke(object, args);
-			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-				LOGGER.debug(readMethod.getName() + " method invoke fail.", e);
-				e.printStackTrace();
-			}
+			Object[] args = {};
+			returnValue = (T) MethodUtilities.methodInvocation(readMethod, object, args);
 		} else {
 			returnValue = (T) FieldUtilities.getFieldValue(field, object);
 		}
@@ -258,12 +237,7 @@ public class TestConfiguration<T> {
 				boolean[] primitives = ObjectToPrimitiveArray.convertObjectToPrimitiveArray(valueArray);
 				args[0] = isArray ? primitives : primitives[0];
 				if (writeMethod != null) {
-					try {
-						writeMethod.invoke(object, args);
-					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-						LOGGER.debug(writeMethod.getName() + " method invoke fail.", e);
-						e.printStackTrace();
-					}
+					MethodUtilities.methodInvocation(writeMethod, object, args);
 				} else {
 					FieldUtilities.setFieldValue(field, object, primitives);
 				}
@@ -272,12 +246,7 @@ public class TestConfiguration<T> {
 				byte[] primitives = ObjectToPrimitiveArray.convertObjectToPrimitiveArray(valueArray);
 				args[0] = isArray ? primitives : primitives[0];
 				if (writeMethod != null) {
-					try {
-						writeMethod.invoke(object, args);
-					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-						LOGGER.debug(writeMethod.getName() + " method invoke fail.", e);
-						e.printStackTrace();
-					}
+					MethodUtilities.methodInvocation(writeMethod, object, args);
 				} else {
 					FieldUtilities.setFieldValue(field, object, primitives);
 				}
@@ -286,12 +255,7 @@ public class TestConfiguration<T> {
 				char[] primitives = ObjectToPrimitiveArray.convertObjectToPrimitiveArray(valueArray);
 				args[0] = isArray ? primitives : primitives[0];
 				if (writeMethod != null) {
-					try {
-						writeMethod.invoke(object, args);
-					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-						LOGGER.debug(writeMethod.getName() + " method invoke fail.", e);
-						e.printStackTrace();
-					}
+					MethodUtilities.methodInvocation(writeMethod, object, args);
 				} else {
 					FieldUtilities.setFieldValue(field, object, primitives);
 				}
@@ -300,12 +264,7 @@ public class TestConfiguration<T> {
 				double[] primitives = ObjectToPrimitiveArray.convertObjectToPrimitiveArray(valueArray);
 				args[0] = isArray ? primitives : primitives[0];
 				if (writeMethod != null) {
-					try {
-						writeMethod.invoke(object, args);
-					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-						LOGGER.debug(writeMethod.getName() + " method invoke fail.", e);
-						e.printStackTrace();
-					}
+					MethodUtilities.methodInvocation(writeMethod, object, args);
 				} else {
 					FieldUtilities.setFieldValue(field, object, primitives);
 				}
@@ -314,12 +273,7 @@ public class TestConfiguration<T> {
 				float[] primitives = ObjectToPrimitiveArray.convertObjectToPrimitiveArray(valueArray);
 				args[0] = isArray ? primitives : primitives[0];
 				if (writeMethod != null) {
-					try {
-						writeMethod.invoke(object, args);
-					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-						LOGGER.debug(writeMethod.getName() + " method invoke fail.", e);
-						e.printStackTrace();
-					}
+					MethodUtilities.methodInvocation(writeMethod, object, args);
 				} else {
 					FieldUtilities.setFieldValue(field, object, primitives);
 				}
@@ -328,12 +282,7 @@ public class TestConfiguration<T> {
 				int[] primitives = ObjectToPrimitiveArray.convertObjectToPrimitiveArray(valueArray);
 				args[0] = isArray ? primitives : primitives[0];
 				if (writeMethod != null) {
-					try {
-						writeMethod.invoke(object, args);
-					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-						LOGGER.debug(writeMethod.getName() + " method invoke fail.", e);
-						e.printStackTrace();
-					}
+					MethodUtilities.methodInvocation(writeMethod, object, args);
 				} else {
 					FieldUtilities.setFieldValue(field, object, primitives);
 				}
@@ -342,12 +291,7 @@ public class TestConfiguration<T> {
 				long[] primitives = ObjectToPrimitiveArray.convertObjectToPrimitiveArray(valueArray);
 				args[0] = isArray ? primitives : primitives[0];
 				if (writeMethod != null) {
-					try {
-						writeMethod.invoke(object, args);
-					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-						LOGGER.debug(writeMethod.getName() + " method invoke fail.", e);
-						e.printStackTrace();
-					}
+					MethodUtilities.methodInvocation(writeMethod, object, args);
 				} else {
 					FieldUtilities.setFieldValue(field, object, primitives);
 				}
@@ -356,12 +300,7 @@ public class TestConfiguration<T> {
 				short[] primitives = ObjectToPrimitiveArray.convertObjectToPrimitiveArray(valueArray);
 				args[0] = isArray ? primitives : primitives[0];
 				if (writeMethod != null) {
-					try {
-						writeMethod.invoke(object, args);
-					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-						LOGGER.debug(writeMethod.getName() + " method invoke fail.", e);
-						e.printStackTrace();
-					}
+					MethodUtilities.methodInvocation(writeMethod, object, args);
 				} else {
 					FieldUtilities.setFieldValue(field, object, primitives);
 				}
@@ -410,14 +349,6 @@ public class TestConfiguration<T> {
 		this.writeMethod = writeMethod;
 	}
 
-	public Method getCreateObjectMethod() {
-		return createObjectMethod;
-	}
-
-	public void setCreateObjectMethod(Method createObjectMethod) {
-		this.createObjectMethod = createObjectMethod;
-	}
-
 	public String getClassFieldName() {
 		return classFieldName;
 	}
@@ -429,5 +360,7 @@ public class TestConfiguration<T> {
 	public Object getObject() {
 		return object;
 	}
+
+	public void setObject(Object object) { this.object = object;}
 
 }

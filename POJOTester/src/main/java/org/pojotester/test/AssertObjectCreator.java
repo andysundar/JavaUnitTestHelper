@@ -41,6 +41,7 @@ import org.pojotester.test.values.changer.FieldValueChanger;
 import org.pojotester.test.values.changer.dto.FieldState;
 import org.pojotester.utils.ClassUtilities;
 import org.pojotester.utils.FieldUtilities;
+import org.pojotester.utils.MethodUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -91,10 +92,9 @@ public class AssertObjectCreator implements IAssertObjectCreator {
 		PackageScan packageScan = loadClassesAskedFor ? new LoadClassIfAskedFor():new LoadClassIfNotIgnored();
 		Set<Class<?>> uniqueClasses = packageScan.getClasses(packagesToScan);
 		for (Class<?> clazz : uniqueClasses) {
-			Method[] methods = clazz.getDeclaredMethods();
-			Method createObjectMethod = findCreateObjectMethod(methods);
-			Map<String, TestConfiguration<?>> fieldTestConfigurationMap = createFieldAndTestConfiguration(clazz, methods, createObjectMethod);
-			List<AssertObject<?>> assertObjects = createAssertObjectList(clazz, fieldTestConfigurationMap);
+
+			Map<String, TestConfiguration<?>> fieldTestConfigurationMap = createFieldAndTestConfiguration(clazz);
+			List<AssertObject<?>> assertObjects = createAssertObjectList(fieldTestConfigurationMap);
 			assertObjectList.addAll(assertObjects);
 	
 			Class<?>[] args = {};
@@ -112,8 +112,8 @@ public class AssertObjectCreator implements IAssertObjectCreator {
 			Object objectY1 = null;
 			Object objectY2 = null;
 			if(toStringMethod != null || hashCodeMethod != null || equalsMethod != null) {
-				Map<String, TestConfiguration<?>> fieldTestConfigurationMapX1 =  createFieldAndTestConfiguration(clazz, methods, createObjectMethod);
-				Map<String, TestConfiguration<?>> fieldTestConfigurationMapY2 =  createFieldAndTestConfiguration(clazz, methods, createObjectMethod);
+				Map<String, TestConfiguration<?>> fieldTestConfigurationMapX1 =  createFieldAndTestConfiguration(clazz);
+				Map<String, TestConfiguration<?>> fieldTestConfigurationMapY2 =  createFieldAndTestConfiguration(clazz);
 				Set<Entry<String, TestConfiguration<?>>> setX1 = fieldTestConfigurationMap.entrySet();
 				Set<Entry<String, TestConfiguration<?>>> setX2 = fieldTestConfigurationMapX1.entrySet();
 				Set<Entry<String, TestConfiguration<?>>> setY2 = fieldTestConfigurationMapY2.entrySet();
@@ -123,7 +123,7 @@ public class AssertObjectCreator implements IAssertObjectCreator {
 
 				objectX1 = testConfigurationsX1.getLast().getObject();
 				objectX2 = testConfigurationsX2.getLast().getObject();
-				objectY1 = createObject(clazz, createObjectMethod);
+				objectY1 = ClassUtilities.createObjectUsingAnnotated(clazz);
 				objectY2 = testConfigurationsY2.getLast().getObject();
 
 			}
@@ -225,8 +225,8 @@ public class AssertObjectCreator implements IAssertObjectCreator {
 				
 				FieldValueChanger fieldValueChanger = FieldValueChanger.getInstance();
 				
-				Object sameContentObject1 = createObject(clazz, createObjectMethod);
-				Object sameContentObject2 = createObject(clazz, createObjectMethod);
+				Object sameContentObject1 = ClassUtilities.createObjectUsingAnnotated(clazz);
+				Object sameContentObject2 = ClassUtilities.createObjectUsingAnnotated(clazz);
 				for (TestConfiguration<?> testConfiguration : testConfigurationsX1) {
 					Object tempObject = testConfiguration.getObject();
 					Field field = testConfiguration.getField();
@@ -302,24 +302,13 @@ public class AssertObjectCreator implements IAssertObjectCreator {
 		return assertObject;
 	}
 
-
-
-	private Object createObject(Class<?> clazz, Method createObjectMethod) {
-		Object object = null;
-		if(createObjectMethod == null) {
-			object = ClassUtilities.createObject(clazz);
-		} else {
-			object = ClassUtilities.createObjectUsingStaticMethod(clazz, createObjectMethod);
-		}
-		return object;
-	}
 	
 	private LinkedList<TestConfiguration<?>> getTestConfigurations(Set<Entry<String, TestConfiguration<?>>> set, Class<?> clazz) {
 		LinkedList<TestConfiguration<?>> testConfigurations = new LinkedList<>();
 		for(Entry<String, TestConfiguration<?>> x : set) {
 			TestConfiguration<?> testConfiguration = x.getValue();
 			if(testConfiguration != null) {
-				testConfiguration.assertAssignedValues(clazz);
+				testConfiguration.assertAssignedValues();
 				testConfigurations.add(testConfiguration);
 			}
 		}
@@ -327,17 +316,20 @@ public class AssertObjectCreator implements IAssertObjectCreator {
 	}
 
 
-	private Map<String, TestConfiguration<?>> createFieldAndTestConfiguration(Class<?> clazz, Method[] methods, Method createObjectMethod) {
+	private Map<String, TestConfiguration<?>> createFieldAndTestConfiguration(Class<?> clazz) {
 		Map<String, TestConfiguration<?>> fieldTestConfigurationMap = new HashMap<>();
-		
-		createTestConfigurationsFromIntrospection(clazz, fieldTestConfigurationMap, createObjectMethod);
-		createTestConfigurationsFromAnnotations(clazz, fieldTestConfigurationMap, methods, createObjectMethod);
+        Method[] methods = ClassUtilities.getDeclaredMethods(clazz);
+
+        Object object = ClassUtilities.createObjectUsingAnnotated(clazz);
+		createTestConfigurationsFromIntrospection(clazz, fieldTestConfigurationMap, object);
+		createTestConfigurationsFromAnnotations(clazz, fieldTestConfigurationMap, methods, object);
 		return fieldTestConfigurationMap;
 	}
 
 	private void createTestConfigurationsFromIntrospection(Class<?> clazz,
-														   Map<String, TestConfiguration<?>> fieldAssertObjectMap, Method createObjectMethod) {
-		BeanInfo beanInfo = null;
+														   Map<String, TestConfiguration<?>> fieldAssertObjectMap,
+                                                           Object object) {
+		BeanInfo beanInfo;
 		PropertyDescriptor[] propertyDescriptors = null;
 		try {
 			beanInfo = Introspector.getBeanInfo(clazz, Object.class);
@@ -351,7 +343,7 @@ public class AssertObjectCreator implements IAssertObjectCreator {
 				Method readMethod = propertyDescriptor.getReadMethod();
 				Method writeMethod = propertyDescriptor.getWriteMethod();
 				String fieldName = propertyDescriptor.getName();
-				TestConfiguration<?> testConfiguration = createTestConfiguration(clazz, createObjectMethod,
+				TestConfiguration<?> testConfiguration = createTestConfiguration(clazz, object,
 						readMethod, writeMethod, fieldName);
 				if (testConfiguration != null) {
 					fieldAssertObjectMap.put(testConfiguration.getClassFieldName(), testConfiguration);
@@ -361,7 +353,7 @@ public class AssertObjectCreator implements IAssertObjectCreator {
 	}
 
 	private void createTestConfigurationsFromAnnotations(Class<?> clazz,
-			Map<String, TestConfiguration<?>> fieldAssertObjectMap, Method[] methods, Method createObjectMethod) {
+			Map<String, TestConfiguration<?>> fieldAssertObjectMap, Method[] methods, Object object) {
 		for (Method method : methods) {
 			String fieldName = ReflectionMethodLevel.getFieldNameOfReadMethod(method);
 			boolean writeMethod = false;
@@ -370,19 +362,19 @@ public class AssertObjectCreator implements IAssertObjectCreator {
 				writeMethod = true;
 			}
 			if(fieldName != null && !fieldName.isEmpty()){
-				setAnnotatedReadOrWriteMethod(clazz, fieldAssertObjectMap, createObjectMethod, method, fieldName,
+				setAnnotatedReadOrWriteMethod(clazz, fieldAssertObjectMap, object, method, fieldName,
 						writeMethod);
 			}
 		}
 	}
 
 	private void setAnnotatedReadOrWriteMethod(Class<?> clazz, Map<String, TestConfiguration<?>> fieldAssertObjectMap,
-											   Method createObjectMethod, Method method, String fieldName, boolean writeMethod) {
+											   Object object, Method method, String fieldName, boolean writeMethod) {
 		if(fieldName != null && !fieldName.isEmpty()) {
 			String classFieldName = clazz.getName() + "." + fieldName;
 			TestConfiguration<?> testConfiguration = fieldAssertObjectMap.get(classFieldName);
 			if (testConfiguration != null) {
-				testConfiguration.setCreateObjectMethod(createObjectMethod);
+				testConfiguration.setObject(object);
 				Field field = testConfiguration.getField();
 				if(!writeMethod){
 					if(method.getReturnType() == field.getType()){
@@ -398,7 +390,7 @@ public class AssertObjectCreator implements IAssertObjectCreator {
 					}
 				}
 			} else {
-				testConfiguration = createTestConfiguration(clazz, createObjectMethod, method, null, fieldName);
+				testConfiguration = createTestConfiguration(clazz, object, method, null, fieldName);
 				if (testConfiguration != null) {
 					fieldAssertObjectMap.put(testConfiguration.getClassFieldName(), testConfiguration);
 				}
@@ -406,8 +398,7 @@ public class AssertObjectCreator implements IAssertObjectCreator {
 		}
 	}
 
-	private List<AssertObject<?>> createAssertObjectList( Class<?> clazz,
-			Map<String, TestConfiguration<?>> fieldAssertObjectMap) {
+	private List<AssertObject<?>> createAssertObjectList(Map<String, TestConfiguration<?>> fieldAssertObjectMap) {
 		List<AssertObject<?>> assertObjectList = Collections.emptyList();
 		Set<String> classFieldNameSet = fieldAssertObjectMap.keySet();
 		if (classFieldNameSet != null && !classFieldNameSet.isEmpty()) {
@@ -415,7 +406,7 @@ public class AssertObjectCreator implements IAssertObjectCreator {
 			for (String classFieldName : classFieldNameSet) {
 				TestConfiguration<?> testConfiguration = fieldAssertObjectMap.get(classFieldName);
 				if(testConfiguration != null){
-					List<AssertObject<?>> assertObjects = testConfiguration.assertAssignedValues(clazz);
+					List<AssertObject<?>> assertObjects = testConfiguration.assertAssignedValues();
 					assertObjectList.addAll(assertObjects);
 				}
 			}
@@ -423,7 +414,7 @@ public class AssertObjectCreator implements IAssertObjectCreator {
 		return assertObjectList;
 	}
 
-	private TestConfiguration<?> createTestConfiguration(Class<?> clazz, Method createObjectMethod, Method readMethod,
+	private TestConfiguration<?> createTestConfiguration(Class<?> clazz, Object object, Method readMethod,
 			Method writeMethod, String fieldName) {
 		TestConfiguration<?> testConfiguration = null;
 		Field field = ClassUtilities.getField(clazz, fieldName);
@@ -444,7 +435,7 @@ public class AssertObjectCreator implements IAssertObjectCreator {
 					} else {
 						logWriteMethodMessage(writeMethod, field);
 					}
-					testConfiguration.setCreateObjectMethod(createObjectMethod);
+					testConfiguration.setObject(object);
 				}
 			}
 		} else {
@@ -478,15 +469,6 @@ public class AssertObjectCreator implements IAssertObjectCreator {
 	}
 
 
-	private Method findCreateObjectMethod(Method[] methods) {
-		Method createObjectMethod = null;
-		for (Method method : methods) {
-			if (ReflectionMethodLevel.isCreateMethod(method)) {
-				createObjectMethod = method;
-				break;
-			}
-		}
-		return createObjectMethod;
-	}
+
 
 }
