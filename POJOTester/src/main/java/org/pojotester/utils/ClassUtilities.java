@@ -269,10 +269,8 @@ public abstract class ClassUtilities {
 		return clazz.getDeclaredMethods();
 	}
 
-	public static Object createObjectUsingAnnotated(Class<?> clazz) {
+	public static Object createObjectUsingAnnotated(Class<?> clazz, Method createObjectMethod) {
 		Object object ;
-		Method[] methods = getDeclaredMethods(clazz);
-		Method createObjectMethod = MethodUtilities.findCreateObjectMethod(methods);
 
 		if(createObjectMethod == null) {
 			object = createObject(clazz);

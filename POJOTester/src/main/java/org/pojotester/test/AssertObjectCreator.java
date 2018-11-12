@@ -92,8 +92,11 @@ public class AssertObjectCreator implements IAssertObjectCreator {
 		PackageScan packageScan = loadClassesAskedFor ? new LoadClassIfAskedFor():new LoadClassIfNotIgnored();
 		Set<Class<?>> uniqueClasses = packageScan.getClasses(packagesToScan);
 		for (Class<?> clazz : uniqueClasses) {
-
-			Map<String, TestConfiguration<?>> fieldTestConfigurationMap = createFieldAndTestConfiguration(clazz);
+			Method[] methods = ClassUtilities.getDeclaredMethods(clazz);
+			Method createObjectMethod = MethodUtilities.findCreateObjectMethod(methods);
+			
+	        Object object = ClassUtilities.createObjectUsingAnnotated(clazz, createObjectMethod);
+			Map<String, TestConfiguration<?>> fieldTestConfigurationMap = createFieldAndTestConfiguration(clazz, object, methods);
 			List<AssertObject<?>> assertObjects = createAssertObjectList(fieldTestConfigurationMap);
 			assertObjectList.addAll(assertObjects);
 	
@@ -112,8 +115,8 @@ public class AssertObjectCreator implements IAssertObjectCreator {
 			Object objectY1 = null;
 			Object objectY2 = null;
 			if(toStringMethod != null || hashCodeMethod != null || equalsMethod != null) {
-				Map<String, TestConfiguration<?>> fieldTestConfigurationMapX1 =  createFieldAndTestConfiguration(clazz);
-				Map<String, TestConfiguration<?>> fieldTestConfigurationMapY2 =  createFieldAndTestConfiguration(clazz);
+				Map<String, TestConfiguration<?>> fieldTestConfigurationMapX1 =  createFieldAndTestConfiguration(clazz, object, methods);
+				Map<String, TestConfiguration<?>> fieldTestConfigurationMapY2 =  createFieldAndTestConfiguration(clazz, object, methods);
 				Set<Entry<String, TestConfiguration<?>>> setX1 = fieldTestConfigurationMap.entrySet();
 				Set<Entry<String, TestConfiguration<?>>> setX2 = fieldTestConfigurationMapX1.entrySet();
 				Set<Entry<String, TestConfiguration<?>>> setY2 = fieldTestConfigurationMapY2.entrySet();
@@ -123,7 +126,7 @@ public class AssertObjectCreator implements IAssertObjectCreator {
 
 				objectX1 = testConfigurationsX1.getLast().getObject();
 				objectX2 = testConfigurationsX2.getLast().getObject();
-				objectY1 = ClassUtilities.createObjectUsingAnnotated(clazz);
+				objectY1 = ClassUtilities.createObjectUsingAnnotated(clazz, createObjectMethod);
 				objectY2 = testConfigurationsY2.getLast().getObject();
 
 			}
@@ -225,8 +228,8 @@ public class AssertObjectCreator implements IAssertObjectCreator {
 				
 				FieldValueChanger fieldValueChanger = FieldValueChanger.getInstance();
 				
-				Object sameContentObject1 = ClassUtilities.createObjectUsingAnnotated(clazz);
-				Object sameContentObject2 = ClassUtilities.createObjectUsingAnnotated(clazz);
+				Object sameContentObject1 = ClassUtilities.createObjectUsingAnnotated(clazz, createObjectMethod);
+				Object sameContentObject2 = ClassUtilities.createObjectUsingAnnotated(clazz, createObjectMethod);
 				for (TestConfiguration<?> testConfiguration : testConfigurationsX1) {
 					Object tempObject = testConfiguration.getObject();
 					Field field = testConfiguration.getField();
@@ -316,11 +319,9 @@ public class AssertObjectCreator implements IAssertObjectCreator {
 	}
 
 
-	private Map<String, TestConfiguration<?>> createFieldAndTestConfiguration(Class<?> clazz) {
+	private Map<String, TestConfiguration<?>> createFieldAndTestConfiguration(Class<?> clazz, Object object, Method[] methods) {
 		Map<String, TestConfiguration<?>> fieldTestConfigurationMap = new HashMap<>();
-        Method[] methods = ClassUtilities.getDeclaredMethods(clazz);
-
-        Object object = ClassUtilities.createObjectUsingAnnotated(clazz);
+        
 		createTestConfigurationsFromIntrospection(clazz, fieldTestConfigurationMap, object);
 		createTestConfigurationsFromAnnotations(clazz, fieldTestConfigurationMap, methods, object);
 		return fieldTestConfigurationMap;
@@ -398,22 +399,7 @@ public class AssertObjectCreator implements IAssertObjectCreator {
 		}
 	}
 
-	private List<AssertObject<?>> createAssertObjectList(Map<String, TestConfiguration<?>> fieldAssertObjectMap) {
-		List<AssertObject<?>> assertObjectList = Collections.emptyList();
-		Set<String> classFieldNameSet = fieldAssertObjectMap.keySet();
-		if (classFieldNameSet != null && !classFieldNameSet.isEmpty()) {
-			assertObjectList = new LinkedList<>();
-			for (String classFieldName : classFieldNameSet) {
-				TestConfiguration<?> testConfiguration = fieldAssertObjectMap.get(classFieldName);
-				if(testConfiguration != null){
-					List<AssertObject<?>> assertObjects = testConfiguration.assertAssignedValues();
-					assertObjectList.addAll(assertObjects);
-				}
-			}
-		}
-		return assertObjectList;
-	}
-
+	
 	private TestConfiguration<?> createTestConfiguration(Class<?> clazz, Object object, Method readMethod,
 			Method writeMethod, String fieldName) {
 		TestConfiguration<?> testConfiguration = null;
@@ -469,6 +455,21 @@ public class AssertObjectCreator implements IAssertObjectCreator {
 	}
 
 
+	private List<AssertObject<?>> createAssertObjectList(Map<String, TestConfiguration<?>> fieldAssertObjectMap) {
+		List<AssertObject<?>> assertObjectList = Collections.emptyList();
+		Set<String> classFieldNameSet = fieldAssertObjectMap.keySet();
+		if (classFieldNameSet != null && !classFieldNameSet.isEmpty()) {
+			assertObjectList = new LinkedList<>();
+			for (String classFieldName : classFieldNameSet) {
+				TestConfiguration<?> testConfiguration = fieldAssertObjectMap.get(classFieldName);
+				if(testConfiguration != null){
+					List<AssertObject<?>> assertObjects = testConfiguration.assertAssignedValues();
+					assertObjectList.addAll(assertObjects);
+				}
+			}
+		}
+		return assertObjectList;
+	}
 
 
 }
