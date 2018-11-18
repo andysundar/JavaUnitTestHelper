@@ -14,7 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package org.pojotester.test.overriden.method;
+package org.pojotester.test.override.method;
 
 import org.pojotester.test.values.AssertObject;
 import org.pojotester.test.values.changer.FieldValueChanger;
