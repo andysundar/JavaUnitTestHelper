@@ -2,6 +2,7 @@ package org.pojotester.testing.mypack;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Objects;
 
 public class MyClass02 {
 
@@ -63,65 +64,46 @@ public class MyClass02 {
 	public void setMyClass01(MyClass01 myClass01) {
 		this.myClass01 = myClass01;
 	}
+
 	@Override
 	public String toString() {
-		return "MyClass02 [ints=" + Arrays.toString(ints) + ", booleans=" + Arrays.toString(booleans) + ", shorts="
-				+ Arrays.toString(shorts) + ", longs=" + Arrays.toString(longs) + ", floats=" + Arrays.toString(floats)
-				+ ", dates=" + Arrays.toString(dates) ;
+		return "MyClass02{" +
+				"ints=" + Arrays.toString(ints) +
+				", booleans=" + Arrays.toString(booleans) +
+				", shorts=" + Arrays.toString(shorts) +
+				", longs=" + Arrays.toString(longs) +
+				", floats=" + Arrays.toString(floats) +
+				", dates=" + Arrays.toString(dates) +
+				", myClass03es=" + Arrays.toString(myClass03es) +
+				", myClass01=" + myClass01 +
+				'}';
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		MyClass02 myClass02 = (MyClass02) o;
+		return Arrays.equals(ints, myClass02.ints) &&
+				Arrays.equals(booleans, myClass02.booleans) &&
+				Arrays.equals(shorts, myClass02.shorts) &&
+				Arrays.equals(longs, myClass02.longs) &&
+				Arrays.equals(floats, myClass02.floats) &&
+				Arrays.equals(dates, myClass02.dates) &&
+				Arrays.equals(myClass03es, myClass02.myClass03es) &&
+				Objects.equals(myClass01, myClass02.myClass01);
+	}
+
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + Arrays.hashCode(booleans);
-		result = prime * result + Arrays.hashCode(dates);
-		result = prime * result + Arrays.hashCode(floats);
-		result = prime * result + Arrays.hashCode(ints);
-		result = prime * result + Arrays.hashCode(longs);
-		result = prime * result + Arrays.hashCode(shorts);
+		int result = Objects.hash(myClass01);
+		result = 31 * result + Arrays.hashCode(ints);
+		result = 31 * result + Arrays.hashCode(booleans);
+		result = 31 * result + Arrays.hashCode(shorts);
+		result = 31 * result + Arrays.hashCode(longs);
+		result = 31 * result + Arrays.hashCode(floats);
+		result = 31 * result + Arrays.hashCode(dates);
+		result = 31 * result + Arrays.hashCode(myClass03es);
 		return result;
 	}
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (!(obj instanceof MyClass02)) {
-			return false;
-		}
-		MyClass02 other = (MyClass02) obj;
-		if (!Arrays.equals(booleans, other.booleans)) {
-			return false;
-		}
-		if (!Arrays.equals(dates, other.dates)) {
-			return false;
-		}
-		if (!Arrays.equals(floats, other.floats)) {
-			return false;
-		}
-		if (!Arrays.equals(ints, other.ints)) {
-			return false;
-		}
-		if (!Arrays.equals(longs, other.longs)) {
-			return false;
-		}
-		if (myClass01 == null) {
-			if (other.myClass01 != null) {
-				return false;
-			}
-		} else if (!myClass01.equals(other.myClass01)) {
-			return false;
-		}
-		if (!Arrays.equals(myClass03es, other.myClass03es)) {
-			return false;
-		}
-		if (!Arrays.equals(shorts, other.shorts)) {
-			return false;
-		}
-		return true;
-	}
-	
 }

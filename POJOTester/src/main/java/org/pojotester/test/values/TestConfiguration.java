@@ -169,7 +169,7 @@ public class TestConfiguration<T> {
 			if (writeMethod != null) {
 				MethodUtilities.methodInvocation(writeMethod, object, args);
 			} else {
-				FieldUtilities.setFieldValue(field, object, args[0]);
+				FieldUtilities.setFieldValue(field, object, value);
 			}
 		}
 		

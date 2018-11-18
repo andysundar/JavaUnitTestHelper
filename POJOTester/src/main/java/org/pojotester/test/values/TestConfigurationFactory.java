@@ -15,24 +15,44 @@
  ******************************************************************************/
 package org.pojotester.test.values;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import org.pojotester.reflection.annotation.ReflectionFieldLevel;
+
+import java.lang.reflect.Field;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * This class is the factory class which return an object {@link TestConfiguration}.
  * @author Anindya Bandopadhyay
  * @since 1.0
  */
-public abstract class TestConfigurationFactory {
+public final class TestConfigurationFactory {
+
+    private final Map<String, TestConfiguration<?>> cache = new ConcurrentHashMap<>();
 
 
-	//public static TestConfiguration<?> createTestConfiguration()
+	public TestConfiguration<?> createTestConfiguration(Object object, Field field) {
+        TestConfiguration<?> testConfiguration = null;
+        boolean ignore = ReflectionFieldLevel.ignoreField(field);
+        if (!ignore) {
+            Class<?> clazz = field.getDeclaringClass();
+            String classFieldName = clazz.getName() + "." + field.getName();
+            testConfiguration = cache.get(classFieldName);
+
+            if(testConfiguration == null && object != null) {
+                testConfiguration = ReflectionFieldLevel.assignValues(field);
+                cache.put(classFieldName, testConfiguration);
+
+                testConfiguration.setClassFieldName(classFieldName);
+                testConfiguration.setObject(object);
+                testConfiguration.setField(field);
+            }
+        }
+        return testConfiguration;
+    }
+
+    public Collection<TestConfiguration<?>> getTestConfigurations(){
+	    return cache.values();
+    }
 
 }

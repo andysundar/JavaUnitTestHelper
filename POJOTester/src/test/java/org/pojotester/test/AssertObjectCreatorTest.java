@@ -64,6 +64,7 @@ public class AssertObjectCreatorTest {
 	public void testGetAssertObjects_WhenObjectCreationFail() {
 		String []packagesToScan = {"org.pojotester.testing.mypack.another.MyClass04.class"};
 		List<AssertObject<?>> assertObjects = assertObjectCreator.getAssertObjects(packagesToScan);
+		System.out.println(assertObjects.toString());
 		assertTrue(assertObjects.isEmpty());
 	}
 	
@@ -71,6 +72,7 @@ public class AssertObjectCreatorTest {
 	public void testGetAssertObjects_WhenObjectCreationMethodFail() {
 		String []packagesToScan = {"org.pojotester.testing.mypack.another.MyClass05.class"};
 		List<AssertObject<?>> assertObjects = assertObjectCreator.getAssertObjects(packagesToScan);
+		System.out.println(assertObjects.toString());
 		assertTrue(assertObjects.isEmpty());
 	}
 	

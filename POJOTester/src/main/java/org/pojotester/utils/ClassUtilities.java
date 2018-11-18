@@ -101,7 +101,7 @@ public abstract class ClassUtilities {
 		try {
 			object = clazz.newInstance();
 		} catch (InstantiationException | IllegalAccessException e) {
-			LOGGER.debug("Not able to initialize using default constructor of " + clazz.getName() + 
+			LOGGER.debug("Not able to initialize using default constructor of " + clazz.getName() +
 					".\n Now trying with other constructor (if any).", e);
 			object =  createObjectUsingOtherConstructor(clazz);
 		}
@@ -148,6 +148,9 @@ public abstract class ClassUtilities {
 				LOGGER.debug("Not able to initialize using other constructor of " + clazz.getName(), ex);
 				object = createObjectUsingStaticMethod(clazz);
 			}
+		}
+		if(clazz.isInterface()) {
+			object = createProxy(clazz);
 		}
 		return object;
 	}
@@ -278,5 +281,10 @@ public abstract class ClassUtilities {
 			object = createObjectUsingStaticMethod(clazz, createObjectMethod);
 		}
 		return object;
+	}
+
+	public static Object createProxy(final Class<?> clazz){
+		MockDependencyObject mockObject = new MockDependencyObject();
+		return  mockObject.getProxyObject(clazz);
 	}
 }
