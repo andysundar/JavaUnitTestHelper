@@ -42,17 +42,17 @@ import java.util.stream.Collectors;
  * @author Anindya Bandopadhyay
  * @since 1.0
  */
-public class AssertObjectCreator implements IAssertObjectCreator {
+public class AssertObjectCreator {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AssertObjectCreator.class);
 	private static final String EQUALS = "equals";
 	private static final String HASH_CODE = "hashCode";
 	private static final String TO_STRING = "toString";
 
-	private boolean loadClassesAskedFor;
-//	private boolean testToStringMethod;
-//	private boolean testHashCodeMethod;
-//	private boolean testEqualsMethod;
+	private boolean loadClassesAskedFor = false;
+	private boolean testToStringMethod = true;
+	private boolean testHashCodeMethod = true;
+	private boolean testEqualsMethod = true;
 
 	/**
 	 * Object created using this constructor will consider all classes in a package for unit testing
@@ -61,16 +61,19 @@ public class AssertObjectCreator implements IAssertObjectCreator {
 	 * @since 1.0
 	 */
 	public AssertObjectCreator() {
-		this(false);
+
 	}
 
 	/**
 	 * Object created using this constructor with parameter as {@code true} will consider only {@code @TestThisClass}
 	 * declared classes in a package for unit testing and if it is used with parameter {@code false} it is act same
 	 * as default constructor.
-	 *
+     *
+	 * @deprecated As of 1.1, replaced by {@link #doLoadClassesAskedFor()}
+     *
 	 * @since 1.0
 	 */
+	@Deprecated
 	public AssertObjectCreator(boolean loadClassesAskedFor) {
 		this.loadClassesAskedFor = loadClassesAskedFor;
 	}
@@ -83,6 +86,7 @@ public class AssertObjectCreator implements IAssertObjectCreator {
 	 * @since 1.0
 	 */
 	public List<AssertObject<?>> getAssertObjects(final String... packagesToScan) {
+	    LOGGER.debug("Start getAssertObjects");
 		List<AssertObject<?>> assertObjectList = new LinkedList<>();
 		PackageScan packageScan = loadClassesAskedFor ? new LoadClassIfAskedFor() : new LoadClassIfNotIgnored();
 		Set<Class<?>> uniqueClasses = packageScan.getClasses(packagesToScan);
@@ -97,12 +101,10 @@ public class AssertObjectCreator implements IAssertObjectCreator {
 				assertObjectList.addAll(testConfiguration.assertAssignedValues());
 			}
 
-			System.gc();
-
 			Class<?>[] args = {};
-			Method toStringMethod = ClassUtilities.getDeclaredMethod(clazz, TO_STRING, args);
-			Method hashCodeMethod = ClassUtilities.getDeclaredMethod(clazz, HASH_CODE, args);
-			Method equalsMethod = ClassUtilities.getDeclaredMethod(clazz, EQUALS, Object.class);
+			Method toStringMethod = testToStringMethod ? ClassUtilities.getDeclaredMethod(clazz, TO_STRING, args) : null;
+			Method hashCodeMethod = testHashCodeMethod ? ClassUtilities.getDeclaredMethod(clazz, HASH_CODE, args) : null;
+			Method equalsMethod = testEqualsMethod ? ClassUtilities.getDeclaredMethod(clazz, EQUALS, Object.class) : null;
 
 			List<Field> fieldList = testConfigurations.stream().map(
 					TestConfiguration::getField).collect(Collectors.toList());
@@ -145,9 +147,62 @@ public class AssertObjectCreator implements IAssertObjectCreator {
 
 			}
 
+            LOGGER.debug("End getAssertObjects");
 			return assertObjectList;
 		}
 
+    /**
+     * If developer do not want to test overridden {@link #toString()} method.
+     *
+     * @since 1.1
+     */
+	public AssertObjectCreator doNotTestToStringMethod() {
+		this.testToStringMethod = false;
+		return this;
+	}
+
+    /**
+     * If developer do not want to test overridden {@link #hashCode()} method.
+     *
+     * @since 1.1
+     */
+	public AssertObjectCreator doNotTestHashCodeMethod() {
+		this.testHashCodeMethod = false;
+		return this;
+	}
+
+    /**
+     * If developer do not want to test overridden {@link #equals(Object)} method.
+     *
+     * @since 1.1
+     */
+	public AssertObjectCreator doNotTestEqualsMethod() {
+		this.testEqualsMethod = false;
+		return this;
+	}
+
+    /**
+     * If developer do not want to test any overridden methods of {@link Object} class.
+     *
+     * @since 1.1
+     */
+    public AssertObjectCreator doNotTestObjectClassOverriddenMethods() {
+        doNotTestEqualsMethod();
+        doNotTestHashCodeMethod();
+        doNotTestToStringMethod();
+        return this;
+    }
+
+    /**
+     * The unit test will consider only {@code @TestThisClass} declared classes in a package
+     * for unit testing
+     *
+     * @since 1.1
+     */
+	public AssertObjectCreator doLoadClassesAskedFor() {
+		this.loadClassesAskedFor = true;
+		return this;
+	}
 
 
 }

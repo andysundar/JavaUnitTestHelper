@@ -21,6 +21,12 @@ import java.lang.reflect.Field;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * This class provide field level reflection utilities like getting/setting field value ,
+ * making field accessible for use and get field type.
+ * @author Anindya Bandopadhyay
+ * @since 1.1
+ */
 public abstract class FieldUtilities {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(FieldUtilities.class);

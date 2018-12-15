@@ -97,19 +97,12 @@ public abstract class ClassUtilities {
 	 * @since 1.0
 	 */
 	public static Object createObject(final Class<?> clazz){
-		Object object = null;
-		try {
-			object = clazz.newInstance();
-		} catch (InstantiationException | IllegalAccessException e) {
-			LOGGER.debug("Not able to initialize using default constructor of " + clazz.getName() +
-					".\n Now trying with other constructor (if any).", e);
-			object =  createObjectUsingOtherConstructor(clazz);
-		}
-		return object;
+		return createObjectUsingOtherConstructor(clazz);
 	}
 	
 	/**
-	 * This method create object of parameter class using other constructor. 
+	 * This method create object of parameter class using other constructor
+	 * and it the class is an interface create proxy object for use.
 	 * @param clazz
 	 * @return object of parameter class
 	 * @since 1.0
@@ -131,12 +124,8 @@ public abstract class ClassUtilities {
 				} else if(parameterDataTypeClass.isArray()){
 					Class<?> typeOfArray = parameterDataTypeClass.getComponentType();
 					args[index] = Array.newInstance(typeOfArray, 0);
-				} else if(parameterDataTypeClass.isInterface()){
-					MockInterfaceObject mockObject = new MockInterfaceObject(parameterDataTypeClass);
-					args[index] = mockObject.proxy();
 				} else {
-					MockDependencyObject mockObject = new MockDependencyObject();
-					args[index] = mockObject.getProxyObject(parameterDataTypeClass);
+					args[index] = createProxy(parameterDataTypeClass);
 				} 
 				index++;
 			}
@@ -263,7 +252,7 @@ public abstract class ClassUtilities {
 	}
 
 	/**
-	 * This method return {@code Method} objects of parameter class type.
+	 * This method return {@code Method} objects of the parameter class type.
 	 * @param clazz
 	 * @return all declared methods
 	 * @since 1.1
@@ -272,6 +261,14 @@ public abstract class ClassUtilities {
 		return clazz.getDeclaredMethods();
 	}
 
+	/**
+	 * This method return an object of the parameter class type using {@code createObjectMethod}
+	 * static method. If the method is null then it will try create using class constructor.
+	 * @param clazz
+	 * @param createObjectMethod static method using which object will be created.
+	 * @return object of the parameter class type.
+	 * @since 1.1
+	 */
 	public static Object createObjectUsingAnnotated(Class<?> clazz, Method createObjectMethod) {
 		Object object ;
 
@@ -283,8 +280,23 @@ public abstract class ClassUtilities {
 		return object;
 	}
 
+	/**
+	 * This method return a proxy object of the parameter class type.
+	 * @param clazz
+	 * @return a proxy object
+	 * @since 1.1
+	 */
 	public static Object createProxy(final Class<?> clazz){
 		MockDependencyObject mockObject = new MockDependencyObject();
 		return  mockObject.getProxyObject(clazz);
+	}
+
+	/**
+	 * This method return {@code true} if more than constructor present else {@code false}.
+	 * @param clazz
+	 * @return {@code true} if more than constructor present else {@code false}.
+	 */
+	public static  boolean isMultipleConstructorPresent(final Class<?> clazz) {
+		return  clazz.getConstructors().length > 1;
 	}
 }
