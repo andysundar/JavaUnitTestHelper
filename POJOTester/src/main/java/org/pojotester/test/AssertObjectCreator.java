@@ -69,7 +69,7 @@ public class AssertObjectCreator {
 	 * declared classes in a package for unit testing and if it is used with parameter {@code false} it is act same
 	 * as default constructor.
      *
-	 * @deprecated As of 1.1, replaced by {@link #doLoadClassesAskedFor()}
+	 * @deprecated As of 1.0.2, replaced by {@link #doLoadClassesAskedFor()}
      *
 	 * @since 1.0
 	 */
@@ -81,7 +81,7 @@ public class AssertObjectCreator {
 	/**
 	 * This method return list of assertion objects created from the classes which are present in parameterised packages.
 	 *
-	 * @param packagesToScan
+	 * @param packagesToScan array of pattern or exact package name.
 	 * @return list of {@code AssertObject} objects
 	 * @since 1.0
 	 */
@@ -126,7 +126,7 @@ public class AssertObjectCreator {
 				}
 			}
 
-			AbstractTester tester = null;
+			AbstractTester tester;
 			if (toStringMethod != null) {
                 tester = new ToStringTester(sameObject1, sameObject2, sameObject3, differentObject);
                 List<AssertObject<?>> toStringTests = tester.createTests();
@@ -154,7 +154,7 @@ public class AssertObjectCreator {
     /**
      * If developer do not want to test overridden {@link #toString()} method.
      *
-     * @since 1.1
+     * @since 1.0.2
      */
 	public AssertObjectCreator doNotTestToStringMethod() {
 		this.testToStringMethod = false;
@@ -164,7 +164,7 @@ public class AssertObjectCreator {
     /**
      * If developer do not want to test overridden {@link #hashCode()} method.
      *
-     * @since 1.1
+     * @since 1.0.2
      */
 	public AssertObjectCreator doNotTestHashCodeMethod() {
 		this.testHashCodeMethod = false;
@@ -174,7 +174,7 @@ public class AssertObjectCreator {
     /**
      * If developer do not want to test overridden {@link #equals(Object)} method.
      *
-     * @since 1.1
+     * @since 1.0.2
      */
 	public AssertObjectCreator doNotTestEqualsMethod() {
 		this.testEqualsMethod = false;
@@ -184,7 +184,7 @@ public class AssertObjectCreator {
     /**
      * If developer do not want to test any overridden methods of {@link Object} class.
      *
-     * @since 1.1
+     * @since 1.0.2
      */
     public AssertObjectCreator doNotTestObjectClassOverriddenMethods() {
         doNotTestEqualsMethod();
@@ -197,7 +197,7 @@ public class AssertObjectCreator {
      * The unit test will consider only {@code @TestThisClass} declared classes in a package
      * for unit testing
      *
-     * @since 1.1
+     * @since 1.0.2
      */
 	public AssertObjectCreator doLoadClassesAskedFor() {
 		this.loadClassesAskedFor = true;

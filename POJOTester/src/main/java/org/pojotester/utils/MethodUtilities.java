@@ -28,7 +28,7 @@ import java.lang.reflect.Method;
  * This class provide method level reflection utilities like invoking method to get/set value
  * and find an annotated {@link CreateObjectMethod} method.
  * @author Anindya Bandopadhyay
- * @since 1.1
+ * @since 1.0.2
  */
 
 public abstract class MethodUtilities {
@@ -41,7 +41,7 @@ public abstract class MethodUtilities {
      * @param obj on which method will be called , null if static method need to be invoked
      * @param args method parameters as Object[]
      * @return if the method return anything then that value will be returned else null.
-     * @since 1.1
+     * @since 1.0.2
      */
     public static Object methodInvocation(Method method, Object obj, Object...args) {
         Object returnObj = null;
@@ -63,7 +63,7 @@ public abstract class MethodUtilities {
      * {@link CreateObjectMethod} method found else null.
      * @param methods list of methods in a class.
      * @return method object if annotated {@link CreateObjectMethod} method found else null.
-     * @since 1.1
+     * @since 1.0.2
      */
     public static Method findCreateObjectMethod(Method[] methods) {
         Method createObjectMethod = null;

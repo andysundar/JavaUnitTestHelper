@@ -25,12 +25,20 @@ import org.slf4j.LoggerFactory;
  * This class provide field level reflection utilities like getting/setting field value ,
  * making field accessible for use and get field type.
  * @author Anindya Bandopadhyay
- * @since 1.1
+ * @since 1.0.2
  */
 public abstract class FieldUtilities {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(FieldUtilities.class);
-	
+
+    /**
+     * Get the value from the field directly.
+     * @param field java field object
+     * @param object of the class which contains the field.
+     * @return object value
+     *
+     * @since 1.0.2
+     */
     public static Object getFieldValue(Field field, Object object) {
         makeAccessToField(field);
         Object value = null;
@@ -43,6 +51,14 @@ public abstract class FieldUtilities {
         return value;
     }
 
+    /**
+     * Set the value into the field object directly.
+     * @param field java field object
+     * @param object of the class which contains the field.
+     * @param value to be set
+     *
+     * @since 1.0.2
+     */
     public static void setFieldValue(Field field, Object object, Object value) {
         makeAccessToField(field);
         try {
@@ -52,10 +68,23 @@ public abstract class FieldUtilities {
         }
     }
 
+    /**
+     * Make a field accessible for reflection get/set operations.
+     * @param field {@code Field} class.
+     *
+     * @since 1.0.2
+     */
     public static void makeAccessToField(Field field) {
         field.setAccessible(true);
     }
 
+    /**
+     * Return the class type of the field.
+     * @param field
+     * @return class type of the field.
+     *
+     * @since 1.0.2
+     */
     public static Class<?> getFieldType(Field field) {
         return field.getType();
     }

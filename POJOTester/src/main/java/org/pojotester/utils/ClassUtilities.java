@@ -46,7 +46,7 @@ public abstract class ClassUtilities {
 	 * @since 1.0
 	 */
 	public static ClassLoader getDefaultClassLoader(){
-		ClassLoader classLoader = null;
+		ClassLoader classLoader;
 		Thread currentThread = Thread.currentThread();
 		if(currentThread != null) {
 			// Thread context class loader 
@@ -74,7 +74,7 @@ public abstract class ClassUtilities {
 	
 	/**
 	 * This method load the class then return the class object else return {@code null}.
-	 * @param className
+	 * @param className qualified class name
 	 * @return {@code Class} object if loaded else {@code null}
 	 * @since 1.0
 	 */
@@ -92,7 +92,7 @@ public abstract class ClassUtilities {
 	
 	/**
 	 * This method create object of parameter class using default constructor. 
-	 * @param clazz
+	 * @param clazz class whome object will be created.
 	 * @return object of parameter class
 	 * @since 1.0
 	 */
@@ -103,7 +103,7 @@ public abstract class ClassUtilities {
 	/**
 	 * This method create object of parameter class using other constructor
 	 * and it the class is an interface create proxy object for use.
-	 * @param clazz
+	 * @param clazz class whome object will be created.
 	 * @return object of parameter class
 	 * @since 1.0
 	 */
@@ -146,8 +146,10 @@ public abstract class ClassUtilities {
 	
 	/**
 	 * This method create object of parameter class using standard static factory method like 'now', 'getInstance'.
-	 * @param clazz
+	 * @param clazz class whome object will be created.
 	 * @return object of parameter class
+	 *
+	 * @since 1.0.2
 	 */
 	public static Object createObjectUsingStaticMethod(final Class<?> clazz){
 		Object object = null;
@@ -169,7 +171,7 @@ public abstract class ClassUtilities {
 	}
 	/**
 	 * This method create object of parameter class using method. 
-	 * @param clazz, method
+	 * @param clazz, method class whome object will be created using static method
 	 * @return object of parameter class
 	 * @since 1.0
 	 */
@@ -191,7 +193,7 @@ public abstract class ClassUtilities {
 	
 	/**
 	 * This method return default value of parameter class type. 
-	 * @param clazz
+	 * @param clazz class to be lookup from default value list.
 	 * @return default object value
 	 * @since 1.0
 	 */
@@ -201,9 +203,9 @@ public abstract class ClassUtilities {
 	
 	/**
 	 * This method return true if it is a concrete class else false of parameter class. 
-	 * @param clazz
+	 * @param clazz {@code Class}
 	 * @return true if it is a concrete class else false
-	 * @since 1.1
+	 * @since 1.0.2
 	 */
 	public static boolean isConcreteClass(Class<?> clazz) {
 		return isClass(clazz) && (!clazz.isInterface()) && (!Modifier.isAbstract(clazz.getModifiers()));
@@ -211,9 +213,9 @@ public abstract class ClassUtilities {
 	
 	/**
 	 * This method return true if it is a class else false of parameter class. 
-	 * @param clazz
+	 * @param clazz {@code Class}
 	 * @return true if it is a class else false
-	 * @since 1.1
+	 * @since 1.0.2
 	 */
 	public static boolean isClass(Class<?> clazz) {
 		return (clazz != null) && (!clazz.isAnnotation()) && (!clazz.isEnum() && (!clazz.isArray()));
@@ -221,9 +223,9 @@ public abstract class ClassUtilities {
 
 	/**
 	 * This method return {@code Field} object of parameter class. 
-	 * @param clazz , fieldName
+	 * @param clazz , fieldName {@code Class} and field name
 	 * @return field object if there is a declared field by that name in that class else return null
-	 * @since 1.1
+	 * @since 1.0.2
 	 */
 	public static Field getField(Class<?> clazz, String fieldName) {
 		Field field = null;
@@ -237,9 +239,9 @@ public abstract class ClassUtilities {
 	
 	/**
 	 * This method return {@code Method} object of parameter class type. 
-	 * @param clazz, methodName, parameterTypes
+	 * @param clazz, methodName, parameterTypes {@code Class} , method  name looking for along with parameters.
 	 * @return method object if there is a declared method by that name and parameter types in that class else return null
-	 * @since 1.1
+	 * @since 1.0.2
 	 */
 	public static Method getDeclaredMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
 		Method method = null;
@@ -253,9 +255,9 @@ public abstract class ClassUtilities {
 
 	/**
 	 * This method return {@code Method} objects of the parameter class type.
-	 * @param clazz
+	 * @param clazz {@code Class}
 	 * @return all declared methods
-	 * @since 1.1
+	 * @since 1.0.2
 	 */
 	public static Method[] getDeclaredMethods(Class<?> clazz) {
 		return clazz.getDeclaredMethods();
@@ -264,10 +266,10 @@ public abstract class ClassUtilities {
 	/**
 	 * This method return an object of the parameter class type using {@code createObjectMethod}
 	 * static method. If the method is null then it will try create using class constructor.
-	 * @param clazz
+	 * @param clazz {@code Class}
 	 * @param createObjectMethod static method using which object will be created.
 	 * @return object of the parameter class type.
-	 * @since 1.1
+	 * @since 1.0.2
 	 */
 	public static Object createObjectUsingAnnotated(Class<?> clazz, Method createObjectMethod) {
 		Object object ;
@@ -282,9 +284,9 @@ public abstract class ClassUtilities {
 
 	/**
 	 * This method return a proxy object of the parameter class type.
-	 * @param clazz
+	 * @param clazz {@code Class}
 	 * @return a proxy object
-	 * @since 1.1
+	 * @since 1.0.2
 	 */
 	public static Object createProxy(final Class<?> clazz){
 		MockDependencyObject mockObject = new MockDependencyObject();
@@ -293,8 +295,10 @@ public abstract class ClassUtilities {
 
 	/**
 	 * This method return {@code true} if more than constructor present else {@code false}.
-	 * @param clazz
+	 * @param clazz {@code Class}
 	 * @return {@code true} if more than constructor present else {@code false}.
+	 *
+	 * @since 1.0.2
 	 */
 	public static  boolean isMultipleConstructorPresent(final Class<?> clazz) {
 		return  clazz.getConstructors().length > 1;
