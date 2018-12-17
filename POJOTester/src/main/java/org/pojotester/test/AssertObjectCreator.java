@@ -20,10 +20,11 @@ import org.pojotester.pack.scan.LoadClassIfAskedFor;
 import org.pojotester.pack.scan.LoadClassIfNotIgnored;
 import org.pojotester.pack.scan.PackageScan;
 import org.pojotester.reflection.PropertyFinder;
-import org.pojotester.test.override.method.AbstractTester;
-import org.pojotester.test.override.method.EqualsTester;
-import org.pojotester.test.override.method.HashCodeTester;
-import org.pojotester.test.override.method.ToStringTester;
+import org.pojotester.test.constructor.ConstructorsTester;
+import org.pojotester.test.override.method.AbstractOverrideMethodTester;
+import org.pojotester.test.override.method.EqualsOverrideMethodTester;
+import org.pojotester.test.override.method.HashCodeOverrideMethodTester;
+import org.pojotester.test.override.method.ToStringOverrideMethodTester;
 import org.pojotester.test.values.AssertObject;
 import org.pojotester.test.values.TestConfiguration;
 import org.pojotester.utils.ClassUtilities;
@@ -53,6 +54,7 @@ public class AssertObjectCreator {
 	private boolean testToStringMethod = true;
 	private boolean testHashCodeMethod = true;
 	private boolean testEqualsMethod = true;
+	private boolean testAllConstructors = false;
 
 	/**
 	 * Object created using this constructor will consider all classes in a package for unit testing
@@ -101,6 +103,16 @@ public class AssertObjectCreator {
 				assertObjectList.addAll(testConfiguration.assertAssignedValues());
 			}
 
+            AbstractTester tester;
+
+			Optional<ConstructorsTester> optionalConstructorsTester =
+                    ConstructorsTester.createIfClassHaveMoreConstructors(clazz, testAllConstructors);
+            if(optionalConstructorsTester.isPresent()) {
+                tester = optionalConstructorsTester.get();
+                List<AssertObject<?>> allConstructorsTests = tester.createTests();
+                assertObjectList.addAll(allConstructorsTests);
+            }
+
 			Class<?>[] args = {};
 			Method toStringMethod = testToStringMethod ? ClassUtilities.getDeclaredMethod(clazz, TO_STRING, args) : null;
 			Method hashCodeMethod = testHashCodeMethod ? ClassUtilities.getDeclaredMethod(clazz, HASH_CODE, args) : null;
@@ -113,37 +125,36 @@ public class AssertObjectCreator {
 			Object sameObject3 = null;
 			Object differentObject = null;
 
-			if(toStringMethod != null || equalsMethod != null || hashCodeMethod != null) {
-				sameObject1 = object;
-				sameObject2 = ClassUtilities.createObjectUsingAnnotated(clazz, createObjectMethod);
-				sameObject3 = ClassUtilities.createObjectUsingAnnotated(clazz, createObjectMethod);
-				differentObject = ClassUtilities.createObjectUsingAnnotated(clazz, createObjectMethod);
+                if(toStringMethod != null || equalsMethod != null || hashCodeMethod != null) {
+                    sameObject1 = object;
+                    sameObject2 = ClassUtilities.createObjectUsingAnnotated(clazz, createObjectMethod);
+                    sameObject3 = ClassUtilities.createObjectUsingAnnotated(clazz, createObjectMethod);
+                    differentObject = ClassUtilities.createObjectUsingAnnotated(clazz, createObjectMethod);
 
-				for(Field field : fieldList) {
-					Object fieldValue = FieldUtilities.getFieldValue(field, sameObject1);
-					FieldUtilities.setFieldValue(field, sameObject2, fieldValue);
-					FieldUtilities.setFieldValue(field, sameObject3, fieldValue);
+                    for(Field field : fieldList) {
+                        Object fieldValue = FieldUtilities.getFieldValue(field, sameObject1);
+                        FieldUtilities.setFieldValue(field, sameObject2, fieldValue);
+                        FieldUtilities.setFieldValue(field, sameObject3, fieldValue);
+                    }
+                 }
+
+				if (toStringMethod != null) {
+					tester = new ToStringOverrideMethodTester(sameObject1, sameObject2, sameObject3, differentObject);
+					List<AssertObject<?>> toStringTests = tester.createTests();
+					assertObjectList.addAll(toStringTests);
 				}
-			}
 
-			AbstractTester tester;
-			if (toStringMethod != null) {
-                tester = new ToStringTester(sameObject1, sameObject2, sameObject3, differentObject);
-                List<AssertObject<?>> toStringTests = tester.createTests();
-                assertObjectList.addAll(toStringTests);
-			}
+				if(equalsMethod != null) {
+					tester = new EqualsOverrideMethodTester(sameObject1, sameObject2, sameObject3, differentObject, fieldList);
+					List<AssertObject<?>> equalsTests = tester.createTests();
+					assertObjectList.addAll(equalsTests);
+				}
 
-			if(equalsMethod != null) {
-                tester = new EqualsTester(sameObject1, sameObject2, sameObject3, differentObject, fieldList);
-                List<AssertObject<?>> equalsTests = tester.createTests();
-                assertObjectList.addAll(equalsTests);
-			}
-
-			if(hashCodeMethod != null) {
-                tester = new HashCodeTester(sameObject1, sameObject2, sameObject3, differentObject);
-                List<AssertObject<?>> hashCodeTests = tester.createTests();
-                assertObjectList.addAll(hashCodeTests);
-			}
+				if(hashCodeMethod != null) {
+					tester = new HashCodeOverrideMethodTester(sameObject1, sameObject2, sameObject3, differentObject);
+					List<AssertObject<?>> hashCodeTests = tester.createTests();
+					assertObjectList.addAll(hashCodeTests);
+				}
 
 			}
 
@@ -205,4 +216,14 @@ public class AssertObjectCreator {
 	}
 
 
+	/**
+	 * If the developer want to test all the constructors of class.
+	 * for unit testing
+	 *
+	 * @since 1.0.2
+	 */
+	public AssertObjectCreator doTestAllConstructors() {
+		this.testAllConstructors = true;
+		return this;
+	}
 }

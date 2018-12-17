@@ -16,11 +16,12 @@
 
 package org.pojotester.test.override.method;
 
+import org.pojotester.test.AbstractTester;
 import org.pojotester.test.values.AssertObject;
 
 import java.util.List;
 
-public abstract class AbstractTester
+public abstract class AbstractOverrideMethodTester extends AbstractTester
 {
 
     private Object sameObject1;
@@ -28,20 +29,14 @@ public abstract class AbstractTester
     private Object sameObject3;
     private Object differentObject;
 
-    public  AbstractTester(Object sameObject1, Object sameObject2,Object sameObject3, Object differentObject) {
+    public AbstractOverrideMethodTester(Object sameObject1, Object sameObject2, Object sameObject3, Object differentObject) {
         this.differentObject = differentObject;
         this.sameObject1 = sameObject1;
         this.sameObject2 = sameObject2;
         this.sameObject3 = sameObject3;
     }
 
-    protected <T> AssertObject<T> createAssertObject(T returnedValue, T expectedValue, String message) {
-        AssertObject<T> assertObject = new AssertObject<>();
-        assertObject.setMessage(message);
-        assertObject.setReturnedValue(returnedValue);
-        assertObject.setExpectedValue(expectedValue);
-        return assertObject;
-    }
+
 
     public Object getSameObject1() {
         return sameObject1;
@@ -58,7 +53,5 @@ public abstract class AbstractTester
     public Object getDifferentObject() {
         return differentObject;
     }
-
-    public abstract List<AssertObject<?>> createTests();
 
 }

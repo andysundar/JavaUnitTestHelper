@@ -21,9 +21,9 @@ import org.pojotester.test.values.AssertObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ToStringTester extends AbstractTester {
+public class ToStringOverrideMethodTester extends AbstractOverrideMethodTester {
 
-    public ToStringTester(Object sameObject1, Object sameObject2, Object sameObject3, Object differentObject) {
+    public ToStringOverrideMethodTester(Object sameObject1, Object sameObject2, Object sameObject3, Object differentObject) {
         super(sameObject1, sameObject2, sameObject3, differentObject);
     }
 

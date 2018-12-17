@@ -25,13 +25,13 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EqualsTester extends AbstractTester {
+public class EqualsOverrideMethodTester extends AbstractOverrideMethodTester {
 
     private List<Field> fieldList;
 
-    public EqualsTester(Object sameObject1, Object sameObject2,
-                        Object sameObject3, Object differentObject,
-                        List<Field> fieldList) {
+    public EqualsOverrideMethodTester(Object sameObject1, Object sameObject2,
+                                      Object sameObject3, Object differentObject,
+                                      List<Field> fieldList) {
         super(sameObject1, sameObject2, sameObject3, differentObject);
         this.fieldList = fieldList;
     }

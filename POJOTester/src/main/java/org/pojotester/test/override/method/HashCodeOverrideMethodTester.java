@@ -21,10 +21,10 @@ import org.pojotester.test.values.AssertObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HashCodeTester extends AbstractTester {
+public class HashCodeOverrideMethodTester extends AbstractOverrideMethodTester {
 
 
-    public HashCodeTester(Object sameObject1, Object sameObject2, Object sameObject3, Object differentObject) {
+    public HashCodeOverrideMethodTester(Object sameObject1, Object sameObject2, Object sameObject3, Object differentObject) {
         super(sameObject1, sameObject2, sameObject3, differentObject);
     }
 

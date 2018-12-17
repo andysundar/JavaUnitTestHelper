@@ -169,6 +169,49 @@ public abstract class ClassUtilities {
 		
 		return object;
 	}
+
+	/**
+	 * This method create objects of parameter class using all constructors.
+	 * @param clazz class whome object will be created.
+	 * @return objects of parameter class
+	 * @since 1.0.2
+	 */
+	public static Object[] createObjectsUsingAllConstructors(final Class<?> clazz){
+		Constructor<?>[] constructors = clazz.getConstructors();
+		Object[] objects = new Object[constructors.length];
+		int numOfConstructors = 0;
+		for(Constructor<?> constructor : constructors){
+			Parameter[] parameters = constructor.getParameters();
+			Object[] args = new Object[parameters.length];
+			int index = 0;
+			for(Parameter parameter : parameters) {
+				Class<?> parameterDataTypeClass = parameter.getType();
+				Object obj = getValueFromMap(parameterDataTypeClass);
+				if(obj != null) {
+					args[index] = obj;
+				} else if(parameterDataTypeClass.isEnum()) {
+					args[index] = parameterDataTypeClass.getEnumConstants()[0];
+				} else if(parameterDataTypeClass.isArray()){
+					Class<?> typeOfArray = parameterDataTypeClass.getComponentType();
+					args[index] = Array.newInstance(typeOfArray, 0);
+				} else {
+					args[index] = createProxy(parameterDataTypeClass);
+				}
+				index++;
+			}
+			try {
+				objects[numOfConstructors] = constructor.newInstance(args);
+			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+					| InvocationTargetException ex) {
+				LOGGER.debug("Not able to initialize using other constructor of " + clazz.getName(), ex);
+			}
+
+			numOfConstructors++;
+		}
+
+		return objects;
+	}
+
 	/**
 	 * This method create object of parameter class using method. 
 	 * @param clazz, method class whome object will be created using static method
