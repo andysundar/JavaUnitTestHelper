@@ -24,7 +24,7 @@ public class ConstructorsTester  extends AbstractTester {
 
         for(Object obj : objects) {
             AssertObject<Boolean> objectNotEqualsToNull = createAssertObject((obj != null), true,
-                    "Fail to create object using constractor.");
+                    "Fail to create object using constructor.");
             assertObjectList.add(objectNotEqualsToNull);
         }
         return assertObjectList;
