@@ -145,4 +145,14 @@ public class AssertObjectCreatorTest {
 		}
 	}
 
+	@Test 
+	public void testDoTestAllConstructors(){
+		String []packagesToScan = {"org.pojotester.testing.mypack.dto.Test01.class"};
+		assertObjectCreator.doTestAllConstructors();
+		List<AssertObject<?>> assertObjects = assertObjectCreator.getAssertObjects(packagesToScan);
+		assertFalse(assertObjects.isEmpty());
+		for(AssertObject<?> assertObject : assertObjects) {
+			assertEquals(assertObject.getMessage(), assertObject.getExpectedValue(), assertObject.getReturnedValue());
+		}
+	}
 }

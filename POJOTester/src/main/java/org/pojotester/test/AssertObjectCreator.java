@@ -16,12 +16,20 @@
 
 package org.pojotester.test;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.pojotester.pack.scan.LoadClassIfAskedFor;
 import org.pojotester.pack.scan.LoadClassIfNotIgnored;
 import org.pojotester.pack.scan.PackageScan;
 import org.pojotester.reflection.PropertyFinder;
 import org.pojotester.test.constructor.ConstructorsTester;
-import org.pojotester.test.override.method.AbstractOverrideMethodTester;
 import org.pojotester.test.override.method.EqualsOverrideMethodTester;
 import org.pojotester.test.override.method.HashCodeOverrideMethodTester;
 import org.pojotester.test.override.method.ToStringOverrideMethodTester;
@@ -32,11 +40,6 @@ import org.pojotester.utils.FieldUtilities;
 import org.pojotester.utils.MethodUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * This class create assert object for unit testing. 

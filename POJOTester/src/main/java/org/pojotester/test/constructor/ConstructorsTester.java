@@ -36,7 +36,7 @@ public class ConstructorsTester  extends AbstractTester {
         if(testAllConstructors) {
             Constructor<?>[] constructors = clazz.getConstructors();
             if(constructors.length > 1) {
-                Optional.of(new ConstructorsTester(clazz));
+            	optionalObject = Optional.of(new ConstructorsTester(clazz));
             }
         }
 
