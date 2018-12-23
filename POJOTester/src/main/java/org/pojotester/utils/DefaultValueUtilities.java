@@ -167,7 +167,7 @@ public abstract class DefaultValueUtilities {
 	
 	/**
 	 * This method return default value of parameter class type. 
-	 * @param clazz
+	 * @param clazz data type class
 	 * @return default object value
 	 * @since 1.0
 	 */

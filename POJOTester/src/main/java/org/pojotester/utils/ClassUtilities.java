@@ -24,7 +24,6 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 
 import org.pojotester.object.mock.MockDependencyObject;
-import org.pojotester.object.mock.MockInterfaceObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -214,7 +213,8 @@ public abstract class ClassUtilities {
 
 	/**
 	 * This method create object of parameter class using method. 
-	 * @param clazz, method class whome object will be created using static method
+	 * @param clazz class whom object will be created
+	 * @param method static method
 	 * @return object of parameter class
 	 * @since 1.0
 	 */
@@ -266,7 +266,8 @@ public abstract class ClassUtilities {
 
 	/**
 	 * This method return {@code Field} object of parameter class. 
-	 * @param clazz , fieldName {@code Class} and field name
+	 * @param clazz {@code Class} 
+	 * @param fieldName field name
 	 * @return field object if there is a declared field by that name in that class else return null
 	 * @since 1.0.2
 	 */
@@ -282,7 +283,9 @@ public abstract class ClassUtilities {
 	
 	/**
 	 * This method return {@code Method} object of parameter class type. 
-	 * @param clazz, methodName, parameterTypes {@code Class} , method  name looking for along with parameters.
+	 * @param clazz {@code Class}
+	 * @param methodName method  name looking for
+	 * @param parameterTypes  with parameters.
 	 * @return method object if there is a declared method by that name and parameter types in that class else return null
 	 * @since 1.0.2
 	 */

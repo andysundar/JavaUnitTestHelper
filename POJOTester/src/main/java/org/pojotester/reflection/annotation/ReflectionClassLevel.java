@@ -28,7 +28,7 @@ public abstract class ReflectionClassLevel {
 
 	/**
 	 * This method check whether {@link IgnoreClass} annotation present on parameter class.
-	 * @param clazz 
+	 * @param clazz class on which checking the annotation
 	 * @return {@code true} if {@code @IgnoreClass} present else {@code false}. 
 	 * @since 1.0
 	 */
@@ -39,7 +39,7 @@ public abstract class ReflectionClassLevel {
 	
 	/**
 	 * This method check whether {@link TestThisClass} annotation present on parameter class.
-	 * @param clazz 
+	 * @param clazz class on which checking the annotation
 	 * @return {@code true} if {@code @TestThisClass} present else {@code false}. 
 	 * @since 1.0
 	 */

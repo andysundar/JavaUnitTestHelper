@@ -80,7 +80,7 @@ public abstract class FieldUtilities {
 
     /**
      * Return the class type of the field.
-     * @param field
+     * @param field java field object
      * @return class type of the field.
      *
      * @since 1.0.2

@@ -73,9 +73,9 @@ public class AssertObjectCreator {
 	 * Object created using this constructor with parameter as {@code true} will consider only {@code @TestThisClass}
 	 * declared classes in a package for unit testing and if it is used with parameter {@code false} it is act same
 	 * as default constructor.
-     *
+     * 
 	 * @deprecated As of 1.0.2, replaced by {@link #doLoadClassesAskedFor()}
-     *
+     * @param loadClassesAskedFor boolean parameter
 	 * @since 1.0
 	 */
 	@Deprecated
@@ -167,6 +167,7 @@ public class AssertObjectCreator {
 
     /**
      * If developer do not want to test overridden {@link #toString()} method.
+     *@return {@code this} class object
      *
      * @since 1.0.2
      */
@@ -177,6 +178,7 @@ public class AssertObjectCreator {
 
     /**
      * If developer do not want to test overridden {@link #hashCode()} method.
+     *@return {@code this} class object
      *
      * @since 1.0.2
      */
@@ -187,6 +189,7 @@ public class AssertObjectCreator {
 
     /**
      * If developer do not want to test overridden {@link #equals(Object)} method.
+     *@return {@code this} class object
      *
      * @since 1.0.2
      */
@@ -197,6 +200,7 @@ public class AssertObjectCreator {
 
     /**
      * If developer do not want to test any overridden methods of {@link Object} class.
+     *@return {@code this} class object
      *
      * @since 1.0.2
      */
@@ -210,6 +214,7 @@ public class AssertObjectCreator {
     /**
      * The unit test will consider only {@code @TestThisClass} declared classes in a package
      * for unit testing
+     *@return {@code this} class object
      *
      * @since 1.0.2
      */
@@ -222,7 +227,8 @@ public class AssertObjectCreator {
 	/**
 	 * If the developer want to test all the constructors of class.
 	 * for unit testing
-	 *
+	 * @return {@code this} class object
+	 * 
 	 * @since 1.0.2
 	 */
 	public AssertObjectCreator doTestAllConstructors() {

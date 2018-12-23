@@ -31,7 +31,7 @@ public abstract class ReflectionMethodLevel {
 	
 	/**
 	 * This method check whether {@link CreateObjectMethod} present at method level. 
-	 * @param method
+	 * @param method on which checking the annotation
 	 * @return {@code true} if {@code @CreateObjectMethod} present else {@code false}
 	 * @since 1.0
 	 */
@@ -42,7 +42,7 @@ public abstract class ReflectionMethodLevel {
 	
 	/**
 	 * This method check if {@link ReadMethod} present and if present the get the field name.  
-	 * @param method
+	 * @param method on which checking the annotation
 	 * @return field name if {@code @ReadMethod} present else {@code null}.
 	 * @since 1.0
 	 */
@@ -58,7 +58,7 @@ public abstract class ReflectionMethodLevel {
 	
 	/**
 	 * This method check if {@link WriteMethod} present and if present the get the field name.  
-	 * @param method
+	 * @param method on which checking the annotation
 	 * @return field name if {@code @WriteMethod} present else {@code null}.
 	 * @since 1.0
 	 */

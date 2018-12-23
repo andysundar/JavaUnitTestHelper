@@ -38,7 +38,6 @@ import org.pojotester.annotation.field.LongTestValue;
 import org.pojotester.annotation.field.ShortTestValue;
 import org.pojotester.annotation.field.StringTestValue;
 import org.pojotester.test.values.TestConfiguration;
-import org.pojotester.test.values.TestConfigurationFactory;
 import org.pojotester.type.convertor.PrimitiveToObjectArray;
  
 /**
@@ -50,7 +49,7 @@ public abstract class ReflectionFieldLevel {
 
 	/**
 	 * This method check whether {@link IgnoreField} present or not. 
-	 * @param field
+	 * @param field on which checking the annotation
 	 * @return {@code true} if {@code @IgnoreField} present else {@code false}
 	 * @since 1.0
 	 */
@@ -61,7 +60,7 @@ public abstract class ReflectionFieldLevel {
 
 	/**
 	 * Based on field data type it create a {@link TestConfiguration} object and assign value to the field for test.
-	 * @param field
+	 * @param field on which checking the annotation
 	 * @return {@code TestConfiguration} object 
 	 * @since 1.0
 	 */
@@ -246,7 +245,7 @@ public abstract class ReflectionFieldLevel {
 
 	/**
 	 * This method create an object of {@link TestConfiguration} based on data type.
-	 * @param typeClass
+	 * @param typeClass class on which checking the annotation
 	 * @return {@code TestConfiguration} type object.
 	 */
 	protected static TestConfiguration<?> createTestConfigurationObject(final Class<?> typeClass){

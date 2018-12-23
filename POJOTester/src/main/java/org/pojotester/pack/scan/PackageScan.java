@@ -63,7 +63,7 @@ public abstract class PackageScan {
 	
 	/**
 	 * This method load the qualified classes and return the unique list.
-	 * @param packagesToScan
+	 * @param packagesToScan array of package name or classes to scan
 	 * @return unique list of qualified classes
 	 * @since 1.0
 	 */
