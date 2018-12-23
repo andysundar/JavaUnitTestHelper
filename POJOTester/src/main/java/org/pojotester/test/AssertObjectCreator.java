@@ -225,8 +225,7 @@ public class AssertObjectCreator {
 
 
 	/**
-	 * If the developer want to test all the constructors of class.
-	 * for unit testing
+	 * If the developer want to test all the constructors of  a class for unit testing.
 	 * @return {@code this} class object
 	 * 
 	 * @since 1.0.2
