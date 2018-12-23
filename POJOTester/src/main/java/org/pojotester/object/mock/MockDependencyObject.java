@@ -47,7 +47,7 @@ public class MockDependencyObject {
 		    try {
 				object = subclazz.newInstance();
 			} catch (InstantiationException | IllegalAccessException e) {
-				LOGGER.debug("Not abōle to create proxy object of dependent's proxy.\n"
+				LOGGER.debug("Not able to create proxy object of dependent's proxy.\n"
 						+ "If this is happend during constructor invoke then if possible please use @CreateObjectMethod annotation.\n", e);
 			}
 		}
