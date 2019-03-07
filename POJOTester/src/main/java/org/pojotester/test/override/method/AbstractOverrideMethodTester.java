@@ -17,9 +17,6 @@
 package org.pojotester.test.override.method;
 
 import org.pojotester.test.AbstractTester;
-import org.pojotester.test.values.AssertObject;
-
-import java.util.List;
 
 public abstract class AbstractOverrideMethodTester extends AbstractTester
 {

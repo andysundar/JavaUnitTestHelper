@@ -22,12 +22,12 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.pojotester.utils.MethodUtilities;
 import org.pojotester.type.convertor.ObjectToPrimitiveArray;
 import org.pojotester.type.convertor.PrimitiveToObjectArray;
 import org.pojotester.utils.ClassUtilities;
 import org.pojotester.utils.DefaultValueUtilities;
 import org.pojotester.utils.FieldUtilities;
+import org.pojotester.utils.MethodUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,7 +54,7 @@ public class TestConfiguration<T> {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<AssertObject<?>> assertAssignedValues() {
-
+		LOGGER.debug("Start assertAssignedValues");
 		List<AssertObject<?>> values = Collections.emptyList();
 		if(object != null){
 			if(assignedValues != null){

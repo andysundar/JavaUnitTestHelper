@@ -8,13 +8,15 @@
 
 group 'com.github.andysundar'
 //artifact 'pojotester'
-version '1.0.2-SNAPSHOT'
+version '1.0.3-SNAPSHOT'
 
 // Apply the java-library plugin to add support for Java Library
 apply plugin: 'java'
 apply plugin: 'maven-publish'
 apply plugin: 'maven'
 apply plugin: 'signing'
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 buildscript {
     repositories {
@@ -91,7 +93,7 @@ publishing {
             artifact javadocJar
             groupId 'com.github.andysundar'
             artifactId 'pojoclasstester'
-            version '1.0.2'
+            version '1.0.3'
             pom.withXml {
                 def root = asNode()
                 root.appendNode('description', 'Framework to automate Java POJO classes unit testing.')
@@ -127,8 +129,8 @@ bintray {
         licenses = ['Apache-2.0']
         vcsUrl = 'https://github.com/andysundar/JavaUnitTestHelper.git'
         version {
-        	name = '1.0.2-Final'
-        	desc = 'POJO Tester 1.0.2 final'
+        	name = '1.0.3-Final'
+        	desc = 'POJO Tester 1.0.3 final'
         	released  = new Date()
         	vcsTag = '1.0.2'
         	attributes = ['pojoclasstester': 'com.github.andysundar:org.pojotester.test:pojo-tester']
