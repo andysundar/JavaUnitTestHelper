@@ -7,7 +7,7 @@
  */
 
 group 'com.github.andysundar'
-//artifact 'pojotester'
+//artifact 'pojoclasstester'
 version '1.0.3-SNAPSHOT'
 
 // Apply the java-library plugin to add support for Java Library
@@ -23,7 +23,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3"
+        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4"
     }
 }
 apply plugin: 'com.jfrog.bintray'
@@ -87,7 +87,7 @@ def pomConfig = {
 // Create the publication with the pom configuration:
 publishing {
     publications {
-        MyPublication(MavenPublication) {
+        publishToBintray(MavenPublication) {
             from components.java
             artifact sourcesJar
             artifact javadocJar
@@ -132,7 +132,7 @@ bintray {
         	name = '1.0.3-Final'
         	desc = 'POJO Tester 1.0.3 final'
         	released  = new Date()
-        	vcsTag = '1.0.2'
+        	vcsTag = '1.0.3'
         	attributes = ['pojoclasstester': 'com.github.andysundar:org.pojotester.test:pojo-tester']
         	
         	//Optional configuration for GPG signing
@@ -141,15 +141,15 @@ bintray {
                 passphrase = 'passphrase' //Optional. The passphrase for GPG signing'
             }
             //Optional configuration for Maven Central sync of the version
-            mavenCentralSync {
-                sync = true //[Default: true] Determines whether to sync the version to Maven Central.
-                user = System.getenv('OSS_USER') //OSS user token: mandatory
-                password = System.getenv('OSS_PS') //OSS user password: mandatory
-                close = '1' //Optional property. By default the staging repository is closed and artifacts are released to Maven Central. You can optionally turn this behaviour off (by puting 0 as value) and release the version manually.
-            }          
+            //mavenCentralSync {
+             //   sync = true //[Default: true] Determines whether to sync the version to Maven Central.
+                //user = System.getenv('OSS_USER') //OSS user token: mandatory
+                //password = System.getenv('OSS_PS') //OSS user password: mandatory
+           //     close = '1' //Optional property. By default the staging repository is closed and artifacts are released to Maven Central. You can optionally turn this behaviour off (by puting 0 as value) and release the version manually.
+           // }          
     	}
     }
-     publications = ['MyPublication'] 
+     publications = ['publishToBintray'] 
 }
 
 
