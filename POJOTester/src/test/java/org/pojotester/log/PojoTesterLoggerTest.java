@@ -14,7 +14,6 @@ public class PojoTesterLoggerTest {
 		try {
 			modifierField = PojoTesterLogger.class.getDeclaredField("logger");
 		} catch (NoSuchFieldException | SecurityException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

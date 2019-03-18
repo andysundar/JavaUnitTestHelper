@@ -60,8 +60,8 @@ public class TestConfiguration<T> {
 			if(assignedValues != null){
 				values = populateValues();
 			} else {
-				Object fieldValueObject = DefaultValueUtilities.getValueFromMap(field.getType());
 				Class<?> fieldType = FieldUtilities.getFieldType(field);
+				Object fieldValueObject = DefaultValueUtilities.getValueFromMap(fieldType);
 				boolean isArray = fieldType.isArray();
 				fieldType = isArray ? fieldType.getComponentType() : fieldType;
 				if(isArray && fieldType.isPrimitive()){
@@ -94,33 +94,55 @@ public class TestConfiguration<T> {
 				
 				
 					values = populateValues();
+				} else if(fieldType.isEnum()) { 
+					int length = fieldType.getEnumConstants().length;
+					fieldValueObject = fieldType.getEnumConstants()[length-1];
+					AssertObject<T> assertObject = null;
+					assertObject = createAssertObject(fieldType, fieldValueObject, isArray);
+					
+					values = addAssertObject(assertObject);
+					
 				} else {
 					AssertObject<T> assertObject = null;
 					if (fieldValueObject == null) {
 						fieldValueObject = ClassUtilities.createObjectUsingOtherConstructor(fieldType);
 						
-						if(isArray){
-							assignedValues = (T[])Array.newInstance(fieldType, 1);
-							assignedValues[0] = (T) fieldValueObject;	
-							assertObject = invokeReadWriteMethod((T) assignedValues,	(T) expectedValues);
-							assignedValues = null;
-						} else {
-							assertObject = invokeReadWriteMethod((T) fieldValueObject,	(T) fieldValueObject);
-						}
+						assertObject = createAssertObject(fieldType, fieldValueObject, isArray);
 						
 					} else {
 						assertObject = invokeReadWriteMethod((T) fieldValueObject,	(T) fieldValueObject);
 					}
 
-					if (assertObject != null) {
-						values = new LinkedList<>();
-						values.add(assertObject);
-					}
+					values = addAssertObject(assertObject);
 				}
 				
 			}
 		}
 		return values;
+	}
+
+
+	private List<AssertObject<?>> addAssertObject(AssertObject<T> assertObject) {
+		List<AssertObject<?>> values = new LinkedList<>();
+		if (assertObject != null) {
+			values.add(assertObject);
+		}
+		return values;
+	}
+
+
+	@SuppressWarnings("unchecked")
+	private AssertObject<T> createAssertObject(Class<?> fieldType, Object fieldValueObject, boolean isArray) {
+		AssertObject<T> assertObject;
+		if(isArray){
+			assignedValues = (T[])Array.newInstance(fieldType, 1);
+			assignedValues[0] = (T) fieldValueObject;	
+			assertObject = invokeReadWriteMethod((T) assignedValues,	(T) expectedValues);
+			assignedValues = null;
+		} else {
+			assertObject = invokeReadWriteMethod((T) fieldValueObject,	(T) fieldValueObject);
+		}
+		return assertObject;
 	}
 
 

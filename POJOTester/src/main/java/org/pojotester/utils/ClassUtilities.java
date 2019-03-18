@@ -84,7 +84,6 @@ public abstract class ClassUtilities {
 			clazz = (classLoader != null) ?  classLoader.loadClass(className) : Class.forName(className);
 		} catch (ClassNotFoundException e) {
 			LOGGER.debug("Not able to load " + className, e);
-			e.printStackTrace();
 		}
 		return clazz;
 	}
@@ -102,7 +101,7 @@ public abstract class ClassUtilities {
 	/**
 	 * This method create object of parameter class using other constructor
 	 * and it the class is an interface create proxy object for use.
-	 * @param clazz class whome object will be created.
+	 * @param clazz class whom object will be created.
 	 * @return object of parameter class
 	 * @since 1.0
 	 */
@@ -276,7 +275,7 @@ public abstract class ClassUtilities {
 		try {
 			field = clazz.getDeclaredField(fieldName);
 		} catch (NoSuchFieldException | SecurityException e) {
-			LOGGER.debug(fieldName + " field name is not present in " + clazz.getName(), e);
+			LOGGER.debug("Field name is not matching with the read / write method or " +fieldName + " field name is not present in " + clazz.getName(), e);
 		}
 		return field;
 	}
