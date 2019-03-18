@@ -29,33 +29,37 @@ public class HashCodeOverrideMethodTester extends AbstractOverrideMethodTester {
     }
 
     @Override
-    public List<AssertObject<?>> createTests() {
-        Object sameObject1 = getSameObject1();
-        Object sameObject2 = getSameObject2();
-        Object sameObject3 = getSameObject3();
-        Object differentObject = getDifferentObject();
-        
-        List<AssertObject<?>> assertObjectList = new ArrayList<>();
-        AssertObject<Integer> reflexiveHashCode = createAssertObject(sameObject1.hashCode(), sameObject1.hashCode(),
-                "Reflexive Test: x.hashCode() == x.hashCode()");
-        assertObjectList.add(reflexiveHashCode);
+	public List<AssertObject<?>> createTests() {
+		Object sameObject1 = getSameObject1();
+		Object sameObject2 = getSameObject2();
+		Object sameObject3 = getSameObject3();
+		Object differentObject = getDifferentObject();
 
-        AssertObject<Integer> symmetricHashCode = createAssertObject(sameObject1.hashCode(), sameObject2.hashCode(),
-                "Symmetric Test: If values of x & y are same then x.hashCode() == y.hashCode()");
-        assertObjectList.add(symmetricHashCode);
+		List<AssertObject<?>> assertObjectList = new ArrayList<>();
+		AssertObject<Integer> reflexiveHashCode = createAssertObject(sameObject1.hashCode(), sameObject1.hashCode(),
+				String.format("%s Reflexive Test: x.hashCode() == x.hashCode()", sameObject1.getClass()));
+		assertObjectList.add(reflexiveHashCode);
 
-        AssertObject<Boolean> transitiveHashCode = createAssertObject(
-                (sameObject1.hashCode() == sameObject2.hashCode() && sameObject2.hashCode() == sameObject3.hashCode() ),
-                (sameObject3.hashCode() == sameObject1.hashCode()),
-                "Transitive Test: If values of x & y are same then x.hashCode() == y.hashCode()");
-        assertObjectList.add(transitiveHashCode);
+		AssertObject<Integer> symmetricHashCode = createAssertObject(sameObject1.hashCode(), sameObject2.hashCode(),
+				String.format("%s Symmetric Test: If values of x & y are same then x.hashCode() == y.hashCode()",
+						sameObject1.getClass()));
+		assertObjectList.add(symmetricHashCode);
 
-        AssertObject<Boolean> consistentHashCode = createAssertObject((sameObject2.hashCode() == differentObject.hashCode()),
-                false,
-                "Consistent Test: If x1 and x2 different object and different value(s) \n x1.hashCode() !+ x2.hashCode()");
-        assertObjectList.add(consistentHashCode);
+		AssertObject<Boolean> transitiveHashCode = createAssertObject(
+				(sameObject1.hashCode() == sameObject2.hashCode() && sameObject2.hashCode() == sameObject3.hashCode()),
+				(sameObject3.hashCode() == sameObject1.hashCode()),
+				String.format("%s Transitive Test: If values of x & y are same then x.hashCode() == y.hashCode()",
+						sameObject1.getClass()));
+		assertObjectList.add(transitiveHashCode);
 
-        return assertObjectList;
-    }
+		AssertObject<Boolean> consistentHashCode = createAssertObject(
+				(sameObject2.hashCode() == differentObject.hashCode()), false,
+				String.format(
+						"%s Consistent Test: If x1 and x2 different object and different value(s) \n x1.hashCode() !+ x2.hashCode()",
+						sameObject2.getClass()));
+		assertObjectList.add(consistentHashCode);
+
+		return assertObjectList;
+	}
 
 }

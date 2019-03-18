@@ -23,7 +23,10 @@ import java.util.List;
 
 public class ToStringOverrideMethodTester extends AbstractOverrideMethodTester {
 
-    public ToStringOverrideMethodTester(Object sameObject1, Object sameObject2, Object sameObject3, Object differentObject) {
+    private static final String DIFFERENT_VALUE = "%s.toString method when different objects and different value(s).";
+	private static final String SAME_VALUE = "%s.toString method when different objects but same value(s).";
+
+	public ToStringOverrideMethodTester(Object sameObject1, Object sameObject2, Object sameObject3, Object differentObject) {
         super(sameObject1, sameObject2, sameObject3, differentObject);
     }
 
@@ -38,13 +41,13 @@ public class ToStringOverrideMethodTester extends AbstractOverrideMethodTester {
         String x1Str = sameObject1.toString();
         String x2Str = sameObject2.toString();
         AssertObject<String> whenBothSameValues = createAssertObject(x1Str, x2Str,
-                "toString method when different objects but same value(s).");
+                String.format(SAME_VALUE, sameObject1.getClass()));
         assertObjectList.add(whenBothSameValues);
 
         String y1Str = sameObject1.toString();
         String y2Str = differentObject.toString();
         AssertObject<Boolean> whenDifferentValues = createAssertObject(y2Str.equals(y1Str), false,
-                "toString method when different objects and different value(s).");
+                String.format(DIFFERENT_VALUE, sameObject1.getClass()));
         assertObjectList.add(whenDifferentValues);
 
         return assertObjectList;
