@@ -35,6 +35,7 @@ public abstract class MethodUtilities {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodUtilities.class);
 
+    private MethodUtilities() {}
     /**
      * This method will invoke using reflection.
      * @param method method {@link Method} object

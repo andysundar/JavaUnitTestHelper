@@ -23,4 +23,6 @@ public class Test06 {
 		return list.getString();
 	}
 
+	
+	
 }

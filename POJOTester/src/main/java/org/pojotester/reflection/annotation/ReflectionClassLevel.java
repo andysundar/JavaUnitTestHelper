@@ -26,6 +26,7 @@ import org.pojotester.annotation.clazz.TestThisClass;
  */
 public abstract class ReflectionClassLevel {
 
+	private ReflectionClassLevel() {}
 	/**
 	 * This method check whether {@link IgnoreClass} annotation present on parameter class.
 	 * @param clazz class on which checking the annotation

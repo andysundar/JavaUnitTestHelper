@@ -70,22 +70,35 @@ public final class PropertyFinder {
                 Method writeMethod = propertyDescriptor.getWriteMethod();
                 String fieldName = propertyDescriptor.getName();
                 Field field = ClassUtilities.getField(clazz, fieldName);
-                TestConfiguration<?> testConfiguration = testConfigurationFactory.createTestConfiguration(object, field);
-                if(testConfiguration != null) {
-                    if(writeMethod != null) {
-                        testConfiguration.setWriteMethod(writeMethod);
-                    }
-
-                    if(readMethod != null) {
-                        testConfiguration.setReadMethod(readMethod);
-                    }
-                }
+                TestConfiguration<?> testConfiguration = null;
+				if (field == null) {
+					String message = String.format(
+							"%s class did not have a field name %s.%nPlease check the bean method name matches with respective field name.",
+							clazz.getSimpleName(), fieldName);
+					LOGGER.error(message);
+					continue;
+				}
+                testConfiguration = testConfigurationFactory.createTestConfiguration(object, field);
+                populateReadWriteMethodsIntoTestConfiguration(readMethod, writeMethod, testConfiguration);
 
                 logWriteMethodMessage(writeMethod, field);
                 logReadMethodMessage(readMethod, field);
             }
         }
     }
+
+	private void populateReadWriteMethodsIntoTestConfiguration(Method readMethod, Method writeMethod,
+			TestConfiguration<?> testConfiguration) {
+		if(testConfiguration != null) {
+		    if(writeMethod != null) {
+		        testConfiguration.setWriteMethod(writeMethod);
+		    }
+
+		    if(readMethod != null) {
+		        testConfiguration.setReadMethod(readMethod);
+		    }
+		}
+	}
 
     private void createTestConfigurationsFromAnnotation() {
         for (Method method : methods) {

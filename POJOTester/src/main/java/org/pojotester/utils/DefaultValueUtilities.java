@@ -52,6 +52,8 @@ import java.util.stream.Stream;
 public abstract class DefaultValueUtilities {
 	private static final Map<Class<?>,Object> CLASS_VALUE_MAP = new HashMap<Class<?>,Object>(100);
 	
+	private DefaultValueUtilities() {}
+	
 	static {
 		CLASS_VALUE_MAP.put(boolean.class, Boolean.TRUE);
 		CLASS_VALUE_MAP.put(Boolean.class, Boolean.TRUE);

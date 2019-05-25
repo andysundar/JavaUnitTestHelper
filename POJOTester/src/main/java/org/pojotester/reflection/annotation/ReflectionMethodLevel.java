@@ -19,6 +19,7 @@ package org.pojotester.reflection.annotation;
 import java.lang.reflect.Method;
 
 import org.pojotester.annotation.method.CreateObjectMethod;
+import org.pojotester.annotation.method.IgnoreMethodForTest;
 import org.pojotester.annotation.method.ReadMethod;
 import org.pojotester.annotation.method.WriteMethod;
 
@@ -29,6 +30,7 @@ import org.pojotester.annotation.method.WriteMethod;
  */
 public abstract class ReflectionMethodLevel {
 	
+	private ReflectionMethodLevel() {}
 	/**
 	 * This method check whether {@link CreateObjectMethod} present at method level. 
 	 * @param method on which checking the annotation
@@ -70,5 +72,19 @@ public abstract class ReflectionMethodLevel {
 			fieldName = writeMethod.fieldName();
 		}
 		return fieldName;
+	}
+	
+	/**
+	 * This method check whether {@link IgnoreMethodForTest} present at method level. 
+	 * @param method on which checking the annotation
+	 * @return {@code true} if {@code @IgnoreMethodForTest} present else {@code false}
+	 * @since 1.0.4
+	 */
+	public static boolean isIgnoreMethodForTest(final Method method) {
+		boolean ignoreStatus = false;
+		if(method != null) {
+			ignoreStatus = method.isAnnotationPresent(IgnoreMethodForTest.class);
+		}
+		return ignoreStatus;
 	}
 }

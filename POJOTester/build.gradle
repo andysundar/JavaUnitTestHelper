@@ -93,7 +93,7 @@ publishing {
             artifact javadocJar
             groupId 'com.github.andysundar'
             artifactId 'pojoclasstester'
-            version '1.0.3'
+            version '1.0.4'
             pom.withXml {
                 def root = asNode()
                 root.appendNode('description', 'Framework to automate Java POJO classes unit testing.')
@@ -129,10 +129,10 @@ bintray {
         licenses = ['Apache-2.0']
         vcsUrl = 'https://github.com/andysundar/JavaUnitTestHelper.git'
         version {
-        	name = '1.0.3-Final'
-        	desc = 'POJO Tester 1.0.3 final'
+        	name = '1.0.4-Final'
+        	desc = 'POJO Tester 1.0.4 final'
         	released  = new Date()
-        	vcsTag = '1.0.3'
+        	vcsTag = '1.0.4'
         	attributes = ['pojoclasstester': 'com.github.andysundar:org.pojotester.test:pojo-tester']
         	
         	//Optional configuration for GPG signing

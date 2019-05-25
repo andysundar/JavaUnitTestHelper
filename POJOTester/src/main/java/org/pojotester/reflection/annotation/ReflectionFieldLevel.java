@@ -46,6 +46,8 @@ import org.pojotester.type.convertor.PrimitiveToObjectArray;
  * @since 1.0
  */
 public abstract class ReflectionFieldLevel {
+	
+	private ReflectionFieldLevel() {}
 
 	/**
 	 * This method check whether {@link IgnoreField} present or not. 

@@ -155,4 +155,22 @@ public class AssertObjectCreatorTest {
 			assertEquals(assertObject.getMessage(), assertObject.getExpectedValue(), assertObject.getReturnedValue());
 		}
 	}
+	
+	
+	@Test 
+	public void testGetAssertObjects_whenBeanMethodNameDoesNotMatchVariableName(){
+		String []packagesToScan = {"org.pojotester.testing.mypack.dto.Test07.class"};
+		List<AssertObject<?>> assertObjects = assertObjectCreator.getAssertObjects(packagesToScan);
+		assertTrue(assertObjects.isEmpty());
+	}
+	
+	@Test 
+	public void testIgnoreMethodForTest(){
+		String []packagesToScan = {"org.pojotester.testing.mypack.dto.Test01.class"};
+		
+		List<AssertObject<?>> assertObjects = assertObjectCreator.getAssertObjects(packagesToScan);
+		assertFalse(assertObjects.isEmpty());
+		assertTrue(assertObjects.size() < 5);
+	}
+	
 }

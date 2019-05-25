@@ -38,6 +38,8 @@ public abstract class ClassUtilities {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ClassUtilities.class);
 	
 	private static final String[] CREATE_METHOD = {"now", "getInstance"};
+	
+	private ClassUtilities() {}
 	/**
 	 * This method first try to get context class loader from current thread then it try to get it from default class loader, 
 	 * then it try to get it from system class loader. 

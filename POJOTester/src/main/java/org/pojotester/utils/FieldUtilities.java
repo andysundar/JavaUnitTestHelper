@@ -31,6 +31,7 @@ public abstract class FieldUtilities {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(FieldUtilities.class);
 
+	private FieldUtilities() {}
     /**
      * Get the value from the field directly.
      * @param field java field object

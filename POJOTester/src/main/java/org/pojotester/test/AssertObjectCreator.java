@@ -29,6 +29,7 @@ import org.pojotester.pack.scan.LoadClassIfAskedFor;
 import org.pojotester.pack.scan.LoadClassIfNotIgnored;
 import org.pojotester.pack.scan.PackageScan;
 import org.pojotester.reflection.PropertyFinder;
+import org.pojotester.reflection.annotation.ReflectionMethodLevel;
 import org.pojotester.test.constructor.ConstructorsTester;
 import org.pojotester.test.override.method.EqualsOverrideMethodTester;
 import org.pojotester.test.override.method.HashCodeOverrideMethodTester;
@@ -117,9 +118,9 @@ public class AssertObjectCreator {
             }
 
 			Class<?>[] args = {};
-			Method toStringMethod = testToStringMethod ? ClassUtilities.getDeclaredMethod(clazz, TO_STRING, args) : null;
-			Method hashCodeMethod = testHashCodeMethod ? ClassUtilities.getDeclaredMethod(clazz, HASH_CODE, args) : null;
-			Method equalsMethod = testEqualsMethod ? ClassUtilities.getDeclaredMethod(clazz, EQUALS, Object.class) : null;
+			Method toStringMethod = testToStringMethod ? removeMethodFromTest(ClassUtilities.getDeclaredMethod(clazz, TO_STRING, args)) : null;
+			Method hashCodeMethod = testHashCodeMethod ? removeMethodFromTest(ClassUtilities.getDeclaredMethod(clazz, HASH_CODE, args)) : null;
+			Method equalsMethod = testEqualsMethod ? removeMethodFromTest(ClassUtilities.getDeclaredMethod(clazz, EQUALS, Object.class)) : null;
 
 			List<Field> fieldList = testConfigurations.stream().map(
 					TestConfiguration::getField).collect(Collectors.toList());
@@ -128,6 +129,7 @@ public class AssertObjectCreator {
 			Object sameObject3 = null;
 			Object differentObject = null;
 
+		
                 if(toStringMethod != null || equalsMethod != null || hashCodeMethod != null) {
                     sameObject1 = object;
                     sameObject2 = ClassUtilities.createObjectUsingAnnotated(clazz, createObjectMethod);
@@ -164,6 +166,7 @@ public class AssertObjectCreator {
             LOGGER.debug("End getAssertObjects");
 			return assertObjectList;
 		}
+
 
     /**
      * If developer do not want to test overridden {@link #toString()} method.
@@ -233,5 +236,12 @@ public class AssertObjectCreator {
 	public AssertObjectCreator doTestAllConstructors() {
 		this.testAllConstructors = true;
 		return this;
+	}
+	
+	private Method removeMethodFromTest(Method method) {
+		if(ReflectionMethodLevel.isIgnoreMethodForTest(method)) {
+			method = null;
+		}
+		return method;
 	}
 }
